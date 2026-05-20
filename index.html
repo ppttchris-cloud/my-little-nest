@@ -134,6 +134,12 @@
     .btn-primary { background:#b3925c; color:white; }
     .btn-danger { background:#e8b4b4; color:#5a2020; }
     .btn-neutral { background:#eee; }
+.skin-modal { position:fixed; top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:60; }
+.skin-modal.show { display:flex; }
+.skin-panel { background:#fffef7;border-radius:28px;padding:20px;width:85%;max-width:360px;border:3px solid #e6d7b8;text-align:center; }
+.skin-list { display:flex;gap:12px;overflow-x:auto;padding:10px 0; }
+.skin-card { min-width:80px;height:100px;border-radius:16px;cursor:pointer;border:2px solid transparent;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:bold;color:#5a4530; }
+.skin-card.active { border-color:#b3925c; }
   </style>
 </head>
 <body>
@@ -146,8 +152,9 @@
   </div>
 
   <div class="top-bar" id="topBar">
-    <h2 id="topTitle" style="cursor:pointer;" onclick="editTitle()">🏠 我的小窝 <span style="font-size:0.7rem;">✏️</span></h2>
-    <button class="mode-toggle" id="modeToggle">🔄 J人模式</button>
+<h2 id="topTitle" style="cursor:pointer;" onclick="editTitle()">🏠 我的小窝 <span style="font-size:0.7rem;">✏️</span></h2>
+
+<button class="mode-toggle" id="modeToggle">🔄 J人模式</button>
   </div>
   <div class="page-area" id="homePage">
     <div class="j-list" id="jListView"></div>
@@ -156,6 +163,10 @@
   <div class="func-page" id="funcPeriod">
     <div class="func-header"><button class="back-btn" onclick="goHome()">← 返回</button><span style="font-weight:bold;">🌸 周期手账</span></div>
     <div class="func-content" id="periodContent"></div>
+  </div>
+  <div class="func-page" id="funcMood">
+    <div class="func-header"><button class="back-btn" onclick="goHome()">← 返回</button><span style="font-weight:bold;">📓 心情日记</span></div>
+    <div class="func-content" id="moodContent"></div>
   </div>
   <div class="func-page" id="funcRecipe">
     <div class="func-header"><button class="back-btn" onclick="goHome()">← 返回</button><span style="font-weight:bold;">🍳 菜谱选购</span></div>
@@ -281,6 +292,7 @@ function renderJList(){
       <div class="j-icon">${m.icon}</div><div class="j-info"><div class="j-name">${m.name}</div><div class="j-desc">${m.desc}</div></div><div class="j-arrow">›</div>
     </div>`).join('');
 }
+function renderSkinList(){ document.getElementById('skinList').innerHTML=skins.map(s=>`<div class="skin-card${currentSkin===s.name?' active':''}" style="background:${s.bg};color:${s.text};" onclick="currentSkin='${s.name}';applySkin('${s.name}');renderSkinList();">${s.name}</div>`).join(''); }
 function renderPGrid(){
   document.getElementById('pGridView').innerHTML = modules.map(m => `
     <div class="p-bubble size-${m.size}" onclick="openModule('${m.id}')">
@@ -299,6 +311,9 @@ function openModule(id){
   if(id === 'period'){
     document.getElementById('funcPeriod').classList.add('active');
     if(!window._periodLoaded){ loadPeriodModule(); window._periodLoaded = true; }
+  } else if(id === 'mood'){
+    document.getElementById('funcMood').classList.add('active');
+    if(!window._moodLoaded){ loadMoodModule(); window._moodLoaded = true; }
   } else if(id === 'recipe'){
     document.getElementById('funcRecipe').classList.add('active');
     if(!window._recipeLoaded){ loadRecipeModule(); window._recipeLoaded = true; }
@@ -522,9 +537,34 @@ document.getElementById('receiptList').innerHTML=unique.map(ing=>`<div class="re
       const category=document.getElementById('editCategory').value;
       const raw=document.getElementById('editIngredients').value.trim();
       const ingredients=raw?raw.split(/[,，]/).map(s=>s.trim()).filter(s=>s):[];
-      const dish={name,category,ingredients,image:tempImageData};
-      if(editingIndex>=0) menuData[editingIndex]=dish; else menuData.push(dish);
-      saveMenu(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes();
+      // 压缩图片
+      let finalImage = tempImageData;
+      if(tempImageData && tempImageData.length > 200000) {
+        const img = new Image();
+        img.src = tempImageData;
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxW = 300;
+          const scale = maxW / img.width;
+          canvas.width = maxW;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          finalImage = canvas.toDataURL('image/jpeg', 0.6);
+          saveDish(finalImage);
+        };
+        return;
+      }
+      saveDish(finalImage);
+      
+      function saveDish(img) {
+        const dish = {name, category, ingredients, image: img};
+        if(editingIndex>=0) menuData[editingIndex]=dish; else menuData.push(dish);
+        saveMenu();
+        document.getElementById('editModal').classList.remove('show');
+        renderCategories();
+        renderDishes();
+      }
     });
     document.getElementById('deleteDishBtn').addEventListener('click',function(){ if(editingIndex>=0&&confirm('确定删除这道菜吗？')){ delete selectedDishes[editingIndex]; menuData.splice(editingIndex,1); saveMenu(); saveCart(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); updateCartInfo(); } });
     document.getElementById('cancelEditBtn').addEventListener('click',()=>{ document.getElementById('editModal').classList.remove('show'); });
@@ -534,6 +574,174 @@ document.getElementById('receiptList').innerHTML=unique.map(ing=>`<div class="re
     document.getElementById('receiptModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); });
 
     loadMenu(); loadCart(); renderCategories(); renderDishes(); updateCartInfo();
+  })();
+}
+
+// ==================== 心情日记模块 ====================
+// ==================== 心情日记模块 ====================
+function loadMoodModule(){
+  document.getElementById('moodContent').innerHTML = `
+    <div class="app-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h2 style="margin:0;">📓 心情日记</h2>
+      </div>
+      <div class="month-header">
+        <button class="month-nav" id="moodPrevMonth">◀</button>
+        <span id="moodMonthLabel"></span>
+        <button class="month-nav" id="moodNextMonth">▶</button>
+      </div>
+      <div class="calendar-grid" id="moodCalHead"></div>
+      <div class="calendar-grid" id="moodCalBody"></div>
+      <div id="moodDayCard" style="display:none;background:#fdf9f2;border-radius:20px;padding:14px;margin-top:8px;border:2px solid #ece0c8;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <strong id="moodDayTitle"></strong>
+          <button id="moodDayEditBtn" style="background:#f0e5d3;border:none;padding:4px 10px;border-radius:12px;font-size:0.7rem;cursor:pointer;">✏️</button>
+        </div>
+        <div style="font-size:2rem;text-align:center;padding:8px;" id="moodDayEmoji"></div>
+        <div style="font-size:0.85rem;color:#5a4a30;text-align:center;" id="moodDayNote"></div>
+        <div id="moodDayImage" style="text-align:center;margin-top:6px;"></div>
+      </div>
+      <div id="moodEditPanel" style="display:none;background:#fdf9f2;border-radius:20px;padding:14px;margin-top:8px;border:2px solid #ece0c8;">
+        <strong id="moodEditDate"></strong>
+        <div id="moodEmojiGrid" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:8px 0;"></div>
+        <textarea id="moodNoteInput" placeholder="写点什么……" maxlength="300" style="width:100%;height:60px;border-radius:14px;border:2px solid #e3cd9e;padding:8px;font-size:0.85rem;background:#fffcf2;resize:none;outline:none;"></textarea>
+        <div class="modal-row"><label for="moodImageUpload" style="background:#f0e5d3;padding:5px 10px;border-radius:12px;font-size:0.7rem;cursor:pointer;">📷 配图</label><input type="file" id="moodImageUpload" accept="image/*" style="display:none;"><span id="moodImagePreview" style="font-size:0.7rem;"></span></div>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <button class="btn btn-primary" id="saveMoodBtn" style="flex:1;">💾 保存</button>
+          <button class="btn btn-delete" id="deleteMoodBtn">🗑 删除</button>
+          <button class="btn btn-close" id="cancelEditBtn">取消</button>
+        </div>
+      </div>
+    </div>
+    <div class="image-modal" id="moodImageModal"><img id="moodLargeImage" src="" alt="大图"><button class="close-img-btn" id="moodCloseImageBtn">关闭</button></div>
+  `;
+
+  (function(){
+    const STORAGE_MOOD = 'mydiary_v2_';
+    const moodList = ['🥰','😄','😆','🤩','😊','🙂','😐','😔','😢','😭','😡','🤬','😰','😱','😴','🤒','🥳','😎','🤔','💕'];
+    let moodCalYear, moodCalMonth;
+    const now = new Date(); moodCalYear = now.getFullYear(); moodCalMonth = now.getMonth() + 1;
+    let selectedDate = null;
+    let curMood = null, curMoodImg = '', isEditing = false;
+
+    const monthLabel = document.getElementById('moodMonthLabel');
+    const calHead = document.getElementById('moodCalHead');
+    const calBody = document.getElementById('moodCalBody');
+    const dayCard = document.getElementById('moodDayCard');
+    const editPanel = document.getElementById('moodEditPanel');
+    const moodHint = document.getElementById('moodHint');
+
+    function getData(ds){ const r=localStorage.getItem(STORAGE_MOOD+ds); return r?JSON.parse(r):{mood:null,note:'',image:''}; }
+    function saveData(ds,obj){ localStorage.setItem(STORAGE_MOOD+ds,JSON.stringify(obj)); }
+    function delData(ds){ localStorage.removeItem(STORAGE_MOOD+ds); }
+    function daysInMonth(y,m){ return new Date(y,m,0).getDate(); }
+
+    function renderCalendar(){
+      monthLabel.textContent = `${moodCalYear}年${moodCalMonth}月`;
+      calHead.innerHTML = ''; ['日','一','二','三','四','五','六'].forEach(d=>{ const el=document.createElement('div'); el.className='day-header'; el.textContent=d; calHead.appendChild(el); });
+      const dim = daysInMonth(moodCalYear, moodCalMonth);
+      const fd = new Date(moodCalYear, moodCalMonth-1, 1).getDay();
+      let html = ''; for(let i=0;i<fd;i++) html+='<div></div>';
+      for(let d=1;d<=dim;d++){
+        const ds = `${moodCalYear}-${String(moodCalMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const data = getData(ds);
+        let cls = 'day-cell';
+        if(ds === selectedDate) cls += ' today';
+        let extra = '';
+        if(data.mood) extra += `<span style="font-size:0.55rem;position:absolute;top:1px;right:2px;">${data.mood}</span>`;
+        html += `<div class="${cls}" data-date="${ds}">${d}${extra}</div>`;
+      }
+      calBody.innerHTML = html;
+      calBody.querySelectorAll('.day-cell').forEach(cell=>{
+cell.addEventListener('click', function(){
+  selectedDate = this.getAttribute('data-date');
+  renderCalendar();
+  showEditPanel(selectedDate);
+});
+      });
+    }
+
+    function showDayCard(ds){
+      const data = getData(ds);
+      document.getElementById('moodDayTitle').textContent = ds;
+      document.getElementById('moodDayEmoji').textContent = data.mood || '—';
+      document.getElementById('moodDayNote').textContent = data.note || '暂无备注';
+      document.getElementById('moodDayImage').innerHTML = data.image ? `<img src="${data.image}" style="max-width:100%;max-height:120px;border-radius:12px;cursor:pointer;" onclick="document.getElementById('moodLargeImage').src='${data.image}';document.getElementById('moodImageModal').classList.add('show');">` : '';
+      dayCard.style.display = 'block';
+      editPanel.style.display = 'none';
+      isEditing = false;
+    }
+
+    function showEditPanel(ds){
+      const data = getData(ds);
+      curMood = data.mood;
+      curMoodImg = data.image || '';
+      document.getElementById('moodEditDate').textContent = ds;
+      document.getElementById('moodNoteInput').value = data.note || '';
+      document.getElementById('moodImagePreview').textContent = curMoodImg ? '✅ 已选图' : '';
+      document.getElementById('moodImagePreview').style.cursor = curMoodImg ? 'pointer' : 'default';
+      document.getElementById('moodImageUpload').value = '';
+      renderEmojis();
+      dayCard.style.display = 'none';
+      editPanel.style.display = 'block';
+      isEditing = true;
+    }
+
+    function renderEmojis(){
+      const grid = document.getElementById('moodEmojiGrid');
+      grid.innerHTML = moodList.map(e => `<span class="modal-emoji${curMood===e?' selected':''}" data-v="${e}">${e}</span>`).join('');
+      grid.querySelectorAll('.modal-emoji').forEach(el=>{
+        el.addEventListener('click', function(){
+          const v = this.getAttribute('data-v');
+          curMood = curMood === v ? null : v;
+          renderEmojis();
+        });
+      });
+    }
+
+    document.getElementById('moodPrevMonth').addEventListener('click',()=>{ moodCalMonth--; if(moodCalMonth<1){moodCalMonth=12;moodCalYear--;} renderCalendar(); dayCard.style.display='none'; editPanel.style.display='none'; });
+    document.getElementById('moodNextMonth').addEventListener('click',()=>{ moodCalMonth++; if(moodCalMonth>12){moodCalMonth=1;moodCalYear++;} renderCalendar(); dayCard.style.display='none'; editPanel.style.display='none'; });
+
+    document.getElementById('moodDayEditBtn').addEventListener('click', function(){
+      showEditPanel(selectedDate);
+    });
+
+    document.getElementById('saveMoodBtn').addEventListener('click', function(){
+      if(!selectedDate) return;
+      const note = document.getElementById('moodNoteInput').value.trim();
+      saveData(selectedDate, {mood: curMood, note, image: curMoodImg});
+      editPanel.style.display = 'none';
+      renderCalendar();
+      showDayCard(selectedDate);
+    });
+
+    document.getElementById('deleteMoodBtn').addEventListener('click', function(){
+      if(!selectedDate) return;
+      if(confirm('确定删除这一天的记录吗？')){
+        delData(selectedDate);
+        editPanel.style.display = 'none';
+        curMood = null; curMoodImg = '';
+        renderCalendar();
+        showDayCard(selectedDate);
+      }
+    });
+
+    document.getElementById('cancelEditBtn').addEventListener('click', function(){
+      editPanel.style.display = 'none';
+      showDayCard(selectedDate);
+    });
+
+    document.getElementById('moodImageUpload').addEventListener('change', function(e){
+      const f = e.target.files[0]; if(!f) return;
+      const r = new FileReader(); r.onload = function(ev){ curMoodImg = ev.target.result; document.getElementById('moodImagePreview').textContent = '✅ 已选图'; document.getElementById('moodImagePreview').style.cursor = 'pointer'; }; r.readAsDataURL(f);
+    });
+    document.getElementById('moodImagePreview').addEventListener('click', function(){
+      if(curMoodImg){ document.getElementById('moodLargeImage').src = curMoodImg; document.getElementById('moodImageModal').classList.add('show'); }
+    });
+    document.getElementById('moodCloseImageBtn').addEventListener('click', function(){ document.getElementById('moodImageModal').classList.remove('show'); });
+    document.getElementById('moodImageModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+
+    renderCalendar();
   })();
 }
 
@@ -579,6 +787,7 @@ function dropItem(e) {
   }
   dragSrcIndex = null;
 }
+
 </script>
 </body>
 </html>
