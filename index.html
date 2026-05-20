@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="我">
+  <meta name="apple-mobile-web-app-title" content="我的小窝">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><rect width='180' height='180' rx='36' fill='#f8d7da'/><text x='90' y='110' font-size='80' text-anchor='middle'>🏠</text></svg>">
   <title>我的小窝</title>
   <style>
@@ -464,15 +464,17 @@ function loadWorkModule(){
           <div class="time-box"><label>上班打卡</label><input type="time" id="startTimeInput" value=""></div>
           <div class="time-box"><label>下班打卡</label><input type="time" id="endTimeInput" value=""></div>
         </div>
-        <div style="display:flex;gap:10px;">
-          <button class="btn-work" id="clockInBtn">🏃 上班</button>
-          <button class="btn-work secondary" id="clockOutBtn">🏁 下班</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-work" id="clockInBtn" style="flex:1;">🏃 上班</button>
+          <button class="btn-work secondary" id="clockOutBtn" style="flex:1;">🏁 下班</button>
+          <button class="btn-work secondary" id="clearTodayBtn" style="padding:14px 16px;">🗑</button>
         </div>
       </div>
       <div class="info-section">
         <div class="info-row"><span>已上班</span><span id="workedTime">--</span></div>
         <div class="info-row"><span>距下班</span><span id="untilOff">--</span></div>
-        <div class="info-row"><span>距周末</span><span id="untilWeekend">--</span></div>
+        <div class="info-row"><span>本月已赚</span><span id="monthlyTotal">¥0.00</span></div>
+        <div class="info-row" id="weekendSettingRow" style="cursor:pointer;"><span>距周末</span><span id="untilWeekend">--</span></div>
         <div class="info-row"><span>距发薪</span><span id="untilPayday">--</span></div>
       </div>
       <div class="settings-section">
@@ -492,7 +494,10 @@ function loadWorkModule(){
     const setEnd = document.getElementById('setEnd');
     const salaryInput = document.getElementById('monthlySalary');
     const paydayInput = document.getElementById('paydayInput');
+    const monthlyTotalEl = document.getElementById('monthlyTotal');
+    const untilWeekendEl = document.getElementById('untilWeekend');
     let timer = null, clockedIn = false, startActual = null, currentMode = 'today';
+    let restDays = JSON.parse(localStorage.getItem('restDays') || '[0,6]'); // 默认双休
 
     if(localStorage.getItem('workStart')) setStart.value = localStorage.getItem('workStart');
     if(localStorage.getItem('workEnd')) setEnd.value = localStorage.getItem('workEnd');
@@ -503,19 +508,46 @@ function loadWorkModule(){
     salaryInput.addEventListener('change', ()=> localStorage.setItem('monthlySalary', salaryInput.value));
     paydayInput.addEventListener('change', ()=> localStorage.setItem('payday', paydayInput.value));
 
+    // 点击“距周末”设置休息日
+    document.getElementById('weekendSettingRow').addEventListener('click', ()=>{
+      const current = restDays.includes(6) && restDays.includes(0) ? '双休' : restDays.includes(6) ? '单休（周日上班）' : restDays.includes(0) ? '单休（周六上班）' : '无休';
+      const choice = prompt(`当前：${current}\n输入数字设置休息日：\n0 = 双休\n1 = 单休（周六上班）\n2 = 单休（周日上班）\n3 = 无休`, restDays.includes(6)&&restDays.includes(0)?'0':restDays.includes(6)?'1':restDays.includes(0)?'2':'3');
+      if(choice === '0') restDays = [0,6];
+      else if(choice === '1') restDays = [0];
+      else if(choice === '2') restDays = [6];
+      else if(choice === '3') restDays = [];
+      else return;
+      localStorage.setItem('restDays', JSON.stringify(restDays));
+      updateInfo();
+    });
+
     function getWage() {
       const monthlySalary = parseFloat(salaryInput.value) || 8000;
       const [startH, startM] = setStart.value.split(':').map(Number);
       const [endH, endM] = setEnd.value.split(':').map(Number);
       const workHoursPerDay = (endH + endM/60) - (startH + startM/60);
-      return workHoursPerDay > 0 ? monthlySalary / (workHoursPerDay * 22) : 0;
+      const workDaysPerMonth = 22; // 默认22天
+      return workHoursPerDay > 0 ? monthlySalary / (workHoursPerDay * workDaysPerMonth) : 0;
     }
 
-    function applyManualTime() {
-      if (!startInput.value) return;
-      const [sh, sm] = startInput.value.split(':').map(Number);
-      startActual = new Date(); startActual.setHours(sh, sm, 0, 0);
-      clockedIn = true;
+    function getMonthlyTotal() {
+      const records = JSON.parse(localStorage.getItem('work_records') || '{}');
+      const now = new Date();
+      const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+      return records[monthKey] || 0;
+    }
+
+    function addMonthlyTotal(amount) {
+      const records = JSON.parse(localStorage.getItem('work_records') || '{}');
+      const now = new Date();
+      const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+      records[monthKey] = (records[monthKey] || 0) + amount;
+      localStorage.setItem('work_records', JSON.stringify(records));
+    }
+
+    function updateMonthlyDisplay() {
+      const total = getMonthlyTotal();
+      monthlyTotalEl.textContent = `¥${total.toFixed(2)}`;
     }
 
     function resetTimer() {
@@ -546,8 +578,25 @@ function loadWorkModule(){
         document.getElementById('untilOff').textContent = '--';
       }
       const dayOfWeek = now.getDay();
-      const daysUntilWeekend = dayOfWeek === 0 ? 0 : dayOfWeek === 6 ? 0 : 6 - dayOfWeek;
-      document.getElementById('untilWeekend').textContent = daysUntilWeekend === 0 ? '周末中🎉' : `${daysUntilWeekend}天`;
+      let daysUntilWeekend = 0;
+      if (restDays.length === 0) {
+        daysUntilWeekend = -1; // 无休
+      } else {
+        for (let i = 0; i < 7; i++) {
+          const checkDay = (dayOfWeek + i) % 7;
+          if (restDays.includes(checkDay)) {
+            daysUntilWeekend = i;
+            break;
+          }
+        }
+      }
+      if (daysUntilWeekend === 0 && restDays.includes(dayOfWeek)) {
+        untilWeekendEl.textContent = '休息中🎉';
+      } else if (daysUntilWeekend === -1) {
+        untilWeekendEl.textContent = '无休😢';
+      } else {
+        untilWeekendEl.textContent = `${daysUntilWeekend}天`;
+      }
       const payday = parseInt(paydayInput.value) || 10;
       const today = now.getDate();
       let daysUntilPay = payday - today;
@@ -590,13 +639,38 @@ function loadWorkModule(){
       });
     });
 
-    startInput.addEventListener('change', ()=>{ applyManualTime(); resetTimer(); });
-    endInput.addEventListener('change', ()=>{ if(startInput.value) { applyManualTime(); resetTimer(); } });
+    startInput.addEventListener('change', ()=>{
+      if (startInput.value) {
+        const [sh, sm] = startInput.value.split(':').map(Number);
+        startActual = new Date(); startActual.setHours(sh, sm, 0, 0);
+        clockedIn = true;
+        resetTimer();
+      }
+    });
+
+    endInput.addEventListener('change', ()=>{
+      if (startInput.value && endInput.value && clockedIn) {
+        const [eh, em] = endInput.value.split(':').map(Number);
+        const endActual = new Date(); endActual.setHours(eh, em, 0, 0);
+        const diffMs = endActual - startActual;
+        const earned = diffMs / 3600000 * getWage();
+        addMonthlyTotal(earned);
+        updateMonthlyDisplay();
+        clockedIn = false;
+        if (timer) clearInterval(timer);
+        updateDisplay();
+        alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`);
+      }
+    });
 
     document.getElementById('clockInBtn').addEventListener('click', ()=>{
       const now = new Date();
       startInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      applyManualTime();
+      startActual = new Date(); startActual.setHours(now.getHours(), now.getMinutes(), 0, 0);
+      clockedIn = true;
+      endInput.value = '';
+      moneyValue.textContent = '¥0.0000';
+      moneyLabel.textContent = '今天已赚（估算）';
       resetTimer();
     });
 
@@ -604,11 +678,31 @@ function loadWorkModule(){
       if (!clockedIn) return alert('还没打卡上班呢～');
       const now = new Date();
       endInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const diffMs = now - startActual;
+      const earned = diffMs / 3600000 * getWage();
+      addMonthlyTotal(earned);
+      updateMonthlyDisplay();
       clockedIn = false;
       if (timer) clearInterval(timer);
       updateDisplay();
+      alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`);
     });
 
+    document.getElementById('clearTodayBtn').addEventListener('click', ()=>{
+      if (confirm('确定清空今天的打卡记录吗？')) {
+        clockedIn = false;
+        startActual = null;
+        startInput.value = '';
+        endInput.value = '';
+        moneyValue.textContent = '¥0.0000';
+        moneyLabel.textContent = '今天已赚（估算）';
+        document.getElementById('workedTime').textContent = '--';
+        document.getElementById('untilOff').textContent = '--';
+        if (timer) clearInterval(timer);
+      }
+    });
+
+    updateMonthlyDisplay();
     updateDisplay();
   })();
 }
