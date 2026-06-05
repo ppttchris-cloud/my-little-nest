@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="我的小窝">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><rect width='180' height='180' rx='36' fill='%231a1510'/><text x='90' y='110' font-size='80' text-anchor='middle'>🏠</text></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><rect width='180' height='180' rx='36' fill='#c9a84c'/><text x='90' y='110' font-size='80' text-anchor='middle'>🏠</text></svg>">
   <title>我的小窝</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-deep: #1a1510;
@@ -26,69 +26,58 @@
       --border: rgba(201,168,76,0.18);
       --border-bright: rgba(201,168,76,0.45);
       --glow: rgba(201,168,76,0.12);
+      --font-title: 'Playfair Display', serif;
+      --font-body: 'Noto Serif SC', serif;
     }
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family:'Noto Serif SC','PingFang SC',sans-serif; }
-    html, body { background:#0d0b08 !important; min-height:100vh; margin:0; padding:0; }
-    body { display:flex; justify-content:center; align-items:flex-start; padding:16px; }
-
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body {
+      background:#0d0b08;
+      font-family:var(--font-body);
+      display:flex; justify-content:center; align-items:center;
+      min-height:100vh; padding:16px; margin:0;
+    }
     .app-frame {
-      width:100%; max-width:420px; height:100vh; max-height:812px;
+      width:100%; max-width:420px; height:85vh; max-height:750px;
       background:var(--bg-deep);
       border-radius:40px;
-      box-shadow:0 0 0 1px rgba(201,168,76,0.3), 0 0 60px rgba(201,168,76,0.08), 0 40px 80px rgba(0,0,0,0.8);
+      box-shadow:0 0 60px rgba(201,168,76,0.08),0 40px 80px rgba(0,0,0,0.8);
       overflow:hidden; display:flex; flex-direction:column;
-      border:1px solid rgba(201,168,76,0.25);
+      border:1px solid rgba(201,168,76,0.3);
       position:relative;
     }
-    /* 背景浮动光晕 */
-    .app-frame::before {
-      content:''; position:absolute;
-      width:300px; height:300px;
-      background:radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
-      border-radius:50%; filter:blur(60px);
-      top:-80px; left:-60px; z-index:0; pointer-events:none;
-      animation:bgFloat1 8s ease-in-out infinite;
-    }
-    .app-frame::after {
-      content:''; position:absolute;
-      width:200px; height:200px;
-      background:radial-gradient(circle, rgba(180,120,40,0.05) 0%, transparent 70%);
-      border-radius:50%; filter:blur(60px);
-      bottom:100px; right:-40px; z-index:0; pointer-events:none;
-      animation:bgFloat2 10s ease-in-out infinite;
-    }
+
     @keyframes bgFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,30px)} }
     @keyframes bgFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-15px,-20px)} }
+    @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
     /* 窗帘 */
     .curtain-handle {
-      width:50px; height:14px;
+      width:50px; height:10px;
       background:linear-gradient(to bottom, var(--gold-dim), transparent);
-      border-radius:0 0 14px 14px;
-      margin:0 auto; cursor:pointer; z-index:50;
-      position:absolute; top:0; left:50%; transform:translateX(-50%);
-      transition:top 0.3s;
-      display:flex; align-items:center; justify-content:center;
+      border-radius:0 0 16px 16px; margin:0 auto;
+      cursor:pointer; z-index:50; position:absolute; top:0; left:50%;
+      transform:translateX(-50%); transition:top 0.3s;
     }
-    .curtain-handle::after { content:''; width:20px; height:2px; background:var(--gold); border-radius:1px; box-shadow:0 0 6px var(--gold); }
     .curtain-panel {
       position:absolute; top:-100%; left:0; width:100%; height:60%;
       background:var(--bg-card); z-index:40;
       border-radius:0 0 30px 30px;
       box-shadow:0 10px 30px rgba(0,0,0,0.5);
       border-bottom:1px solid var(--border);
-      transition:top 0.3s ease; padding:30px 16px 20px;
-      overflow-y:auto; display:flex; flex-direction:column; gap:10px;
+      transition:top 0.3s ease;
+      padding:30px 16px 20px; overflow-y:auto;
+      display:flex; flex-direction:column; gap:10px;
     }
     .curtain-panel.open { top:0; }
     .curtain-handle.open { top:60%; }
     .curtain-item {
-      display:flex; align-items:center; gap:10px; padding:10px 12px;
-      background:var(--bg-elevated); border-radius:14px; cursor:grab;
-      border:1px solid var(--border);
+      display:flex; align-items:center; gap:10px; padding:8px;
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:14px; cursor:grab;
     }
     .curtain-item:active { cursor:grabbing; }
-    .curtain-item.checked span { text-decoration:line-through; color:var(--text-muted); }
+    .curtain-item.checked { opacity:0.5; }
+    .curtain-item.checked span { text-decoration:line-through; }
     .curtain-checkbox {
       width:20px; height:20px; border-radius:6px;
       border:2px solid var(--gold-dim); flex-shrink:0;
@@ -97,42 +86,26 @@
     .curtain-item.checked .curtain-checkbox { background:var(--gold-dim); border-color:var(--gold-dim); }
     .curtain-item.checked .curtain-checkbox::after { content:'✓'; color:var(--bg-deep); font-weight:bold; font-size:0.8rem; }
 
-    /* 顶栏 */
+    /* 顶部栏 */
     .top-bar {
       display:flex; justify-content:space-between; align-items:center;
-      padding:20px 20px 12px; flex-shrink:0; position:relative; z-index:10;
-      border-bottom:1px solid var(--border);
+      padding:16px 20px 8px; flex-shrink:0;
+      border-bottom:1px solid var(--border); padding-bottom:12px;
     }
-    .top-bar h2 {
-      font-family:'Playfair Display', serif;
-      font-size:1.3rem; color:var(--gold-light); letter-spacing:2px;
-      cursor:pointer; display:flex; align-items:center; gap:8px;
-    }
-    .title-dot {
-      width:6px; height:6px; background:var(--gold); border-radius:50%;
-      box-shadow:0 0 8px var(--gold);
-      animation:pulseDot 2s ease-in-out infinite;
-    }
-    @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.6)} }
+    .top-bar h2 { font-family:var(--font-title); color:var(--gold-light); letter-spacing:2px; font-size:1.3rem; }
     .mode-toggle {
       background:var(--bg-elevated); border:1px solid var(--border);
-      padding:7px 14px; border-radius:20px;
-      font-weight:600; cursor:pointer; font-size:0.75rem;
-      color:var(--gold-dim); letter-spacing:0.5px;
-      transition:all 0.2s;
+      color:var(--gold-dim); border-radius:20px;
+      padding:8px 14px; font-weight:bold; cursor:pointer; font-size:0.7rem; letter-spacing:1px;
     }
-    .mode-toggle:active { border-color:var(--border-bright); color:var(--gold); }
 
-    /* 主页内容区 */
-    .page-area { flex:1; overflow-y:auto; padding:14px 16px 16px; position:relative; z-index:10; scrollbar-width:none; }
-    .page-area::-webkit-scrollbar { display:none; }
-
-    /* J人列表 */
+    /* 主页 */
+    .page-area { flex:1; overflow-y:auto; padding:8px 16px 16px; }
     .j-list { display:flex; flex-direction:column; gap:10px; }
     .j-item {
       display:flex; align-items:center; gap:14px;
-      background:var(--bg-card); border-radius:20px; padding:16px;
-      cursor:pointer; border:1px solid var(--border);
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:22px; padding:18px 20px; cursor:pointer;
       transition:all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
       position:relative; overflow:hidden;
       animation:cardIn 0.5s ease backwards;
@@ -141,257 +114,334 @@
     .j-item:nth-child(2){animation-delay:0.12s}
     .j-item:nth-child(3){animation-delay:0.19s}
     .j-item:nth-child(4){animation-delay:0.26s}
-    .j-item:nth-child(5){animation-delay:0.33s}
-    @keyframes cardIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
     .j-item:active { background:var(--bg-elevated); border-color:var(--border-bright); transform:scale(0.98); }
     .j-icon { font-size:2rem; width:48px; text-align:center; }
     .j-info { flex:1; }
-    .j-name { font-weight:600; color:var(--text-primary); font-size:1rem; margin-bottom:3px; }
-    .j-desc { font-size:0.72rem; color:var(--text-secondary); }
+    .j-name { color:var(--text-primary); font-size:1rem; font-weight:600; }
+    .j-desc { color:var(--text-secondary); font-size:0.7rem; margin-top:2px; }
     .j-arrow {
       width:28px; height:28px; border-radius:50%;
       background:var(--bg-surface); border:1px solid var(--border);
       display:flex; align-items:center; justify-content:center;
       color:var(--gold-dim); font-size:0.75rem;
-      transition:all 0.2s; flex-shrink:0;
     }
-    .j-item:active .j-arrow { background:var(--gold); color:var(--bg-deep); border-color:var(--gold); }
-
-    /* P人气泡 */
     .p-grid { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; padding:10px 0; }
     .p-bubble {
-      background:var(--bg-card); border-radius:28px; padding:20px 16px;
-      cursor:pointer; border:1px solid var(--border); text-align:center;
-      box-shadow:0 4px 16px rgba(0,0,0,0.2);
-      transition:all 0.3s;
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:28px; padding:20px 16px; cursor:pointer;
+      text-align:center; transition:all 0.3s;
     }
     .p-bubble:active { background:var(--bg-elevated); border-color:var(--border-bright); transform:scale(0.95); box-shadow:0 0 20px var(--glow); }
     .p-bubble.size-lg { width:140px; height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
     .p-bubble.size-md { width:110px; height:100px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
     .p-bubble.size-sm { width:90px; height:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; }
     .p-icon { font-size:2rem; }
-    .p-name { font-weight:600; font-size:0.82rem; color:var(--text-primary); }
+    .p-name { font-weight:bold; font-size:0.85rem; color:var(--text-primary); }
 
     /* 功能页 */
-    .func-page { display:none; flex-direction:column; height:100%; position:relative; z-index:10; }
+    .func-page { display:none; flex-direction:column; height:100%; }
     .func-page.active { display:flex; }
     .func-header {
-      display:flex; align-items:center; gap:10px;
-      padding:16px 16px 12px; flex-shrink:0;
-      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:10px; padding:8px 16px;
+      flex-shrink:0; border-bottom:1px solid var(--border); padding-bottom:12px;
     }
     .back-btn {
       background:var(--bg-elevated); border:1px solid var(--border);
-      padding:6px 14px; border-radius:14px; cursor:pointer;
-      font-weight:600; font-size:0.85rem; color:var(--gold-dim);
-      transition:all 0.2s;
+      color:var(--gold-dim); border-radius:12px;
+      width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+      cursor:pointer; font-size:0.85rem;
     }
-    .back-btn:active { border-color:var(--border-bright); color:var(--gold); }
-    .func-header span { font-weight:600; color:var(--text-primary); }
+    .back-btn:active { border-color:var(--border-bright); }
+    .func-content { flex:1; overflow-y:auto; padding:0 8px 8px; }
 
-    /* 通用卡片 */
+    /* 周期手账 */
     .app-card {
-      width:100%; background:var(--bg-card);
-      border-radius:24px; padding:16px 14px 18px;
-      border:1px solid var(--border);
+      width:100%; background:var(--bg-card); border:1px solid var(--border);
+      border-radius:24px; padding:16px 10px 18px;
       display:flex; flex-direction:column; gap:10px;
       background-size:cover; background-position:center; background-repeat:no-repeat;
       position:relative;
     }
     .app-card::before {
       content:''; position:absolute; top:0; left:0; right:0; bottom:0;
-      background:rgba(26,21,16,0.82); border-radius:22px; z-index:0; pointer-events:none;
+      background:rgba(26,21,16,0.8); border-radius:22px; z-index:0; pointer-events:none;
     }
     .app-card > * { position:relative; z-index:1; }
-    .app-card h2 {
-      text-align:center; font-family:'Playfair Display',serif;
-      color:var(--gold-light); font-size:1.2rem; letter-spacing:2px;
-    }
-
-    /* 日历相关 */
-    .month-header { display:flex; justify-content:space-between; align-items:center; font-weight:600; color:var(--text-primary); }
+    .app-card h2 { font-family:var(--font-title); color:var(--gold-light); font-size:1.3rem; letter-spacing:2px; text-align:center; }
+    .month-header { display:flex; justify-content:space-between; align-items:center; font-weight:bold; color:var(--text-secondary); }
     .month-nav {
       background:var(--bg-elevated); border:1px solid var(--border);
-      font-size:1rem; width:32px; height:32px; border-radius:50%;
+      color:var(--gold-dim); border-radius:50%;
+      font-size:1.2rem; width:34px; height:34px;
       cursor:pointer; display:flex; align-items:center; justify-content:center;
-      color:var(--gold-dim); transition:all 0.2s;
     }
-    .month-nav:active { border-color:var(--border-bright); color:var(--gold); }
     .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center; }
-    .day-header { font-size:0.6rem; color:var(--text-muted); font-weight:600; padding:4px 0; }
+    .day-header { font-size:0.6rem; color:var(--text-muted); font-weight:bold; padding:3px 0; }
     .day-cell {
       aspect-ratio:1; border-radius:8px;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      font-size:0.78rem; background:rgba(255,255,255,0.02);
-      cursor:pointer; border:1px solid transparent;
-      font-weight:600; color:var(--text-secondary); position:relative;
-      transition:all 0.15s;
+      font-size:0.8rem; background:rgba(255,255,255,0.03); color:var(--text-secondary);
+      cursor:pointer; border:2px solid transparent; font-weight:bold; position:relative;
     }
-    .day-cell:active { transform:scale(0.9); }
-    .day-cell.period { background:rgba(232,160,176,0.15); border-color:rgba(232,160,176,0.3); color:#e8a0b0; }
-    .day-cell.predicted { background:rgba(200,160,220,0.08); border:1px dashed rgba(200,160,220,0.25); color:#c0a0d8; }
-    .day-cell.fertile { background:rgba(100,200,180,0.1); border-color:rgba(100,200,180,0.2); color:#80c8b0; }
-    .day-cell.ovulation { background:rgba(100,200,180,0.2); border-color:rgba(100,200,180,0.4); color:#60d0b0; }
-    .day-cell.luteal { background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.15); color:var(--gold-dim); }
-    .day-cell.intimacy-only { background:rgba(232,160,176,0.08); border-color:rgba(232,160,176,0.15); color:#c47080; }
+    .day-cell.period { background:rgba(232,160,176,0.15); color:#e8a0b0; border:1px solid rgba(232,160,176,0.3); }
+    .day-cell.predicted { background:rgba(200,160,220,0.08); color:#c0a0d8; border:1px dashed rgba(200,160,220,0.25); }
+    .day-cell.fertile { background:rgba(100,200,180,0.1); color:#80c8b0; border:1px solid rgba(100,200,180,0.2); }
+    .day-cell.ovulation { background:rgba(100,200,180,0.2); color:#60d0b0; border:1px solid rgba(100,200,180,0.4); }
+    .day-cell.luteal { background:rgba(201,168,76,0.08); color:var(--gold-dim); border:1px solid rgba(201,168,76,0.15); }
+    .day-cell.intimacy-only { background:rgba(232,160,176,0.1); color:#e8a0b0; border:1px solid rgba(232,160,176,0.2); }
     .day-cell.today { box-shadow:0 0 0 2px var(--gold); color:var(--gold-light); font-weight:700; }
-    .mini-dot { width:4px; height:4px; background:#e87d8b; border-radius:50%; margin-top:1px; }
+    .mini-dot { width:4px; height:4px; background:#e8a0b0; border-radius:50%; margin-top:1px; }
     .mini-img { width:14px; height:14px; border-radius:3px; background-size:cover; background-position:center; margin-top:1px; }
     .ovu-icon { font-size:0.5rem; position:absolute; top:1px; right:1px; }
     .legend { display:flex; gap:4px; font-size:0.55rem; color:var(--text-muted); flex-wrap:wrap; justify-content:center; }
-    .legend span { display:flex; align-items:center; gap:2px; }
+    .legend span { display:flex; align-items:center; gap:1px; }
     .legend-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
-    .hint-text { font-size:0.65rem; color:var(--text-secondary); text-align:center; min-height:14px; }
+    .hint-text { font-size:0.65rem; color:var(--text-muted); text-align:center; min-height:14px; }
 
     /* 弹窗 */
     .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:10; }
     .modal-overlay.show { display:flex; }
     .modal-box {
-      background:var(--bg-card); border-radius:22px; padding:18px 14px;
-      width:85%; max-width:340px;
-      border:1px solid var(--border-bright);
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:24px; padding:18px 14px; width:85%; max-width:340px;
       box-shadow:0 20px 60px rgba(0,0,0,0.6);
       display:flex; flex-direction:column; gap:8px; max-height:75vh; overflow-y:auto;
     }
-    .modal-box strong { color:var(--gold-light); font-family:'Playfair Display',serif; }
+    .modal-box strong { color:var(--gold-light); font-family:var(--font-title); }
     .modal-row { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
-    .modal-emoji { font-size:1.6rem; cursor:pointer; padding:4px 6px; border-radius:10px; border:2px solid transparent; background:var(--bg-elevated); }
-    .modal-emoji.selected { background:rgba(201,168,76,0.15); border-color:var(--border-bright); }
-    .toggle-row { display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer; padding:4px 0; color:var(--text-secondary); }
+    .modal-emoji {
+      font-size:1.6rem; cursor:pointer; padding:2px 5px; border-radius:10px;
+      background:var(--bg-elevated); border:1px solid var(--border);
+    }
+    .modal-emoji.selected { background:rgba(160,144,200,0.2); border-color:rgba(160,144,200,0.5); box-shadow:0 0 12px rgba(160,144,200,0.2); }
+    .toggle-row { display:flex; align-items:center; gap:8px; font-weight:bold; cursor:pointer; padding:4px 0; }
     .toggle-track { width:42px; height:24px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:12px; position:relative; flex-shrink:0; }
-    .toggle-track.on { background:rgba(232,160,176,0.25); border-color:rgba(232,160,176,0.5); }
+    .toggle-track.on { background:rgba(232,160,176,0.3); border-color:rgba(232,160,176,0.5); }
     .toggle-thumb { width:20px; height:20px; background:var(--cream-dim); border-radius:50%; position:absolute; top:2px; left:2px; transition:0.2s; }
     .toggle-track.on .toggle-thumb { left:20px; background:#e8a0b0; }
-    .btn { border:none; padding:8px 14px; border-radius:14px; font-weight:600; cursor:pointer; font-size:0.8rem; font-family:'Noto Serif SC',sans-serif; }
-    .btn-delete { background:rgba(232,160,176,0.15); color:#e8a0b0; border:1px solid rgba(232,160,176,0.25); }
+    .btn { border:none; padding:8px 14px; border-radius:14px; font-weight:bold; cursor:pointer; font-size:0.8rem; }
+    .btn-delete { background:rgba(232,160,176,0.15); color:#e8a0b0; border:1px solid rgba(232,160,176,0.2); }
     .btn-close { background:var(--bg-elevated); color:var(--text-secondary); border:1px solid var(--border); }
-    .intimacy-tag { background:var(--bg-elevated); padding:5px 10px; border-radius:12px; font-size:0.7rem; font-weight:600; cursor:pointer; border:1px solid var(--border); color:var(--text-muted); }
-    .intimacy-tag.selected { background:rgba(232,160,176,0.15); border-color:rgba(232,160,176,0.4); color:#e8a0b0; }
-    .image-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center; z-index:20; flex-direction:column; gap:12px; }
+    .intimacy-tag {
+      background:var(--bg-elevated); color:var(--text-muted);
+      padding:4px 8px; border-radius:12px; font-size:0.7rem; font-weight:bold;
+      cursor:pointer; border:1px solid var(--border);
+    }
+    .intimacy-tag.selected { background:rgba(232,160,176,0.15); color:#e8a0b0; border-color:rgba(232,160,176,0.4); }
+
+    /* 大图弹窗 */
+    .image-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:20; flex-direction:column; gap:12px; }
     .image-modal.show { display:flex; }
-    .image-modal img { max-width:90%; max-height:75%; border-radius:14px; border:2px solid var(--border-bright); }
-    .image-modal .close-img-btn { background:var(--bg-elevated); border:1px solid var(--border); color:var(--text-primary); padding:8px 22px; border-radius:20px; font-weight:600; cursor:pointer; }
+    .image-modal img { max-width:90%; max-height:75%; border-radius:14px; border:4px solid var(--border-bright); }
+    .image-modal .close-img-btn { background:var(--bg-elevated); color:var(--text-secondary); border:1px solid var(--border); padding:8px 22px; border-radius:20px; font-weight:bold; cursor:pointer; }
 
     /* 菜谱 */
-    .recipe-container { width:100%; background:var(--bg-card); border-radius:24px; overflow:hidden; display:flex; flex-direction:column; height:100%; border:1px solid var(--border); }
-    .recipe-header { padding:14px 14px 10px; border-bottom:1px solid var(--border); flex-shrink:0; display:flex; justify-content:space-between; align-items:center; }
-    .recipe-header h1 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--gold-light); margin:0; }
+    .recipe-container {
+      width:100%; background:var(--bg-deep); border:1px solid var(--border);
+      border-radius:24px; overflow:hidden; display:flex; flex-direction:column; height:100%;
+    }
+    .recipe-header {
+      padding:16px 14px 10px; border-bottom:1px solid var(--border);
+      flex-shrink:0; display:flex; justify-content:space-between; align-items:center;
+    }
+    .recipe-header h1 { font-family:var(--font-title); color:var(--gold-light); font-size:1.3rem; margin:0; }
     .recipe-main { display:flex; flex:1; overflow:hidden; }
-    .category-sidebar { width:60px; background:var(--bg-surface); border-right:1px solid var(--border); overflow-y:auto; padding:6px 0; flex-shrink:0; }
-    .category-item { text-align:center; padding:10px 2px; cursor:pointer; font-size:0.68rem; color:var(--text-muted); border-radius:10px; margin:0 4px; font-weight:600; transition:all 0.2s; }
+    .category-sidebar {
+      width:60px; background:var(--bg-card); border-right:1px solid var(--border);
+      overflow-y:auto; padding:6px 0; flex-shrink:0;
+    }
+    .category-item {
+      text-align:center; padding:10px 2px; cursor:pointer;
+      font-size:0.65rem; color:var(--text-muted); border-radius:10px;
+      margin:0 4px; font-weight:bold;
+    }
     .category-item.active { background:rgba(201,168,76,0.12); color:var(--gold); }
     .dish-list { flex:1; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:8px; }
-    .dish-card { display:flex; gap:8px; background:var(--bg-elevated); border-radius:16px; padding:10px; border:1px solid var(--border); align-items:center; transition:all 0.2s; }
-    .dish-card:active { background:var(--bg-surface); }
-    .dish-img { width:52px; height:52px; border-radius:12px; background-size:cover; background-position:center; background-color:var(--bg-surface); flex-shrink:0; border:1px solid var(--border); }
+    .dish-card {
+      display:flex; gap:8px; background:var(--bg-card); border:1px solid var(--border);
+      border-radius:16px; padding:8px; transition:all 0.2s; align-items:center;
+    }
+    .dish-card:active { background:var(--bg-elevated); }
+    .dish-img { width:52px; height:52px; border-radius:12px; background-size:cover; background-position:center; background-color:var(--bg-surface); flex-shrink:0; }
     .dish-info { flex:1; min-width:0; }
-    .dish-name { font-weight:600; font-size:0.88rem; color:var(--text-primary); margin-bottom:4px; }
-    .dish-ingredients { font-size:0.65rem; color:var(--text-secondary); display:flex; flex-wrap:wrap; gap:2px; }
-    .ingredient-tag { background:rgba(201,168,76,0.08); padding:2px 6px; border-radius:8px; font-size:0.6rem; color:var(--gold-dim); border:1px solid rgba(201,168,76,0.12); }
-    .qty-btn { border:none; color:white; width:26px; height:26px; border-radius:50%; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .dish-name { font-weight:bold; font-size:0.9rem; color:var(--text-primary); margin-bottom:2px; }
+    .dish-ingredients { font-size:0.65rem; display:flex; flex-wrap:wrap; gap:2px; }
+    .ingredient-tag { background:rgba(201,168,76,0.08); color:var(--gold-dim); padding:1px 6px; border-radius:8px; font-size:0.6rem; }
+    .qty-btn { border:none; color:white; width:24px; height:24px; border-radius:50%; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .qty-btn.minus { background:rgba(232,160,176,0.2); color:#e8a0b0; }
     .qty-btn.plus { background:rgba(201,168,76,0.2); color:var(--gold); }
-    .add-btn { background:linear-gradient(135deg,var(--gold-dim),var(--gold)); border:none; color:var(--bg-deep); font-size:1rem; width:30px; height:30px; border-radius:50%; cursor:pointer; flex-shrink:0; box-shadow:0 3px 10px rgba(201,168,76,0.25); transition:all 0.2s; }
-    .add-btn:active { transform:scale(0.9) rotate(90deg); }
+    .add-btn {
+      background:linear-gradient(135deg, var(--gold-dim), var(--gold));
+      color:var(--bg-deep); border:none; font-size:1rem;
+      width:30px; height:30px; border-radius:50%; cursor:pointer;
+      flex-shrink:0; box-shadow:0 3px 10px rgba(201,168,76,0.25);
+    }
+    .add-btn:active { transform:translateY(2px); box-shadow:none; }
     .qty-wrap { display:flex; align-items:center; gap:6px; }
-    .qty-num { font-weight:700; min-width:18px; text-align:center; font-size:0.9rem; color:var(--gold); }
-    .recipe-bottom-bar { background:var(--bg-surface); border-top:1px solid var(--border); padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
-    .cart-info { font-weight:600; color:var(--text-secondary); font-size:0.8rem; }
-    .view-list-btn { background:linear-gradient(135deg,var(--gold-dim),var(--gold)); color:var(--bg-deep); border:none; padding:8px 16px; border-radius:18px; font-weight:700; cursor:pointer; font-size:0.8rem; box-shadow:0 3px 10px rgba(201,168,76,0.2); }
-    .add-dish-header-btn { background:linear-gradient(135deg,var(--gold-dim),var(--gold)); color:var(--bg-deep); border:none; width:32px; height:32px; border-radius:50%; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(201,168,76,0.2); }
-    .receipt-modal { background:var(--bg-card); border-radius:24px; padding:20px 14px; width:85%; max-width:340px; max-height:60vh; overflow-y:auto; border:1px solid var(--border-bright); }
-    .receipt-modal h3 { color:var(--gold-light); font-family:'Playfair Display',serif; }
-    .receipt-item { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px dashed rgba(201,168,76,0.12); cursor:pointer; font-size:0.85rem; color:var(--text-secondary); }
+    .qty-num { font-weight:bold; min-width:18px; text-align:center; font-size:0.9rem; color:var(--text-primary); }
+    .recipe-bottom-bar {
+      background:var(--bg-card); border-top:1px solid var(--border);
+      padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-shrink:0;
+    }
+    .cart-info { font-weight:bold; color:var(--text-secondary); font-size:0.8rem; }
+    .view-list-btn {
+      background:linear-gradient(135deg, var(--gold-dim), var(--gold));
+      color:var(--bg-deep); border:none; padding:6px 14px;
+      border-radius:16px; font-weight:700; cursor:pointer; font-size:0.8rem;
+    }
+    .add-dish-header-btn {
+      background:linear-gradient(135deg, var(--gold-dim), var(--gold));
+      color:var(--bg-deep); border:none; width:34px; height:34px;
+      border-radius:50%; font-size:1.3rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 3px 10px rgba(201,168,76,0.25);
+    }
+
+    /* 小票弹窗 */
+    .receipt-modal {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:24px; padding:20px 14px; width:85%; max-width:340px;
+      max-height:60vh; overflow-y:auto;
+    }
+    .receipt-item {
+      display:flex; align-items:center; gap:8px; padding:8px 0;
+      border-bottom:1px dashed rgba(201,168,76,0.15); color:var(--text-secondary);
+      cursor:pointer; font-size:0.85rem;
+    }
     .receipt-item.checked { text-decoration:line-through; color:var(--text-muted); }
-    .check-box { width:18px; height:18px; border-radius:4px; border:2px solid var(--gold-dim); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
-    .receipt-item.checked .check-box { background:var(--gold-dim); border-color:var(--gold-dim); }
+    .check-box {
+      width:18px; height:18px; border-radius:4px;
+      border:2px solid var(--gold-dim); flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .receipt-item.checked .check-box { background:var(--gold-dim); }
     .receipt-item.checked .check-box::after { content:'✓'; color:var(--bg-deep); font-weight:bold; font-size:0.7rem; }
-    .close-receipt { background:var(--bg-elevated); border:1px solid var(--border); color:var(--text-secondary); padding:8px 18px; border-radius:16px; margin-top:12px; font-weight:600; cursor:pointer; width:100%; }
+    .close-receipt {
+      background:var(--bg-elevated); color:var(--text-secondary);
+      border:1px solid var(--border); padding:8px 18px; border-radius:16px;
+      margin-top:12px; font-weight:bold; cursor:pointer; width:100%;
+    }
 
     /* 编辑弹窗 */
     .edit-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:30; }
     .edit-modal.show { display:flex; }
-    .edit-box { background:var(--bg-card); border-radius:22px; padding:18px 14px; width:90%; max-width:360px; border:1px solid var(--border-bright); box-shadow:0 20px 60px rgba(0,0,0,0.6); display:flex; flex-direction:column; gap:8px; max-height:70vh; overflow-y:auto; }
-    .edit-box h3 { color:var(--gold-light); font-family:'Playfair Display',serif; }
-    .edit-box input, .edit-box textarea, .edit-box select { width:100%; padding:8px 10px; border-radius:12px; border:1px solid var(--border); font-size:0.85rem; background:var(--bg-elevated); outline:none; color:var(--text-primary); font-family:'Noto Serif SC',sans-serif; }
+    .edit-box {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:22px; padding:18px 14px; width:90%; max-width:360px;
+      display:flex; flex-direction:column; gap:8px; max-height:70vh; overflow-y:auto;
+    }
+    .edit-box input, .edit-box textarea, .edit-box select {
+      width:100%; padding:8px; border-radius:12px;
+      border:1px solid var(--border); font-size:0.85rem;
+      background:var(--bg-elevated); color:var(--text-primary); outline:none;
+    }
     .edit-box .row { display:flex; gap:6px; align-items:center; }
-    .btn-primary { background:linear-gradient(135deg,var(--gold-dim),var(--gold)); color:var(--bg-deep); font-weight:700; }
-    .btn-danger { background:rgba(232,160,176,0.15); color:#e8a0b0; border:1px solid rgba(232,160,176,0.25); }
+    .btn-primary { background:linear-gradient(135deg, var(--gold-dim), var(--gold)); color:var(--bg-deep); border:none; }
+    .btn-danger { background:rgba(232,160,176,0.15); color:#e8a0b0; border:1px solid rgba(232,160,176,0.2); }
     .btn-neutral { background:var(--bg-elevated); color:var(--text-secondary); border:1px solid var(--border); }
 
-    /* 打工模块 */
-    .work-card { width:100%; background:var(--bg-card); border-radius:24px; padding:20px 18px; border:1px solid rgba(122,184,122,0.2); display:flex; flex-direction:column; gap:18px; }
-    .work-card h2 { text-align:center; font-family:'Playfair Display',serif; color:#a8e8a8; font-size:1.2rem; letter-spacing:2px; }
-    .money-display { background:linear-gradient(135deg,#0e1a0e,#1a2a18); border-radius:20px; padding:20px; border:1px solid rgba(122,184,122,0.2); position:relative; overflow:hidden; }
-    .money-display::before { content:''; position:absolute; top:-30px; left:-30px; width:120px; height:120px; background:radial-gradient(circle,rgba(100,180,100,0.08) 0%,transparent 70%); pointer-events:none; }
-    .money-display .big-number { font-family:'Playfair Display',serif; font-size:2.6rem; font-weight:700; color:#a8e8a8; word-break:break-all; text-shadow:0 0 30px rgba(122,184,122,0.3); }
-    .money-display small { font-size:0.75rem; color:#6a9a6a; display:block; margin-top:4px; letter-spacing:0.5px; }
-    .toggle-row { display:flex; justify-content:center; gap:6px; margin-top:10px; flex-wrap:wrap; }
-    .toggle-btn { background:var(--bg-elevated); border:1px solid var(--border); padding:5px 12px; border-radius:16px; font-weight:600; cursor:pointer; font-size:0.72rem; color:var(--text-muted); transition:all 0.2s; font-family:'Noto Serif SC',sans-serif; }
+    /* 打工续命 */
+    .work-card {
+      width:100%; background:var(--bg-card); border:1px solid rgba(122,184,122,0.2);
+      border-radius:24px; padding:24px 20px;
+      display:flex; flex-direction:column; gap:24px; text-align:center;
+    }
+    .money-display {
+      background:linear-gradient(135deg, #0e1a0e, #1a2a18);
+      border:1px solid rgba(122,184,122,0.2); border-radius:20px; padding:24px;
+    }
+    .money-display .big-number {
+      font-family:var(--font-title); font-size:2.8rem; font-weight:bold;
+      color:#a8e8a8; text-shadow:0 0 30px rgba(122,184,122,0.3); word-break:break-all;
+    }
+    .money-display small { color:#6a9a6a; font-size:0.85rem; display:block; margin-top:6px; }
+    .toggle-btn {
+      background:var(--bg-elevated); color:var(--text-muted);
+      border:1px solid var(--border); padding:6px 14px; border-radius:16px;
+      font-weight:bold; cursor:pointer; font-size:0.75rem;
+    }
     .toggle-btn.active { background:rgba(122,184,122,0.15); color:#a8e8a8; border-color:rgba(122,184,122,0.4); }
-    .time-section { display:flex; flex-direction:column; gap:10px; }
-    .time-row { display:flex; justify-content:space-between; gap:10px; }
-    .time-box { flex:1; background:var(--bg-elevated); border-radius:16px; padding:12px; border:1px solid var(--border); }
-    .time-box label { font-size:0.72rem; color:var(--text-muted); display:block; margin-bottom:6px; letter-spacing:0.3px; }
-    .time-box input { width:100%; text-align:center; border:1px solid var(--border); border-radius:10px; padding:7px; font-size:0.88rem; background:var(--bg-surface); color:var(--gold-light); font-weight:600; outline:none; font-family:'Noto Serif SC',sans-serif; }
+    .time-section { display:flex; flex-direction:column; gap:12px; }
+    .time-row { display:flex; justify-content:space-between; gap:12px; }
+    .time-box {
+      flex:1; background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:16px; padding:16px;
+    }
+    .time-box label { color:var(--text-muted); font-size:0.8rem; display:block; margin-bottom:6px; }
+    .time-box input {
+      width:100%; text-align:center; border:1px solid var(--border);
+      border-radius:10px; padding:8px; font-size:0.9rem;
+      background:var(--bg-surface); color:var(--gold-light); font-weight:bold;
+    }
     .info-section { display:flex; flex-direction:column; gap:8px; }
-    .info-row { display:flex; justify-content:space-between; background:var(--bg-elevated); border-radius:14px; padding:11px 14px; border:1px solid var(--border); }
-    .info-row span:first-child { font-size:0.78rem; color:var(--text-muted); }
-    .info-row span:last-child { font-weight:600; color:var(--text-primary); font-size:0.88rem; }
-    .settings-section { display:flex; flex-direction:column; gap:8px; }
-    .setting-row { display:flex; justify-content:space-between; align-items:center; background:var(--bg-elevated); border-radius:14px; padding:10px 14px; border:1px solid var(--border); }
-    .setting-row label { font-size:0.78rem; color:var(--text-secondary); }
-    .setting-row input { width:90px; padding:6px; border-radius:10px; border:1px solid var(--border); text-align:center; font-size:0.85rem; background:var(--bg-surface); color:var(--gold-light); outline:none; }
-    .btn-work { background:linear-gradient(135deg,#2a4a2a,#3a6a3a); border:1px solid rgba(122,184,122,0.3); color:#a8e8a8; font-weight:700; padding:13px; border-radius:22px; cursor:pointer; font-size:0.9rem; box-shadow:0 4px 16px rgba(50,120,50,0.2); width:100%; font-family:'Noto Serif SC',sans-serif; transition:all 0.2s; }
-    .btn-work:active { transform:translateY(1px); box-shadow:0 2px 8px rgba(50,120,50,0.15); }
-    .btn-work.secondary { background:var(--bg-elevated); color:var(--text-secondary); box-shadow:none; border-color:var(--border); }
-
-    /* 心情日记 */
-    .mood-edit-panel { background:var(--bg-elevated); border-radius:20px; padding:14px; margin-top:8px; border:1px solid var(--border); }
-    #moodNoteInput { background:var(--bg-surface); border:1px solid var(--border); color:var(--text-secondary); border-radius:14px; }
-
-    /* func-content */
-    .func-content { flex:1; overflow-y:auto; padding:10px 10px 10px; scrollbar-width:none; }
-    .func-content::-webkit-scrollbar { display:none; }
+    .info-row {
+      display:flex; justify-content:space-between;
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:14px; padding:12px 16px;
+    }
+    .info-row span:first-child { color:var(--text-muted); font-size:0.8rem; }
+    .info-row span:last-child { color:var(--text-primary); font-weight:bold; font-size:0.9rem; }
+    .settings-section { display:flex; flex-direction:column; gap:10px; }
+    .setting-row {
+      display:flex; justify-content:space-between; align-items:center;
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:14px; padding:10px 14px;
+    }
+    .setting-row label { color:var(--text-secondary); font-size:0.8rem; }
+    .setting-row input {
+      width:80px; padding:6px; border-radius:10px;
+      border:1px solid var(--border); text-align:center;
+      font-size:0.85rem; background:var(--bg-surface); color:var(--gold-light);
+    }
+    .btn-work {
+      background:linear-gradient(135deg, #2a4a2a, #3a6a3a);
+      color:#a8e8a8; border:1px solid rgba(122,184,122,0.3);
+      box-shadow:0 4px 16px rgba(50,120,50,0.2);
+      border-radius:20px; font-weight:bold; padding:14px;
+      cursor:pointer; font-size:0.95rem; width:100%;
+    }
+    .btn-work:active { transform:translateY(2px); box-shadow:none; }
+    .btn-work.secondary {
+      background:var(--bg-elevated); color:var(--text-secondary);
+      box-shadow:none; border-color:var(--border);
+    }
   </style>
 </head>
 <body>
 <div class="app-frame" id="appFrame">
+  <!-- 浮动光晕 -->
+  <div style="position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 70%);border-radius:50%;filter:blur(60px);top:-80px;left:-60px;z-index:0;pointer-events:none;animation:bgFloat1 8s ease-in-out infinite;"></div>
+  <div style="position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(180,120,40,0.06) 0%,transparent 70%);border-radius:50%;filter:blur(60px);bottom:100px;right:-40px;z-index:0;pointer-events:none;animation:bgFloat2 10s ease-in-out infinite;"></div>
   <!-- 窗帘组件 -->
   <div class="curtain-handle" id="curtainHandle"></div>
   <div class="curtain-panel" id="curtainPanel">
-    <h4 style="text-align:center; color:var(--gold-light); font-family:'Playfair Display',serif;">📋 待办清单</h4>
+    <h4 style="text-align:center; color:var(--gold-light);">📋 待办清单</h4>
     <div id="curtainList"></div>
   </div>
 
   <div class="top-bar" id="topBar">
-    <h2 id="topTitle" onclick="editTitle()">
-      <div class="title-dot"></div>
-      🏠 我的小窝 <span style="font-size:0.7rem;">✏️</span>
-    </h2>
+    <h2 id="topTitle" style="cursor:pointer;" onclick="editTitle()">🏠 我的小窝 <span style="font-size:0.7rem;">✏️</span></h2>
     <button class="mode-toggle" id="modeToggle">🔄 J人模式</button>
   </div>
-
   <div class="page-area" id="homePage">
     <div class="j-list" id="jListView"></div>
     <div class="p-grid" id="pGridView" style="display:none;"></div>
   </div>
-
   <div class="func-page" id="funcPeriod">
-    <div class="func-header"><button class="back-btn" onclick="goHome()">← 返回</button><span style="color:#e8a0b0;">🌸 周期手账</span></div>
+    <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8a0b0;">🌸 周期手账</span></div>
     <div class="func-content" id="periodContent"></div>
   </div>
-  <div class="func-page" id="funcMood">
-    <div class="func-header"><button class="back-btn" onclick="goHome()">← 返回</button><span style="color:#c0a0d8;">📓 心情日记</span></div>
-    <div class="func-content" id="moodContent"></div>
-  </div>
   <div class="func-page" id="funcRecipe">
-    <div class="func-header"><button class="back-btn" onclick="goHome()">← 返回</button><span style="color:var(--gold-light);">🍳 菜谱选购</span></div>
+    <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8c97a;">🍳 菜谱选购</span></div>
     <div class="func-content" id="recipeContent"></div>
   </div>
   <div class="func-page" id="funcWork">
-    <div class="func-header"><button class="back-btn" onclick="goHome()">← 返回</button><span style="color:#a8e8a8;">💰 钱钱钱</span></div>
+    <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#a8e8a8;">💰 钱钱钱</span></div>
     <div class="func-content" id="workContent"></div>
+  </div>
+  <div class="func-page" id="funcDiary">
+    <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8c97a;">📸 日记相册</span></div>
+    <div class="func-content" id="diaryContent"></div>
   </div>
 </div>
 
@@ -402,11 +452,16 @@ function getCurtainItems() {
   const cart = JSON.parse(localStorage.getItem('my_menu_cart') || '{}');
   const menu = JSON.parse(localStorage.getItem('my_menu_data') || '[]');
   const receipts = JSON.parse(localStorage.getItem('my_receipt_checked') || '{}');
+  
   const ingredientCounts = {};
   Object.keys(cart).forEach(index => {
     const dish = menu[parseInt(index)];
     const qty = cart[index] || 1;
-    if (dish) { dish.ingredients.forEach(ing => { ingredientCounts[ing] = (ingredientCounts[ing] || 0) + qty; }); }
+    if (dish) {
+      dish.ingredients.forEach(ing => {
+        ingredientCounts[ing] = (ingredientCounts[ing] || 0) + qty;
+      });
+    }
   });
   Object.keys(ingredientCounts).forEach(ing => {
     const key = `ing_${ing}`;
@@ -415,14 +470,25 @@ function getCurtainItems() {
       items.push({ id: key, text: `🛒 ${ing}${count > 1 ? ' x' + count : ''}`, source: 'recipe' });
     }
   });
+
   const today = new Date();
   const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   const periodData = JSON.parse(localStorage.getItem('cycle_v5_' + dateStr) || '{}');
-  if (periodData.note) { items.push({ id: 'period_note', text: `📝 ${periodData.note}`, source: 'period' }); }
+  if (periodData.note) {
+    items.push({ id: 'period_note', text: `📝 ${periodData.note}`, source: 'period' });
+  }
+
   const savedOrder = JSON.parse(localStorage.getItem('my_curtain_order') || '[]');
   if (savedOrder.length > 0) {
-    items.sort((a, b) => { const aIdx = savedOrder.indexOf(a.id); const bIdx = savedOrder.indexOf(b.id); if (aIdx === -1) return 1; if (bIdx === -1) return -1; return aIdx - bIdx; });
+    items.sort((a, b) => {
+      const aIdx = savedOrder.indexOf(a.id);
+      const bIdx = savedOrder.indexOf(b.id);
+      if (aIdx === -1) return 1;
+      if (bIdx === -1) return -1;
+      return aIdx - bIdx;
+    });
   }
+
   return items;
 }
 
@@ -432,24 +498,37 @@ const curtainHandle = document.getElementById('curtainHandle');
 
 function toggleCurtain() {
   curtainOpen = !curtainOpen;
-  if (curtainOpen) { curtainPanel.classList.add('open'); curtainHandle.classList.add('open'); renderCurtain(); }
-  else { curtainPanel.classList.remove('open'); curtainHandle.classList.remove('open'); }
+  if (curtainOpen) {
+    curtainPanel.classList.add('open');
+    curtainHandle.classList.add('open');
+    renderCurtain();
+  } else {
+    curtainPanel.classList.remove('open');
+    curtainHandle.classList.remove('open');
+  }
 }
+
 curtainHandle.addEventListener('click', toggleCurtain);
 curtainPanel.addEventListener('click', function(e) { e.stopPropagation(); });
 document.getElementById('appFrame').addEventListener('click', function(e) {
-  if (curtainOpen && !curtainPanel.contains(e.target) && e.target !== curtainHandle) { toggleCurtain(); }
+  if (curtainOpen && !curtainPanel.contains(e.target) && e.target !== curtainHandle) {
+    toggleCurtain();
+  }
 });
 
 function renderCurtain() {
   const items = getCurtainItems();
   const list = document.getElementById('curtainList');
-  if (items.length === 0) { list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">✨ 暂无待办，去逛逛吧</div>'; return; }
-  list.innerHTML = items.map((item, index) => `
+  if (items.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">✨ 暂无待办，去逛逛吧</div>';
+    return;
+  }
+list.innerHTML = items.map((item, index) => `
     <div class="curtain-item" draggable="true" data-index="${index}" data-id="${item.id}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropItem(event)">
       <div class="curtain-checkbox" onclick="toggleCurtainItem('${item.id}')"></div>
-      <span style="flex:1;color:var(--text-secondary);font-size:0.85rem;">${item.text}</span>
-    </div>`).join('');
+      <span style="flex:1;">${item.text}</span>
+    </div>
+  `).join('');
 }
 
 function toggleCurtainItem(id) {
@@ -464,7 +543,7 @@ const modules = [
   { id:'period', name:'周期手账', icon:'🌸', desc:'经期记录、排卵预测', size:'lg' },
   { id:'recipe', name:'菜谱选购', icon:'🍳', desc:'选菜、生成采购清单', size:'lg' },
   { id:'work', name:'钱钱钱💰', icon:'💰', desc:'防止裸辞神器', size:'lg' },
-  { id:'mood', name:'心情日记', icon:'📓', desc:'每天记录心情', size:'md' },
+  { id:'diary', name:'日记相册', icon:'📸', desc:'拍照抠图记录生活', size:'lg' },
   { id:'more', name:'更多', icon:'📦', desc:'即将上线', size:'sm' }
 ];
 let isJMode = true;
@@ -472,9 +551,7 @@ let isJMode = true;
 function renderJList(){
   document.getElementById('jListView').innerHTML = modules.map(m => `
     <div class="j-item" onclick="openModule('${m.id}')">
-      <div class="j-icon">${m.icon}</div>
-      <div class="j-info"><div class="j-name">${m.name}</div><div class="j-desc">${m.desc}</div></div>
-      <div class="j-arrow">›</div>
+      <div class="j-icon">${m.icon}</div><div class="j-info"><div class="j-name">${m.name}</div><div class="j-desc">${m.desc}</div></div><div class="j-arrow">›</div>
     </div>`).join('');
 }
 function renderPGrid(){
@@ -492,11 +569,19 @@ document.getElementById('modeToggle').addEventListener('click', function(){
 function openModule(id){
   document.getElementById('homePage').style.display = 'none';
   document.getElementById('topBar').style.display = 'none';
-  if(id==='period'){ document.getElementById('funcPeriod').classList.add('active'); if(!window._periodLoaded){ loadPeriodModule(); window._periodLoaded=true; } }
-  else if(id==='work'){ document.getElementById('funcWork').classList.add('active'); if(!window._workLoaded){ loadWorkModule(); window._workLoaded=true; } }
-  else if(id==='mood'){ document.getElementById('funcMood').classList.add('active'); if(!window._moodLoaded){ loadMoodModule(); window._moodLoaded=true; } }
-  else if(id==='recipe'){ document.getElementById('funcRecipe').classList.add('active'); if(!window._recipeLoaded){ loadRecipeModule(); window._recipeLoaded=true; } }
-  else { alert('这个功能还在开发中~'); goHome(); }
+  if(id === 'period'){
+    document.getElementById('funcPeriod').classList.add('active');
+    if(!window._periodLoaded){ loadPeriodModule(); window._periodLoaded = true; }
+  } else if(id === 'diary'){
+    document.getElementById('funcDiary').classList.add('active');
+    if(!window._diaryLoaded){ loadDiaryModule(); window._diaryLoaded = true; }  
+} else if(id === 'work'){
+    document.getElementById('funcWork').classList.add('active');
+    if(!window._workLoaded){ loadWorkModule(); window._workLoaded = true; }
+  } else if(id === 'recipe'){
+    document.getElementById('funcRecipe').classList.add('active');
+    if(!window._recipeLoaded){ loadRecipeModule(); window._recipeLoaded = true; }
+  } else { alert('这个功能还在开发中~'); goHome(); }
 }
 function goHome(){
   document.getElementById('homePage').style.display = 'block';
@@ -510,36 +595,24 @@ function loadPeriodModule(){
     <div class="app-card" id="appCard">
       <h2>🌸 周期手账</h2>
       <div style="display:flex;justify-content:center;gap:6px;">
-        <button id="changeBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:14px;font-size:0.7rem;font-weight:600;cursor:pointer;color:var(--gold-dim);">🖼 换背景</button>
-        <button id="resetBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:14px;font-size:0.7rem;font-weight:600;cursor:pointer;color:var(--text-muted);">↩ 恢复</button>
+        <button id="changeBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:16px;font-size:0.7rem;font-weight:bold;cursor:pointer;color:var(--text-secondary);">🖼 换背景</button>
+        <button id="resetBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:16px;font-size:0.7rem;font-weight:bold;cursor:pointer;color:var(--text-secondary);">↩ 恢复</button>
         <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
       </div>
       <div class="month-header"><button class="month-nav" id="prevMonth">◀</button><span id="monthLabel"></span><button class="month-nav" id="nextMonth">▶</button></div>
       <div class="calendar-grid" id="calendarHead"></div>
       <div class="calendar-grid" id="calendarBody"></div>
       <div class="legend">
-        <span><span class="legend-dot" style="background:rgba(232,160,176,0.4);"></span>经期</span>
-        <span><span class="legend-dot" style="background:rgba(200,160,220,0.3);border:1px dashed rgba(200,160,220,0.5);"></span>预测</span>
+        <span><span class="legend-dot" style="background:rgba(232,160,176,0.5);"></span>经期</span>
+        <span><span class="legend-dot" style="background:rgba(200,160,220,0.3); border:1px dashed rgba(200,160,220,0.5);"></span>预测</span>
         <span><span class="legend-dot" style="background:rgba(100,200,180,0.3);"></span>排卵期</span>
         <span><span class="legend-dot" style="background:rgba(100,200,180,0.5);"></span>排卵日</span>
         <span><span class="legend-dot" style="background:rgba(201,168,76,0.2);"></span>黄体期</span>
-        <span><span class="legend-dot" style="background:rgba(232,160,176,0.15);"></span>亲密</span>
+        <span><span class="legend-dot" style="background:rgba(232,160,176,0.2);"></span>亲密</span>
       </div>
       <div class="hint-text" id="cycleHint"></div>
     </div>
-    <div class="modal-overlay" id="modalOverlay">
-      <div class="modal-box">
-        <strong id="modalDateTitle"></strong>
-        <div class="toggle-row" id="periodToggle"><span>🩸 标记为经期</span><div class="toggle-track" id="toggleTrack"><div class="toggle-thumb"></div></div></div>
-        <div class="hint-text" id="periodHint"></div>
-        <div class="modal-row"><span style="color:var(--text-secondary);">😣 肚子：</span><span id="painEmojis"></span></div>
-        <div class="modal-row"><span style="color:var(--text-secondary);">🩸 血量：</span><span id="flowEmojis"></span></div>
-        <div class="modal-row"><span style="color:var(--text-secondary);">💕 亲密：</span><span id="intimacyTags"><span class="intimacy-tag" data-val="none">无</span><span class="intimacy-tag" data-val="condom">🍥戴套</span><span class="intimacy-tag" data-val="pill">💊吃药</span><span class="intimacy-tag" data-val="outside">🚫体外</span><span class="intimacy-tag" data-val="other">❓其他</span></span></div>
-        <textarea id="modalNote" placeholder="备注……" rows="2" style="width:100%;border-radius:12px;border:1px solid var(--border);padding:8px;resize:none;font-size:0.8rem;background:var(--bg-elevated);color:var(--text-secondary);outline:none;"></textarea>
-        <div class="modal-row"><label style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 10px;border-radius:12px;font-size:0.7rem;cursor:pointer;color:var(--gold-dim);" for="imageUpload">📷 配图</label><input type="file" id="imageUpload" accept="image/*" style="display:none;"><span id="imagePreview" style="font-size:0.7rem;cursor:pointer;color:var(--text-secondary);"></span></div>
-        <div style="display:flex;gap:4px;"><button class="btn btn-delete" id="modalDelete">🗑 删除</button><button class="btn btn-close" id="modalClose">关闭</button></div>
-      </div>
-    </div>
+    <div class="modal-overlay" id="modalOverlay"><div class="modal-box"><strong id="modalDateTitle"></strong><div class="toggle-row" id="periodToggle"><span style="color:var(--text-secondary);">🩸 标记为经期</span><div class="toggle-track" id="toggleTrack"><div class="toggle-thumb"></div></div></div><div class="hint-text" id="periodHint"></div><div class="modal-row"><span style="color:var(--text-secondary);">😣 肚子：</span><span id="painEmojis"></span></div><div class="modal-row"><span style="color:var(--text-secondary);">🩸 血量：</span><span id="flowEmojis"></span></div><div class="modal-row"><span style="color:var(--text-secondary);">💕 亲密：</span><span id="intimacyTags"><span class="intimacy-tag" data-val="none">无</span><span class="intimacy-tag" data-val="condom">🍥戴套</span><span class="intimacy-tag" data-val="pill">💊吃药</span><span class="intimacy-tag" data-val="outside">🚫体外</span><span class="intimacy-tag" data-val="other">❓其他</span></span></div><textarea id="modalNote" placeholder="备注……" rows="2" style="width:100%; border-radius:12px; padding:6px; resize:none; font-size:0.8rem;"></textarea><div class="modal-row"><label style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);padding:6px 10px;border-radius:12px;font-size:0.7rem;cursor:pointer;" for="imageUpload">📷 配图</label><input type="file" id="imageUpload" accept="image/*" style="display:none;"><span id="imagePreview" style="font-size:0.7rem;cursor:pointer;color:var(--text-secondary);"></span></div><div style="display:flex;gap:4px;"><button class="btn btn-delete" id="modalDelete">🗑 删除</button><button class="btn btn-close" id="modalClose">关闭</button></div></div></div>
     <div class="image-modal" id="imageModal"><img id="largeImage" src="" alt="大图"><button class="close-img-btn" id="closeImageBtn">关闭</button></div>
   `;
   (function(){
@@ -607,27 +680,17 @@ function loadPeriodModule(){
 function loadRecipeModule(){
   document.getElementById('recipeContent').innerHTML = `
     <div class="recipe-container"><div class="recipe-header"><h1>🍳 今天吃什么</h1><button class="add-dish-header-btn" id="addDishHeaderBtn">+</button></div><div class="recipe-main"><div class="category-sidebar" id="categorySidebar"></div><div class="dish-list" id="dishList"></div></div><div class="recipe-bottom-bar"><span class="cart-info" id="cartInfo">已选 0 份</span><button class="view-list-btn" id="viewListBtn">📋 采购小票</button></div></div>
-    <div class="modal-overlay" id="receiptModal"><div class="receipt-modal"><h3 style="text-align:center;">🧾 采购清单</h3><div id="receiptList"></div><button class="close-receipt" id="closeReceiptBtn">关闭</button></div></div>
-    <div class="edit-modal" id="editModal"><div class="edit-box"><h3 id="editTitle">添加新菜</h3><input type="text" id="editName" placeholder="菜名（必填）"><select id="editCategory"><option value="荤菜">荤菜</option><option value="素菜">素菜</option><option value="汤羹">汤羹</option><option value="甜品">甜品</option><option value="主食">主食</option><option value="其他">其他</option></select><input type="text" id="editIngredients" placeholder="食材，用逗号分隔（如：番茄,鸡蛋,葱）"><div class="row"><label for="editImage" style="flex:1;background:var(--bg-elevated);border:1px solid var(--border);padding:8px;border-radius:12px;text-align:center;cursor:pointer;color:var(--gold-dim);">📷 选择图片</label><input type="file" id="editImage" accept="image/*" style="display:none;"><span id="editImagePreview" style="font-size:0.7rem;color:var(--text-secondary);"></span></div><div class="row" style="justify-content:space-between;"><button class="btn btn-primary" id="saveDishBtn">保存</button><button class="btn btn-danger" id="deleteDishBtn" style="display:none;">删除</button><button class="btn btn-neutral" id="cancelEditBtn">取消</button></div></div></div>
+    <div class="modal-overlay" id="receiptModal"><div class="receipt-modal"><h3 style="text-align:center;color:var(--gold-light);">🧾 采购清单</h3><div id="receiptList"></div><button class="close-receipt" id="closeReceiptBtn">关闭</button></div></div>
+    <div class="edit-modal" id="editModal"><div class="edit-box"><h3 id="editTitle" style="color:var(--gold-light);">添加新菜</h3><input type="text" id="editName" placeholder="菜名（必填）"><select id="editCategory"><option value="荤菜">荤菜</option><option value="素菜">素菜</option><option value="汤羹">汤羹</option><option value="甜品">甜品</option><option value="主食">主食</option><option value="其他">其他</option></select><input type="text" id="editIngredients" placeholder="食材，用逗号分隔（如：番茄,鸡蛋,葱）"><div class="row"><label for="editImage" style="flex:1;background:var(--bg-elevated);border:1px solid var(--border);padding:8px;border-radius:12px;text-align:center;cursor:pointer;color:var(--text-secondary);">📷 选择图片</label><input type="file" id="editImage" accept="image/*" style="display:none;"><span id="editImagePreview" style="font-size:0.7rem;color:var(--text-secondary);"></span></div><div class="row" style="justify-content:space-between;"><button class="btn btn-primary" id="saveDishBtn">保存</button><button class="btn btn-danger" id="deleteDishBtn" style="display:none;">删除</button><button class="btn btn-neutral" id="cancelEditBtn">取消</button></div></div></div>
   `;
   (function(){ const STORAGE_KEY='my_menu_data',STORAGE_CART='my_menu_cart'; const defaultMenu=[{name:'番茄炒蛋',category:'荤菜',ingredients:['番茄','鸡蛋','葱','盐','糖'],image:''},{name:'青椒肉丝',category:'荤菜',ingredients:['青椒','猪肉','蒜','酱油','淀粉'],image:''},{name:'蒜蓉西兰花',category:'素菜',ingredients:['西兰花','蒜','蚝油','盐'],image:''},{name:'可乐鸡翅',category:'荤菜',ingredients:['鸡翅','可乐','姜','料酒','生抽'],image:''}]; let menuData=[],selectedDishes={},currentCategory='全部',editingIndex=-1,tempImageData=''; function loadMenu(){ const r=localStorage.getItem(STORAGE_KEY); menuData=r?JSON.parse(r):defaultMenu; if(!r) localStorage.setItem(STORAGE_KEY,JSON.stringify(defaultMenu)); } function saveMenu(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(menuData)); } function loadCart(){ const r=localStorage.getItem(STORAGE_CART); selectedDishes=r?JSON.parse(r):{}; } function saveCart(){ localStorage.setItem(STORAGE_CART,JSON.stringify(selectedDishes)); } function getCategories(){ const cats=new Set(menuData.map(d=>d.category)); return['全部',...Array.from(cats)]; } function renderCategories(){ document.getElementById('categorySidebar').innerHTML=getCategories().map(c=>`<div class="category-item${c===currentCategory?' active':''}" data-cat="${c}">${c}</div>`).join(''); document.querySelectorAll('.category-item').forEach(item=>{ item.addEventListener('click',function(){ currentCategory=this.getAttribute('data-cat'); renderCategories(); renderDishes(); }); }); } function renderDishes(){ const filtered=currentCategory==='全部'?menuData:menuData.filter(d=>d.category===currentCategory); document.getElementById('dishList').innerHTML=filtered.map(dish=>{ const gi=menuData.indexOf(dish); const is=dish.image?`background-image:url('${dish.image}')`:''; const qty=selectedDishes[gi]||0; const rightHTML=qty>0?`<div class="qty-wrap"><button class="qty-btn minus" data-index="${gi}">−</button><span class="qty-num">${qty}</span><button class="qty-btn plus" data-index="${gi}">+</button></div>`:`<button class="add-btn" data-index="${gi}">➕</button>`; return`<div class="dish-card"><div class="dish-img" style="${is}"></div><div class="dish-info"><div class="dish-name">${dish.name}</div><div class="dish-ingredients">${dish.ingredients.map(i=>`<span class="ingredient-tag">${i}</span>`).join('')}</div></div>${rightHTML}</div>`; }).join(''); document.querySelectorAll('.add-btn').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.plus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=(selectedDishes[i]||0)+1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.minus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]--; if(selectedDishes[i]<=0) delete selectedDishes[i]; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.dish-card').forEach((card,i)=>{ let pressTimer; card.addEventListener('touchstart',function(e){ pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('touchend',function(){ clearTimeout(pressTimer); }); card.addEventListener('touchmove',function(){ clearTimeout(pressTimer); }); card.addEventListener('mousedown',function(e){ pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('mouseup',function(){ clearTimeout(pressTimer); }); card.addEventListener('mouseleave',function(){ clearTimeout(pressTimer); }); }); } function updateCartInfo(){ const total=Object.values(selectedDishes).reduce((a,b)=>a+b,0); document.getElementById('cartInfo').textContent=`已选 ${total} 份`; } function renderReceipt(){ const all=[]; Object.keys(selectedDishes).forEach(i=>{ const d=menuData[parseInt(i)]; const qty=selectedDishes[i]||1; if(d) d.ingredients.forEach(ing=>{ for(let n=0;n<qty;n++) all.push(ing); }); }); const counts={}; all.forEach(ing=>{ counts[ing]=(counts[ing]||0)+1; }); const unique=Object.keys(counts).map(ing=>counts[ing]>1?`${ing} x${counts[ing]}`:ing); document.getElementById('receiptList').innerHTML=unique.map(ing=>`<div class="receipt-item" data-ing="${ing.split(' x')[0]}"><div class="check-box"></div><span>${ing}</span></div>`).join(''); document.querySelectorAll('.receipt-item').forEach(item=>{ item.addEventListener('click',function(){ this.classList.toggle('checked'); }); }); } function openEditor(index){ editingIndex=index; const dish=index>=0?menuData[index]:null; document.getElementById('editTitle').textContent=index>=0?'编辑菜品':'添加新菜'; document.getElementById('editName').value=dish?dish.name:''; document.getElementById('editCategory').value=dish?dish.category:'荤菜'; document.getElementById('editIngredients').value=dish?dish.ingredients.join(','):''; document.getElementById('editImagePreview').textContent=dish&&dish.image?'✅ 已有图':''; tempImageData=dish?dish.image||'':''; document.getElementById('deleteDishBtn').style.display=index>=0?'inline-block':'none'; document.getElementById('editModal').classList.add('show'); } document.getElementById('addDishHeaderBtn').addEventListener('click',()=>openEditor(-1)); document.getElementById('editImage').addEventListener('change',function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ tempImageData=ev.target.result; document.getElementById('editImagePreview').textContent='✅ 已选图'; }; r.readAsDataURL(f); }); document.getElementById('saveDishBtn').addEventListener('click',function(){ const name=document.getElementById('editName').value.trim(); if(!name) return alert('菜名不能为空'); const category=document.getElementById('editCategory').value; const raw=document.getElementById('editIngredients').value.trim(); const ingredients=raw?raw.split(/[,，]/).map(s=>s.trim()).filter(s=>s):[]; let finalImage=tempImageData; if(tempImageData&&tempImageData.length>200000){ const img=new Image(); img.src=tempImageData; img.onload=function(){ const canvas=document.createElement('canvas'); const maxW=300; const scale=maxW/img.width; canvas.width=maxW; canvas.height=img.height*scale; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); finalImage=canvas.toDataURL('image/jpeg',0.6); saveDish(finalImage); }; return; } saveDish(finalImage); function saveDish(img){ const dish={name,category,ingredients,image:img}; if(editingIndex>=0) menuData[editingIndex]=dish; else menuData.push(dish); saveMenu(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); } }); document.getElementById('deleteDishBtn').addEventListener('click',function(){ if(editingIndex>=0&&confirm('确定删除这道菜吗？')){ delete selectedDishes[editingIndex]; menuData.splice(editingIndex,1); saveMenu(); saveCart(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); updateCartInfo(); } }); document.getElementById('cancelEditBtn').addEventListener('click',()=>{ document.getElementById('editModal').classList.remove('show'); }); document.getElementById('editModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); document.getElementById('viewListBtn').addEventListener('click',()=>{ renderReceipt(); document.getElementById('receiptModal').classList.add('show'); }); document.getElementById('closeReceiptBtn').addEventListener('click',()=>{ document.getElementById('receiptModal').classList.remove('show'); }); document.getElementById('receiptModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); loadMenu(); loadCart(); renderCategories(); renderDishes(); updateCartInfo(); })();
-}
-
-// ==================== 心情日记模块 ====================
-function loadMoodModule(){
-  document.getElementById('moodContent').innerHTML = `
-    <div class="app-card"><div style="display:flex;justify-content:space-between;align-items:center;"><h2 style="margin:0;">📓 心情日记</h2></div><div class="month-header"><button class="month-nav" id="moodPrevMonth">◀</button><span id="moodMonthLabel"></span><button class="month-nav" id="moodNextMonth">▶</button></div><div class="calendar-grid" id="moodCalHead"></div><div class="calendar-grid" id="moodCalBody"></div>
-    <div id="moodEditPanel" style="display:none;background:var(--bg-elevated);border-radius:20px;padding:14px;margin-top:8px;border:1px solid var(--border);"><strong id="moodEditDate" style="color:var(--gold-light);"></strong><div id="moodEmojiGrid" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding:8px 0;"></div><textarea id="moodNoteInput" placeholder="写点什么……" maxlength="300" style="width:100%;height:60px;border-radius:14px;border:1px solid var(--border);padding:8px;font-size:0.85rem;background:var(--bg-surface);color:var(--text-secondary);resize:none;outline:none;"></textarea><div class="modal-row" style="margin-top:6px;"><label for="moodImageUpload" style="background:var(--bg-surface);border:1px solid var(--border);padding:5px 10px;border-radius:12px;font-size:0.7rem;cursor:pointer;color:var(--gold-dim);">📷 配图</label><input type="file" id="moodImageUpload" accept="image/*" style="display:none;"><span id="moodImagePreview" style="font-size:0.7rem;color:var(--text-secondary);"></span></div><div style="display:flex;gap:6px;margin-top:8px;"><button class="btn btn-primary" id="saveMoodBtn" style="flex:1;">💾 保存</button><button class="btn btn-delete" id="deleteMoodBtn">🗑 删除</button><button class="btn btn-close" id="cancelEditBtn">取消</button></div></div></div>
-    <div class="image-modal" id="moodImageModal"><img id="moodLargeImage" src="" alt="大图"><button class="close-img-btn" id="moodCloseImageBtn">关闭</button></div>
-  `;
-  (function(){ const STORAGE_MOOD='mydiary_v2_'; const moodList=['🥰','😄','😆','🤩','😊','🙂','😐','😔','😢','😭','😡','🤬','😰','😱','😴','🤒','🥳','😎','🤔','💕']; let moodCalYear,moodCalMonth; const now=new Date(); moodCalYear=now.getFullYear(); moodCalMonth=now.getMonth()+1; let selectedDate=null; let curMood=null,curMoodImg=''; const monthLabel=document.getElementById('moodMonthLabel'),calHead=document.getElementById('moodCalHead'),calBody=document.getElementById('moodCalBody'),editPanel=document.getElementById('moodEditPanel'); function getData(ds){ const r=localStorage.getItem(STORAGE_MOOD+ds); return r?JSON.parse(r):{mood:null,note:'',image:''}; } function saveData(ds,obj){ localStorage.setItem(STORAGE_MOOD+ds,JSON.stringify(obj)); } function delData(ds){ localStorage.removeItem(STORAGE_MOOD+ds); } function daysInMonth(y,m){ return new Date(y,m,0).getDate(); } function renderCalendar(){ monthLabel.textContent=`${moodCalYear}年${moodCalMonth}月`; calHead.innerHTML=''; ['日','一','二','三','四','五','六'].forEach(d=>{ const el=document.createElement('div'); el.className='day-header'; el.textContent=d; calHead.appendChild(el); }); const dim=daysInMonth(moodCalYear,moodCalMonth); const fd=new Date(moodCalYear,moodCalMonth-1,1).getDay(); let html=''; for(let i=0;i<fd;i++) html+='<div></div>'; for(let d=1;d<=dim;d++){ const ds=`${moodCalYear}-${String(moodCalMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const data=getData(ds); let cls='day-cell'; if(ds===selectedDate) cls+=' today'; let extra=''; if(data.mood) extra+=`<span style="font-size:0.55rem;position:absolute;top:1px;right:2px;">${data.mood}</span>`; html+=`<div class="${cls}" data-date="${ds}">${d}${extra}</div>`; } calBody.innerHTML=html; calBody.querySelectorAll('.day-cell').forEach(cell=>{ cell.addEventListener('click',function(){ selectedDate=this.getAttribute('data-date'); renderCalendar(); showEditPanel(selectedDate); }); }); } function showEditPanel(ds){ const data=getData(ds); curMood=data.mood; curMoodImg=data.image||''; document.getElementById('moodEditDate').textContent=ds; document.getElementById('moodNoteInput').value=data.note||''; document.getElementById('moodImagePreview').textContent=curMoodImg?'✅ 已选图':''; document.getElementById('moodImagePreview').style.cursor=curMoodImg?'pointer':'default'; document.getElementById('moodImageUpload').value=''; renderEmojis(); editPanel.style.display='block'; } function renderEmojis(){ const grid=document.getElementById('moodEmojiGrid'); grid.innerHTML=moodList.map(e=>`<span class="modal-emoji${curMood===e?' selected':''}" data-v="${e}">${e}</span>`).join(''); grid.querySelectorAll('.modal-emoji').forEach(el=>{ el.addEventListener('click',function(){ const v=this.getAttribute('data-v'); curMood=curMood===v?null:v; renderEmojis(); }); }); } document.getElementById('moodPrevMonth').addEventListener('click',()=>{ moodCalMonth--; if(moodCalMonth<1){moodCalMonth=12;moodCalYear--;} renderCalendar(); editPanel.style.display='none'; }); document.getElementById('moodNextMonth').addEventListener('click',()=>{ moodCalMonth++; if(moodCalMonth>12){moodCalMonth=1;moodCalYear++;} renderCalendar(); editPanel.style.display='none'; }); document.getElementById('saveMoodBtn').addEventListener('click',function(){ if(!selectedDate) return; saveData(selectedDate,{mood:curMood,note:document.getElementById('moodNoteInput').value.trim(),image:curMoodImg}); editPanel.style.display='none'; renderCalendar(); }); document.getElementById('deleteMoodBtn').addEventListener('click',function(){ if(!selectedDate) return; if(confirm('确定删除吗？')){ delData(selectedDate); editPanel.style.display='none'; curMood=null; curMoodImg=''; renderCalendar(); } }); document.getElementById('cancelEditBtn').addEventListener('click',function(){ editPanel.style.display='none'; }); document.getElementById('moodImageUpload').addEventListener('change',function(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=function(ev){ curMoodImg=ev.target.result; document.getElementById('moodImagePreview').textContent='✅ 已选图'; document.getElementById('moodImagePreview').style.cursor='pointer'; }; r.readAsDataURL(f); }); document.getElementById('moodImagePreview').addEventListener('click',function(){ if(curMoodImg){ document.getElementById('moodLargeImage').src=curMoodImg; document.getElementById('moodImageModal').classList.add('show'); } }); document.getElementById('moodCloseImageBtn').addEventListener('click',function(){ document.getElementById('moodImageModal').classList.remove('show'); }); document.getElementById('moodImageModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); renderCalendar(); })();
 }
 
 // ==================== 打工续命模块 ====================
 function loadWorkModule(){
   document.getElementById('workContent').innerHTML = `
     <div class="work-card">
-      <h2>💰 钱钱钱</h2>
+      <h2 style="font-family:var(--font-title);color:#a8e8a8;">💰 钱钱钱</h2>
       <div class="money-display" id="moneyDisplay">
         <small id="moneyLabel">今天已赚（估算）</small>
         <div class="big-number" id="moneyValue">¥0.0000</div>
@@ -648,12 +711,15 @@ function loadWorkModule(){
           <button class="btn-work secondary" id="clockOutBtn" style="flex:1;">🏁 下班</button>
         </div>
       </div>
+      <div id="flipCard" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;padding:20px;text-align:center;cursor:pointer;min-height:100px;display:flex;flex-direction:column;justify-content:center;">
+        <div id="flipLabel" style="font-size:0.8rem;color:var(--text-muted);"></div>
+        <div id="flipValue" style="font-size:2.5rem;font-weight:bold;color:var(--gold-light);"></div>
+      </div>
       <div class="info-section">
         <div class="info-row"><span>已上班</span><span id="workedTime">--</span></div>
         <div class="info-row"><span>距下班</span><span id="untilOff">--</span></div>
-        <div class="info-row"><span>本月已赚</span><span id="monthlyTotal" style="color:#7ab87a;">¥0.00</span></div>
-        <div class="info-row"><span>今天是</span><span id="todayLabel">--</span></div>
-        <div class="info-row"><span>距发薪</span><span id="untilPayday">--</span></div>
+        <div class="info-row"><span>本月已赚</span><span id="monthlyTotal">¥0.00</span></div>
+        <div style="text-align:right;margin-top:-4px;"><button id="clearMonthBtn" style="background:transparent;border:none;color:rgba(232,160,176,0.6);font-size:0.65rem;cursor:pointer;">清空本月数据</button></div>
       </div>
       <div class="settings-section">
         <div class="setting-row"><label>上班时间</label><input type="time" id="setStart" value="09:00"></div>
@@ -664,59 +730,468 @@ function loadWorkModule(){
     </div>
   `;
   (function(){
-    const moneyValue=document.getElementById('moneyValue'),moneyLabel=document.getElementById('moneyLabel'),startInput=document.getElementById('startTimeInput'),endInput=document.getElementById('endTimeInput'),setStart=document.getElementById('setStart'),setEnd=document.getElementById('setEnd'),salaryInput=document.getElementById('monthlySalary'),paydayInput=document.getElementById('paydayInput'),monthlyTotalEl=document.getElementById('monthlyTotal'),todayLabel=document.getElementById('todayLabel');
-    let timer=null,clockedIn=false,startActual=null,currentMode='today';
-    if(localStorage.getItem('workStart')) setStart.value=localStorage.getItem('workStart');
-    if(localStorage.getItem('workEnd')) setEnd.value=localStorage.getItem('workEnd');
-    if(localStorage.getItem('monthlySalary')) salaryInput.value=localStorage.getItem('monthlySalary');
-    if(localStorage.getItem('payday')) paydayInput.value=localStorage.getItem('payday');
-    setStart.addEventListener('change',()=>{ localStorage.setItem('workStart',setStart.value); if(clockedIn) resetTimer(); });
-    setEnd.addEventListener('change',()=>{ localStorage.setItem('workEnd',setEnd.value); if(clockedIn) resetTimer(); });
-    salaryInput.addEventListener('change',()=>localStorage.setItem('monthlySalary',salaryInput.value));
-    paydayInput.addEventListener('change',()=>localStorage.setItem('payday',paydayInput.value));
-    function getWage(){ const ms=parseFloat(salaryInput.value)||8000; const [sh,sm]=setStart.value.split(':').map(Number); const [eh,em]=setEnd.value.split(':').map(Number); const wh=(eh+em/60)-(sh+sm/60); return wh>0?ms/(wh*22):0; }
-    function getMonthlyTotal(){ const records=JSON.parse(localStorage.getItem('work_records')||'{}'); const now=new Date(); const mk=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`; return records[mk]||0; }
-    function addMonthlyTotal(amount){ const records=JSON.parse(localStorage.getItem('work_records')||'{}'); const now=new Date(); const mk=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`; records[mk]=(records[mk]||0)+amount; localStorage.setItem('work_records',JSON.stringify(records)); }
-    function updateMonthlyDisplay(){ monthlyTotalEl.textContent=`¥${getMonthlyTotal().toFixed(2)}`; }
-    function resetTimer(){ if(timer) clearInterval(timer); if(clockedIn) timer=setInterval(updateDisplay,100); updateDisplay(); }
-    function updateInfo(){
-      const now=new Date(); const weekdays=['周日','周一','周二','周三','周四','周五','周六']; todayLabel.textContent=weekdays[now.getDay()];
-      if(startActual&&clockedIn){ const diffMs=now-startActual; if(diffMs>0){ const h=Math.floor(diffMs/3600000); const m=Math.floor((diffMs%3600000)/60000); document.getElementById('workedTime').textContent=`${h}小时${m}分钟`; } const [eh,em]=setEnd.value.split(':').map(Number); const endActual=new Date(); endActual.setHours(eh,em,0,0); const remainMs=endActual-now; if(remainMs>0){ const rh=Math.floor(remainMs/3600000); const rm=Math.floor((remainMs%3600000)/60000); document.getElementById('untilOff').textContent=`${rh}小时${rm}分钟`; } else { document.getElementById('untilOff').textContent='已下班'; } }
-      else { document.getElementById('workedTime').textContent='--'; document.getElementById('untilOff').textContent='--'; }
-      const payday=parseInt(paydayInput.value)||10; const today=now.getDate(); let daysUntilPay=payday-today; if(daysUntilPay<0) daysUntilPay+=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(); document.getElementById('untilPayday').textContent=daysUntilPay===0?'今天发薪💰':`${daysUntilPay}天`;
+    const moneyValue = document.getElementById('moneyValue');
+    const moneyLabel = document.getElementById('moneyLabel');
+    const startInput = document.getElementById('startTimeInput');
+    const endInput = document.getElementById('endTimeInput');
+    const setStart = document.getElementById('setStart');
+    const setEnd = document.getElementById('setEnd');
+    const salaryInput = document.getElementById('monthlySalary');
+    const paydayInput = document.getElementById('paydayInput');
+    const monthlyTotalEl = document.getElementById('monthlyTotal');
+    const flipLabel = document.getElementById('flipLabel');
+    const flipValue = document.getElementById('flipValue');
+    let timer = null, clockedIn = false, startActual = null, currentMode = 'today';
+    let flipIndex = 0;
+    const flipItems = [
+      { label: '距周末', get: ()=>{
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        let days = 0;
+        for (let i=0;i<7;i++){ const check=(dayOfWeek+i)%7; if(check===0||check===6){ days=i; break; } }
+        return days===0&&(dayOfWeek===0||dayOfWeek===6) ? '休息中🎉' : `${days}天`;
+      }},
+      { label: '距发薪', get: ()=>{
+        const now = new Date();
+        const payday = parseInt(paydayInput.value)||10;
+        const today = now.getDate();
+        let d = payday-today;
+        if(d<0) d += new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+        return d===0?'今天发薪💰':`${d}天`;
+      }}
+    ];
+
+    function updateFlip() {
+      const item = flipItems[flipIndex];
+      flipLabel.textContent = item.label;
+      flipValue.textContent = item.get();
     }
-    function updateDisplay(){
-      const wage=getWage(); const ms=parseFloat(salaryInput.value)||8000;
-      if(currentMode==='today'&&clockedIn&&startActual){ const now=new Date(); const endActual=new Date(); const [eh,em]=setEnd.value.split(':').map(Number); endActual.setHours(eh,em,0,0); const effectiveEnd=now>endActual?endActual:now; const diffMs=effectiveEnd-startActual; if(diffMs<0){ moneyValue.textContent='¥0.0000'; moneyLabel.textContent='还没到上班时间'; return; } moneyValue.textContent=`¥${(diffMs/3600000*wage).toFixed(4)}`; moneyLabel.textContent='今天已赚（估算）'; }
-      else if(currentMode==='hour'){ moneyValue.textContent=`¥${wage.toFixed(4)}`; moneyLabel.textContent='每小时工资'; }
-      else if(currentMode==='month'){ moneyValue.textContent=`¥${ms.toLocaleString()}`; moneyLabel.textContent='每月工资'; }
-      else if(currentMode==='year'){ moneyValue.textContent=`¥${(ms*12).toLocaleString()}`; moneyLabel.textContent='每年预计收入'; }
+
+    document.getElementById('flipCard').addEventListener('click', ()=>{
+      flipIndex = (flipIndex+1) % flipItems.length;
+      updateFlip();
+    });
+
+    if(localStorage.getItem('workStart')) setStart.value = localStorage.getItem('workStart');
+    if(localStorage.getItem('workEnd')) setEnd.value = localStorage.getItem('workEnd');
+    if(localStorage.getItem('monthlySalary')) salaryInput.value = localStorage.getItem('monthlySalary');
+    if(localStorage.getItem('payday')) paydayInput.value = localStorage.getItem('payday');
+    setStart.addEventListener('change', ()=> { localStorage.setItem('workStart', setStart.value); if(clockedIn) resetTimer(); });
+    setEnd.addEventListener('change', ()=> { localStorage.setItem('workEnd', setEnd.value); if(clockedIn) resetTimer(); });
+    salaryInput.addEventListener('change', ()=> localStorage.setItem('monthlySalary', salaryInput.value));
+    paydayInput.addEventListener('change', ()=> { localStorage.setItem('payday', paydayInput.value); updateFlip(); });
+
+    function getWage() {
+      const monthlySalary = parseFloat(salaryInput.value) || 8000;
+      const [startH, startM] = setStart.value.split(':').map(Number);
+      const [endH, endM] = setEnd.value.split(':').map(Number);
+      const workHoursPerDay = (endH + endM/60) - (startH + startM/60);
+      return workHoursPerDay > 0 ? monthlySalary / (workHoursPerDay * 22) : 0;
+    }
+
+    function getMonthlyTotal() {
+      const records = JSON.parse(localStorage.getItem('work_records') || '{}');
+      const now = new Date();
+      const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+      return records[monthKey] || 0;
+    }
+
+    function addMonthlyTotal(amount) {
+      const records = JSON.parse(localStorage.getItem('work_records') || '{}');
+      const now = new Date();
+      const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+      records[monthKey] = (records[monthKey] || 0) + amount;
+      localStorage.setItem('work_records', JSON.stringify(records));
+    }
+
+    function updateMonthlyDisplay() {
+      const total = getMonthlyTotal();
+      monthlyTotalEl.textContent = `¥${total.toFixed(2)}`;
+    }
+
+    document.getElementById('clearMonthBtn').addEventListener('click', ()=>{
+      if(confirm('确定清空本月所有赚钱记录吗？此操作不可恢复。')){
+        const records = JSON.parse(localStorage.getItem('work_records') || '{}');
+        const now = new Date();
+        const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+        delete records[monthKey];
+        localStorage.setItem('work_records', JSON.stringify(records));
+        updateMonthlyDisplay();
+      }
+    });
+
+    function resetTimer() {
+      if (timer) clearInterval(timer);
+      if (clockedIn) timer = setInterval(updateDisplay, 100);
+      updateDisplay();
+    }
+
+    function updateInfo() {
+      if (startActual && clockedIn) {
+        const now = new Date();
+        const diffMs = now - startActual;
+        if (diffMs > 0) {
+          const h = Math.floor(diffMs / 3600000);
+          const m = Math.floor((diffMs % 3600000) / 60000);
+          document.getElementById('workedTime').textContent = `${h}小时${m}分钟`;
+        }
+        const [endH, endM] = setEnd.value.split(':').map(Number);
+        const endActual = new Date(); endActual.setHours(endH, endM, 0, 0);
+        const remainMs = endActual - now;
+        if (remainMs > 0) {
+          const rh = Math.floor(remainMs / 3600000);
+          const rm = Math.floor((remainMs % 3600000) / 60000);
+          document.getElementById('untilOff').textContent = `${rh}小时${rm}分钟`;
+        } else { document.getElementById('untilOff').textContent = '已下班'; }
+      } else {
+        document.getElementById('workedTime').textContent = '--';
+        document.getElementById('untilOff').textContent = '--';
+      }
+      updateFlip();
+    }
+
+    function updateDisplay() {
+      const wage = getWage();
+      const monthlySalary = parseFloat(salaryInput.value) || 8000;
+      if (currentMode === 'today' && clockedIn && startActual) {
+        const now = new Date();
+        const endActual = new Date();
+        const [endH, endM] = setEnd.value.split(':').map(Number);
+        endActual.setHours(endH, endM, 0, 0);
+        const effectiveEnd = now > endActual ? endActual : now;
+        const diffMs = effectiveEnd - startActual;
+        if (diffMs < 0) { moneyValue.textContent = '¥0.0000'; moneyLabel.textContent = '还没到上班时间'; return; }
+        moneyValue.textContent = `¥${(diffMs / 3600000 * wage).toFixed(4)}`;
+        moneyLabel.textContent = '今天已赚（估算）';
+      } else if (currentMode === 'hour') {
+        moneyValue.textContent = `¥${wage.toFixed(4)}`;
+        moneyLabel.textContent = '每秒都在赚';
+      } else if (currentMode === 'month') {
+        moneyValue.textContent = `¥${monthlySalary.toLocaleString()}`;
+        moneyLabel.textContent = '每月工资';
+      } else if (currentMode === 'year') {
+        moneyValue.textContent = `¥${(monthlySalary*12).toLocaleString()}`;
+        moneyLabel.textContent = '每年预计收入';
+      }
       updateInfo();
     }
-    document.querySelectorAll('.toggle-btn').forEach(btn=>{ btn.addEventListener('click',function(){ document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); currentMode=this.getAttribute('data-mode'); updateDisplay(); }); });
-    startInput.addEventListener('change',()=>{ if(startInput.value){ const [sh,sm]=startInput.value.split(':').map(Number); startActual=new Date(); startActual.setHours(sh,sm,0,0); clockedIn=true; resetTimer(); } });
-    endInput.addEventListener('change',()=>{ if(startInput.value&&endInput.value&&clockedIn){ const [eh,em]=endInput.value.split(':').map(Number); const endActual=new Date(); endActual.setHours(eh,em,0,0); const diffMs=endActual-startActual; const earned=diffMs/3600000*getWage(); addMonthlyTotal(earned); updateMonthlyDisplay(); clockedIn=false; if(timer) clearInterval(timer); updateDisplay(); alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`); } });
-    document.getElementById('clockInBtn').addEventListener('click',()=>{ const now=new Date(); startInput.value=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`; startActual=new Date(); startActual.setHours(now.getHours(),now.getMinutes(),0,0); clockedIn=true; endInput.value=''; moneyValue.textContent='¥0.0000'; moneyLabel.textContent='今天已赚（估算）'; resetTimer(); });
-    document.getElementById('clockOutBtn').addEventListener('click',()=>{ if(!clockedIn) return alert('还没打卡上班呢～'); const now=new Date(); endInput.value=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`; const diffMs=now-startActual; const earned=diffMs/3600000*getWage(); addMonthlyTotal(earned); updateMonthlyDisplay(); clockedIn=false; if(timer) clearInterval(timer); updateDisplay(); alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`); });
-    updateMonthlyDisplay(); updateDisplay();
+
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentMode = this.getAttribute('data-mode');
+        updateDisplay();
+      });
+    });
+
+    startInput.addEventListener('change', ()=>{
+      if (startInput.value) {
+        const [sh, sm] = startInput.value.split(':').map(Number);
+        startActual = new Date(); startActual.setHours(sh, sm, 0, 0);
+        clockedIn = true;
+        localStorage.setItem('clockInTimestamp', startActual.getTime());
+        localStorage.setItem('clockInDate', `${startActual.getFullYear()}-${String(startActual.getMonth()+1).padStart(2,'0')}-${String(startActual.getDate()).padStart(2,'0')}`);
+        resetTimer();
+      }
+    });
+
+    endInput.addEventListener('change', ()=>{
+      if (startInput.value && endInput.value && clockedIn) {
+        const [eh, em] = endInput.value.split(':').map(Number);
+        const endActual = new Date(); endActual.setHours(eh, em, 0, 0);
+        const diffMs = endActual - startActual;
+        const earned = diffMs / 3600000 * getWage();
+        addMonthlyTotal(earned);
+        updateMonthlyDisplay();
+        clockedIn = false;
+        startActual = null;
+        localStorage.removeItem('clockInTimestamp');
+        localStorage.removeItem('clockInDate');
+        if (timer) clearInterval(timer);
+        updateDisplay();
+        alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`);
+      }
+    });
+
+    document.getElementById('clockInBtn').addEventListener('click', ()=>{
+      const now = new Date();
+      startInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      startActual = new Date(); startActual.setHours(now.getHours(), now.getMinutes(), 0, 0);
+      clockedIn = true;
+      endInput.value = '';
+      moneyValue.textContent = '¥0.0000';
+      moneyLabel.textContent = '今天已赚（估算）';
+      localStorage.setItem('clockInTimestamp', startActual.getTime());
+      localStorage.setItem('clockInDate', `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`);
+      resetTimer();
+    });
+
+    document.getElementById('clockOutBtn').addEventListener('click', ()=>{
+      if (!clockedIn) return alert('还没打卡上班呢～');
+      const now = new Date();
+      endInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const diffMs = now - startActual;
+      const earned = diffMs / 3600000 * getWage();
+      addMonthlyTotal(earned);
+      updateMonthlyDisplay();
+      clockedIn = false;
+      startActual = null;
+      localStorage.removeItem('clockInTimestamp');
+      localStorage.removeItem('clockInDate');
+      if (timer) clearInterval(timer);
+      updateDisplay();
+      alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`);
+    });
+
+    // 页面加载时恢复后台计时
+    const savedTimestamp = localStorage.getItem('clockInTimestamp');
+    const savedDate = localStorage.getItem('clockInDate');
+    const todayStr = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`;
+    if (savedTimestamp && savedDate === todayStr) {
+      startActual = new Date(parseInt(savedTimestamp));
+      clockedIn = true;
+      startInput.value = `${String(startActual.getHours()).padStart(2,'0')}:${String(startActual.getMinutes()).padStart(2,'0')}`;
+      endInput.value = '';
+      resetTimer();
+    }
+
+    updateMonthlyDisplay();
+    updateDisplay();
   })();
 }
 
-// ==================== 初始化 ====================
+// ==================== 初始化主页 ====================
 renderJList();
 renderPGrid();
 function editTitle(){
-  const newTitle=prompt('输入新名称：',document.getElementById('topTitle').textContent.replace('✏️','').trim());
-  if(newTitle){ document.getElementById('topTitle').innerHTML=`<div class="title-dot"></div>${newTitle} <span style="font-size:0.7rem;">✏️</span>`; document.title=newTitle; localStorage.setItem('my_app_title',newTitle); }
+  const newTitle = prompt('输入新名称：', document.getElementById('topTitle').textContent.replace('✏️','').trim());
+  if(newTitle){
+    document.getElementById('topTitle').innerHTML = newTitle + ' <span style="font-size:0.7rem;">✏️</span>';
+    document.getElementById('topTitle').setAttribute('onclick','editTitle()');
+    document.title = newTitle;
+    localStorage.setItem('my_app_title', newTitle);
+  }
 }
 (function(){
-  const saved=localStorage.getItem('my_app_title');
-  if(saved){ document.getElementById('topTitle').innerHTML=`<div class="title-dot"></div>${saved} <span style="font-size:0.7rem;">✏️</span>`; document.title=saved; }
+  const saved = localStorage.getItem('my_app_title');
+  if(saved){
+    document.getElementById('topTitle').innerHTML = saved + ' <span style="font-size:0.7rem;">✏️</span>';
+    document.title = saved;
+  }
 })();
-let dragSrcIndex=null;
-function dragStart(e){ dragSrcIndex=parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); e.dataTransfer.effectAllowed='move'; }
-function dragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
-function dropItem(e){ e.preventDefault(); const targetIndex=parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); if(dragSrcIndex!==null&&dragSrcIndex!==targetIndex){ const items=getCurtainItems(); const draggedItem=items.splice(dragSrcIndex,1)[0]; items.splice(targetIndex,0,draggedItem); localStorage.setItem('my_curtain_order',JSON.stringify(items.map(i=>i.id))); renderCurtain(); } dragSrcIndex=null; }
+let dragSrcIndex = null;
+function dragStart(e) { dragSrcIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); e.dataTransfer.effectAllowed = 'move'; }
+function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+function dropItem(e) { e.preventDefault(); const targetIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) { const items = getCurtainItems(); const draggedItem = items.splice(dragSrcIndex, 1)[0]; items.splice(targetIndex, 0, draggedItem); localStorage.setItem('my_curtain_order', JSON.stringify(items.map(i => i.id))); renderCurtain(); } dragSrcIndex = null; }
+// ==================== 日记相册模块 ====================
+function loadDiaryModule(){
+  document.getElementById('diaryContent').innerHTML = `
+    <div class="app-card">
+      <h2>📸 日记相册</h2>
+      <div class="month-header">
+        <button class="month-nav" id="diaryPrevMonth">◀</button>
+        <span id="diaryMonthLabel"></span>
+        <button class="month-nav" id="diaryNextMonth">▶</button>
+      </div>
+      <div id="diaryGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;"></div>
+    </div>
+    <div class="edit-modal" id="diaryEditModal">
+      <div class="edit-box" style="max-width:380px;">
+        <h3 id="diaryEditTitle">编辑日记</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary" id="uploadImgBtn">📷 上传图片</button>
+          <button class="btn btn-primary" id="cameraBtn">📸 拍照</button>
+          <input type="file" id="diaryImageInput" accept="image/*" style="display:none;">
+          <input type="file" id="diaryCameraInput" accept="image/*" capture="environment" style="display:none;">
+        </div>
+        <div id="diaryPreview" style="text-align:center;min-height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);border-radius:14px;padding:10px;margin-top:8px;">
+          <span style="color:var(--text-muted);">图片预览</span>
+        </div>
+        <button class="btn btn-primary" id="cutoutBtn" style="display:none;">✂️ 抠图加白边</button>
+        <textarea id="diaryNoteInput" placeholder="写点什么……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" id="saveDiaryBtn" style="flex:1;">💾 保存</button>
+          <button class="btn btn-delete" id="deleteDiaryBtn">🗑 删除</button>
+          <button class="btn btn-close" id="cancelDiaryBtn">取消</button>
+        </div>
+      </div>
+    </div>
+    <canvas id="diaryCanvas" style="display:none;"></canvas>
+    <video id="diaryVideo" autoplay playsinline style="display:none;"></video>
+  `;
+  (function(){
+    const STORAGE_DIARY = 'diary_v1_';
+    let diaryYear, diaryMonth;
+    const now = new Date(); diaryYear = now.getFullYear(); diaryMonth = now.getMonth() + 1;
+    let selectedDate = null, currentImage = null, processedImage = null;
+
+    function daysInMonth(y,m){ return new Date(y,m,0).getDate(); }
+    function getData(ds){ const r=localStorage.getItem(STORAGE_DIARY+ds); return r?JSON.parse(r):{image:'',note:''}; }
+    function saveData(ds,obj){ localStorage.setItem(STORAGE_DIARY+ds,JSON.stringify(obj)); }
+    function delData(ds){ localStorage.removeItem(STORAGE_DIARY+ds); }
+
+    function renderGrid(){
+      document.getElementById('diaryMonthLabel').textContent = `${diaryYear}年${diaryMonth}月`;
+      const dim = daysInMonth(diaryYear, diaryMonth);
+      const fd = new Date(diaryYear, diaryMonth-1, 1).getDay();
+      let html = '';
+      // 星期头
+      ['日','一','二','三','四','五','六'].forEach(d=>{ html+=`<div style="font-size:0.6rem;color:var(--text-muted);padding:4px 0;">${d}</div>`; });
+      // 空白填充
+      for(let i=0;i<fd;i++) html+='<div></div>';
+      // 日期格子
+      for(let d=1;d<=dim;d++){
+        const ds = `${diaryYear}-${String(diaryMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const data = getData(ds);
+        const bg = data.image ? `background-image:url(${data.image});background-size:cover;background-position:center;` : '';
+        const border = data.image ? 'border:3px solid white;' : 'border:2px solid rgba(201,168,76,0.2);';
+        html += `<div data-date="${ds}" style="aspect-ratio:1;${bg}${border}border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:bold;color:var(--text-secondary);background-color:var(--bg-elevated);">${data.image?'':d}</div>`;
+      }
+      document.getElementById('diaryGrid').innerHTML = html;
+      document.querySelectorAll('#diaryGrid [data-date]').forEach(cell=>{
+        cell.addEventListener('click', function(){
+          selectedDate = this.getAttribute('data-date');
+          openEditor(selectedDate);
+        });
+      });
+    }
+
+    function openEditor(ds){
+      selectedDate = ds;
+      const data = getData(ds);
+      currentImage = data.image || null;
+      processedImage = data.image || null;
+      document.getElementById('diaryEditTitle').textContent = ds;
+      document.getElementById('diaryNoteInput').value = data.note || '';
+      document.getElementById('cutoutBtn').style.display = currentImage ? 'inline-block' : 'none';
+      updatePreview();
+      document.getElementById('diaryEditModal').classList.add('show');
+    }
+
+    function updatePreview(){
+      const preview = document.getElementById('diaryPreview');
+      if (processedImage) {
+        preview.innerHTML = `<img src="${processedImage}" style="max-width:100%;max-height:200px;border-radius:10px;">`;
+      } else {
+        preview.innerHTML = '<span style="color:var(--text-muted);">图片预览</span>';
+      }
+    }
+
+    // 上传图片
+    document.getElementById('uploadImgBtn').addEventListener('click', ()=> document.getElementById('diaryImageInput').click());
+    document.getElementById('diaryImageInput').addEventListener('change', function(e){
+      const f = e.target.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = function(ev){ currentImage = ev.target.result; processedImage = currentImage; document.getElementById('cutoutBtn').style.display='inline-block'; updatePreview(); };
+      reader.readAsDataURL(f);
+    });
+
+    // 拍照
+    document.getElementById('cameraBtn').addEventListener('click', ()=>{
+      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+        navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+          const video = document.getElementById('diaryVideo');
+          video.srcObject = stream;
+          video.style.display = 'block';
+          video.play();
+          setTimeout(()=>{
+            const canvas = document.getElementById('diaryCanvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video,0,0);
+            currentImage = canvas.toDataURL('image/jpeg',0.8);
+            processedImage = currentImage;
+            stream.getTracks().forEach(t=>t.stop());
+            video.style.display = 'none';
+            document.getElementById('cutoutBtn').style.display='inline-block';
+            updatePreview();
+          },1000);
+        }).catch(()=> alert('无法访问摄像头'));
+      } else {
+        // 回退：用文件选择
+        document.getElementById('diaryCameraInput').click();
+      }
+    });
+    document.getElementById('diaryCameraInput').addEventListener('change', function(e){
+      const f = e.target.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = function(ev){ currentImage = ev.target.result; processedImage = currentImage; document.getElementById('cutoutBtn').style.display='inline-block'; updatePreview(); };
+      reader.readAsDataURL(f);
+    });
+
+    // 抠图加白边
+    document.getElementById('cutoutBtn').addEventListener('click', ()=>{
+      if (!currentImage) return;
+      const img = new Image();
+      img.src = currentImage;
+      img.onload = function(){
+        const canvas = document.getElementById('diaryCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img,0,0);
+        const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+        const data = imageData.data;
+        // 简单边缘检测：检测透明/接近白色的边缘
+        const edgeMap = new Uint8Array(canvas.width * canvas.height);
+        for(let y=1;y<canvas.height-1;y++){
+          for(let x=1;x<canvas.width-1;x++){
+            const idx = (y*canvas.width+x)*4;
+            const r=data[idx], g=data[idx+1], b=data[idx+2];
+            const brightness = (r+g+b)/3;
+            // 检测邻近视差
+            const nIdx = ((y-1)*canvas.width+x)*4;
+            const nr=data[nIdx], ng=data[nIdx+1], nb=data[nIdx+2];
+            const diff = Math.abs(brightness - (nr+ng+nb)/3);
+            if(diff>30) edgeMap[y*canvas.width+x]=1;
+          }
+        }
+        // 创建新画布加白边
+        const newCanvas = document.createElement('canvas');
+        const border = 20;
+        newCanvas.width = canvas.width + border*2;
+        newCanvas.height = canvas.height + border*2;
+        const nctx = newCanvas.getContext('2d');
+        nctx.fillStyle = 'white';
+        nctx.fillRect(0,0,newCanvas.width,newCanvas.height);
+        // 把原图贴到中间，边缘检测区域留白
+        nctx.drawImage(canvas, border, border);
+        processedImage = newCanvas.toDataURL('image/png');
+        updatePreview();
+      };
+    });
+
+    // 保存
+    document.getElementById('saveDiaryBtn').addEventListener('click', ()=>{
+      if(!selectedDate) return;
+      saveData(selectedDate, {image:processedImage||'', note:document.getElementById('diaryNoteInput').value.trim()});
+      document.getElementById('diaryEditModal').classList.remove('show');
+      renderGrid();
+    });
+
+    // 删除
+    document.getElementById('deleteDiaryBtn').addEventListener('click', ()=>{
+      if(!selectedDate) return;
+      if(confirm('确定删除这一天的记录吗？')){
+        delData(selectedDate);
+        document.getElementById('diaryEditModal').classList.remove('show');
+        renderGrid();
+      }
+    });
+
+    // 取消
+    document.getElementById('cancelDiaryBtn').addEventListener('click', ()=>{
+      document.getElementById('diaryEditModal').classList.remove('show');
+    });
+    document.getElementById('diaryEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+
+    document.getElementById('diaryPrevMonth').addEventListener('click', ()=>{ diaryMonth--; if(diaryMonth<1){diaryMonth=12;diaryYear--;} renderGrid(); });
+    document.getElementById('diaryNextMonth').addEventListener('click', ()=>{ diaryMonth++; if(diaryMonth>12){diaryMonth=1;diaryYear++;} renderGrid(); });
+
+    renderGrid();
+  })();
+}
 </script>
 </body>
 </html>
