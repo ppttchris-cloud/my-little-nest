@@ -1149,15 +1149,29 @@ function loadDiaryModule(){
     reader.readAsDataURL(f);
   });
 
-  // 拍照
+  // 拍照（带取景画面）
   document.getElementById('cameraBtn').addEventListener('click', ()=>{
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
       navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
         const video = document.getElementById('diaryVideo');
         video.srcObject = stream;
         video.style.display = 'block';
+        video.style.position = 'fixed';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.zIndex = '999';
+        video.style.objectFit = 'cover';
         video.play();
-        setTimeout(()=>{
+
+        // 拍摄按钮
+        const shootBtn = document.createElement('button');
+        shootBtn.textContent = '📷 拍摄';
+        shootBtn.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:1000;background:#c9a84c;color:#1a1510;border:none;padding:16px 40px;border-radius:30px;font-size:1.2rem;font-weight:bold;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
+        document.body.appendChild(shootBtn);
+
+        shootBtn.addEventListener('click', ()=>{
           const canvas = document.getElementById('diaryCanvas');
           canvas.width = video.videoWidth || 640;
           canvas.height = video.videoHeight || 480;
@@ -1165,12 +1179,14 @@ function loadDiaryModule(){
           currentImage = canvas.toDataURL('image/jpeg',0.8);
           stream.getTracks().forEach(t=>t.stop());
           video.style.display = 'none';
+          video.style.position = '';
+          shootBtn.remove();
           updatePreview();
           autoCutout(currentImage, (result) => {
             processedImage = result;
             updatePreview();
           });
-        },1000);
+        });
       }).catch(()=> alert('无法访问摄像头'));
     } else {
       document.getElementById('diaryCameraInput').click();
