@@ -961,6 +961,268 @@ function loadWorkModule(){
   })();
 }
 
+// ==================== 日记相册模块 ====================
+function loadDiaryModule(){
+  document.getElementById('diaryContent').innerHTML = `
+    <div class="app-card">
+      <h2>📸 日记相册</h2>
+      <div class="month-header">
+        <button class="month-nav" id="diaryPrevMonth">◀</button>
+        <span id="diaryMonthLabel"></span>
+        <button class="month-nav" id="diaryNextMonth">▶</button>
+      </div>
+      <div id="diaryGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
+    </div>
+    <div class="edit-modal" id="diaryEditModal">
+      <div class="edit-box" style="max-width:380px;">
+        <h3 id="diaryEditTitle">编辑日记</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <label class="btn btn-primary" for="diaryImageInput" style="cursor:pointer;">📷 上传图片</label>
+          <input type="file" id="diaryImageInput" accept="image/*" style="display:none;">
+          <button class="btn btn-primary" id="cameraBtn">📸 拍照</button>
+          <input type="file" id="diaryCameraInput" accept="image/*" capture="environment" style="display:none;">
+        </div>
+        <div id="diaryPreview" style="text-align:center;min-height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);border-radius:14px;padding:10px;margin-top:8px;">
+          <span style="color:var(--text-muted);">图片预览</span>
+        </div>
+        <textarea id="diaryNoteInput" placeholder="写点什么……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" id="saveDiaryBtn" style="flex:1;">💾 保存</button>
+          <button class="btn btn-delete" id="deleteDiaryBtn">🗑 删除</button>
+          <button class="btn btn-close" id="cancelDiaryBtn">取消</button>
+        </div>
+      </div>
+    </div>
+    <canvas id="diaryCanvas" style="display:none;"></canvas>
+    <video id="diaryVideo" autoplay playsinline style="display:none;"></video>
+  `;
+
+  const STORAGE_DIARY = 'diary_v1_';
+  let diaryYear, diaryMonth;
+  const now = new Date(); diaryYear = now.getFullYear(); diaryMonth = now.getMonth() + 1;
+  let selectedDate = null, currentImage = null, processedImage = null;
+
+  function daysInMonth(y,m){ return new Date(y,m,0).getDate(); }
+  function getData(ds){ const r=localStorage.getItem(STORAGE_DIARY+ds); return r?JSON.parse(r):{image:'',note:''}; }
+  function saveData(ds,obj){ localStorage.setItem(STORAGE_DIARY+ds,JSON.stringify(obj)); }
+  function delData(ds){ localStorage.removeItem(STORAGE_DIARY+ds); }
+
+  function renderGrid(){
+    document.getElementById('diaryMonthLabel').textContent = `${diaryYear}年${diaryMonth}月`;
+    const dim = daysInMonth(diaryYear, diaryMonth);
+    const fd = new Date(diaryYear, diaryMonth-1, 1).getDay();
+    let html = '';
+    ['日','一','二','三','四','五','六'].forEach(d=>{ html+=`<div style="font-size:0.6rem;color:var(--text-muted);padding:4px 0;">${d}</div>`; });
+    for(let i=0;i<fd;i++) html+='<div></div>';
+    for(let d=1;d<=dim;d++){
+      const ds = `${diaryYear}-${String(diaryMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const data = getData(ds);
+      let imgTag = '';
+      if(data.image){
+        imgTag = `<div style="position:absolute;bottom:2px;right:2px;width:28px;height:28px;border-radius:6px;background-image:url(${data.image});background-size:cover;background-position:center;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>`;
+      }
+      html += `<div data-date="${ds}" style="aspect-ratio:1;background:var(--bg-elevated);border:2px solid rgba(201,168,76,0.2);border-radius:10px;cursor:pointer;position:relative;display:flex;align-items:flex-start;justify-content:flex-start;font-size:0.8rem;font-weight:bold;color:var(--text-secondary);padding:4px;">
+        <span>${d}</span>
+        ${imgTag}
+      </div>`;
+    }
+    document.getElementById('diaryGrid').innerHTML = html;
+    document.querySelectorAll('#diaryGrid [data-date]').forEach(cell=>{
+      cell.addEventListener('click', function(){
+        selectedDate = this.getAttribute('data-date');
+        openEditor(selectedDate);
+      });
+    });
+  }
+
+  function openEditor(ds){
+    selectedDate = ds;
+    const data = getData(ds);
+    currentImage = data.image || null;
+    processedImage = data.image || null;
+    document.getElementById('diaryEditTitle').textContent = ds;
+    document.getElementById('diaryNoteInput').value = data.note || '';
+    updatePreview();
+    document.getElementById('diaryEditModal').classList.add('show');
+  }
+
+  function updatePreview(){
+    const preview = document.getElementById('diaryPreview');
+    if (processedImage) {
+      preview.innerHTML = `<img src="${processedImage}" style="max-width:100%;max-height:200px;border-radius:10px;">`;
+    } else {
+      preview.innerHTML = '<span style="color:var(--text-muted);">图片预览</span>';
+    }
+  }
+
+  // 调用 remove.bg API 去背景 + 白边描边
+  function autoCutout(src, callback) {
+    const apiKey = 'e874DJMsR5wLwsegs1DtpBwE';
+    const base64Data = src.split(',')[1];
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'image/png' });
+
+    const formData = new FormData();
+    formData.append('image_file', blob, 'photo.png');
+    formData.append('size', 'auto');
+
+    fetch('https://api.remove.bg/v1.0/removebg', {
+      method: 'POST',
+      headers: { 'X-Api-Key': apiKey },
+      body: formData,
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('API 请求失败');
+      return response.blob();
+    })
+    .then(blob => {
+      const reader = new FileReader();
+      reader.onload = function() {
+        const removedBgImage = reader.result;
+        const img = new Image();
+        img.src = removedBgImage;
+        img.onload = function() {
+          const canvas = document.getElementById('diaryCanvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+          const w = canvas.width, h = canvas.height;
+          const alpha = new Uint8Array(w * h);
+          for (let i = 0; i < w * h; i++) {
+            alpha[i] = data[i * 4 + 3] > 128 ? 1 : 0;
+          }
+          ctx.strokeStyle = 'white';
+          ctx.lineWidth = 12;
+          ctx.beginPath();
+          for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+              if (!alpha[y * w + x]) continue;
+              let isEdge = false;
+              for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                  if (dx === 0 && dy === 0) continue;
+                  const nx = x + dx, ny = y + dy;
+                  if (nx < 0 || nx >= w || ny < 0 || ny >= h || !alpha[ny * w + nx]) {
+                    isEdge = true; break;
+                  }
+                }
+                if (isEdge) break;
+              }
+              if (isEdge) {
+                ctx.moveTo(x, y);
+                ctx.arc(x, y, 6, 0, Math.PI * 2);
+              }
+            }
+          }
+          ctx.stroke();
+          callback(canvas.toDataURL('image/png'));
+        };
+      };
+      reader.readAsDataURL(blob);
+    })
+    .catch(error => {
+      console.error('抠图失败:', error);
+      callback(src);
+    });
+  }
+
+  // 上传图片
+  document.getElementById('diaryImageInput').addEventListener('change', function(e){
+    const f = e.target.files[0]; if(!f) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      currentImage = ev.target.result;
+      updatePreview();
+      autoCutout(currentImage, (result) => {
+        processedImage = result;
+        updatePreview();
+      });
+    };
+    reader.readAsDataURL(f);
+  });
+
+  // 拍照
+  document.getElementById('cameraBtn').addEventListener('click', ()=>{
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+      navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+        const video = document.getElementById('diaryVideo');
+        video.srcObject = stream;
+        video.style.display = 'block';
+        video.play();
+        setTimeout(()=>{
+          const canvas = document.getElementById('diaryCanvas');
+          canvas.width = video.videoWidth || 640;
+          canvas.height = video.videoHeight || 480;
+          canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+          currentImage = canvas.toDataURL('image/jpeg',0.8);
+          stream.getTracks().forEach(t=>t.stop());
+          video.style.display = 'none';
+          updatePreview();
+          autoCutout(currentImage, (result) => {
+            processedImage = result;
+            updatePreview();
+          });
+        },1000);
+      }).catch(()=> alert('无法访问摄像头'));
+    } else {
+      document.getElementById('diaryCameraInput').click();
+    }
+  });
+  document.getElementById('diaryCameraInput').addEventListener('change', function(e){
+    const f = e.target.files[0]; if(!f) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      currentImage = ev.target.result;
+      updatePreview();
+      autoCutout(currentImage, (result) => {
+        processedImage = result;
+        updatePreview();
+      });
+    };
+    reader.readAsDataURL(f);
+  });
+
+  // 保存
+document.getElementById('saveDiaryBtn').addEventListener('click', ()=>{
+    if(!selectedDate) return;
+    if(!processedImage && currentImage){
+      alert('图片还在处理中，请稍等几秒再保存');
+      return;
+    }
+    saveData(selectedDate, {image:processedImage||'', note:document.getElementById('diaryNoteInput').value.trim()});
+    document.getElementById('diaryEditModal').classList.remove('show');
+    renderGrid();
+  });
+
+  // 删除
+  document.getElementById('deleteDiaryBtn').addEventListener('click', ()=>{
+    if(!selectedDate) return;
+    if(confirm('确定删除吗？')){
+      delData(selectedDate);
+      document.getElementById('diaryEditModal').classList.remove('show');
+      renderGrid();
+    }
+  });
+
+  // 取消
+  document.getElementById('cancelDiaryBtn').addEventListener('click', ()=>{
+    document.getElementById('diaryEditModal').classList.remove('show');
+  });
+  document.getElementById('diaryEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+
+  document.getElementById('diaryPrevMonth').addEventListener('click', ()=>{ diaryMonth--; if(diaryMonth<1){diaryMonth=12;diaryYear--;} renderGrid(); });
+  document.getElementById('diaryNextMonth').addEventListener('click', ()=>{ diaryMonth++; if(diaryMonth>12){diaryMonth=1;diaryYear++;} renderGrid(); });
+
+  renderGrid();
+}
 // ==================== 初始化主页 ====================
 renderJList();
 renderPGrid();
@@ -968,7 +1230,6 @@ function editTitle(){
   const newTitle = prompt('输入新名称：', document.getElementById('topTitle').textContent.replace('✏️','').trim());
   if(newTitle){
     document.getElementById('topTitle').innerHTML = newTitle + ' <span style="font-size:0.7rem;">✏️</span>';
-    document.getElementById('topTitle').setAttribute('onclick','editTitle()');
     document.title = newTitle;
     localStorage.setItem('my_app_title', newTitle);
   }
@@ -984,214 +1245,6 @@ let dragSrcIndex = null;
 function dragStart(e) { dragSrcIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); e.dataTransfer.effectAllowed = 'move'; }
 function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
 function dropItem(e) { e.preventDefault(); const targetIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) { const items = getCurtainItems(); const draggedItem = items.splice(dragSrcIndex, 1)[0]; items.splice(targetIndex, 0, draggedItem); localStorage.setItem('my_curtain_order', JSON.stringify(items.map(i => i.id))); renderCurtain(); } dragSrcIndex = null; }
-// ==================== 日记相册模块 ====================
-function loadDiaryModule(){
-  document.getElementById('diaryContent').innerHTML = `
-    <div class="app-card">
-      <h2>📸 日记相册</h2>
-      <div class="month-header">
-        <button class="month-nav" id="diaryPrevMonth">◀</button>
-        <span id="diaryMonthLabel"></span>
-        <button class="month-nav" id="diaryNextMonth">▶</button>
-      </div>
-      <div id="diaryGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;"></div>
-    </div>
-    <div class="edit-modal" id="diaryEditModal">
-      <div class="edit-box" style="max-width:380px;">
-        <h3 id="diaryEditTitle">编辑日记</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-primary" id="uploadImgBtn">📷 上传图片</button>
-          <button class="btn btn-primary" id="cameraBtn">📸 拍照</button>
-          <input type="file" id="diaryImageInput" accept="image/*" style="display:none;">
-          <input type="file" id="diaryCameraInput" accept="image/*" capture="environment" style="display:none;">
-        </div>
-        <div id="diaryPreview" style="text-align:center;min-height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);border-radius:14px;padding:10px;margin-top:8px;">
-          <span style="color:var(--text-muted);">图片预览</span>
-        </div>
-        <button class="btn btn-primary" id="cutoutBtn" style="display:none;">✂️ 抠图加白边</button>
-        <textarea id="diaryNoteInput" placeholder="写点什么……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-primary" id="saveDiaryBtn" style="flex:1;">💾 保存</button>
-          <button class="btn btn-delete" id="deleteDiaryBtn">🗑 删除</button>
-          <button class="btn btn-close" id="cancelDiaryBtn">取消</button>
-        </div>
-      </div>
-    </div>
-    <canvas id="diaryCanvas" style="display:none;"></canvas>
-    <video id="diaryVideo" autoplay playsinline style="display:none;"></video>
-  `;
-  (function(){
-    const STORAGE_DIARY = 'diary_v1_';
-    let diaryYear, diaryMonth;
-    const now = new Date(); diaryYear = now.getFullYear(); diaryMonth = now.getMonth() + 1;
-    let selectedDate = null, currentImage = null, processedImage = null;
-
-    function daysInMonth(y,m){ return new Date(y,m,0).getDate(); }
-    function getData(ds){ const r=localStorage.getItem(STORAGE_DIARY+ds); return r?JSON.parse(r):{image:'',note:''}; }
-    function saveData(ds,obj){ localStorage.setItem(STORAGE_DIARY+ds,JSON.stringify(obj)); }
-    function delData(ds){ localStorage.removeItem(STORAGE_DIARY+ds); }
-
-    function renderGrid(){
-      document.getElementById('diaryMonthLabel').textContent = `${diaryYear}年${diaryMonth}月`;
-      const dim = daysInMonth(diaryYear, diaryMonth);
-      const fd = new Date(diaryYear, diaryMonth-1, 1).getDay();
-      let html = '';
-      // 星期头
-      ['日','一','二','三','四','五','六'].forEach(d=>{ html+=`<div style="font-size:0.6rem;color:var(--text-muted);padding:4px 0;">${d}</div>`; });
-      // 空白填充
-      for(let i=0;i<fd;i++) html+='<div></div>';
-      // 日期格子
-      for(let d=1;d<=dim;d++){
-        const ds = `${diaryYear}-${String(diaryMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-        const data = getData(ds);
-        const bg = data.image ? `background-image:url(${data.image});background-size:cover;background-position:center;` : '';
-        const border = data.image ? 'border:3px solid white;' : 'border:2px solid rgba(201,168,76,0.2);';
-        html += `<div data-date="${ds}" style="aspect-ratio:1;${bg}${border}border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:bold;color:var(--text-secondary);background-color:var(--bg-elevated);">${data.image?'':d}</div>`;
-      }
-      document.getElementById('diaryGrid').innerHTML = html;
-      document.querySelectorAll('#diaryGrid [data-date]').forEach(cell=>{
-        cell.addEventListener('click', function(){
-          selectedDate = this.getAttribute('data-date');
-          openEditor(selectedDate);
-        });
-      });
-    }
-
-    function openEditor(ds){
-      selectedDate = ds;
-      const data = getData(ds);
-      currentImage = data.image || null;
-      processedImage = data.image || null;
-      document.getElementById('diaryEditTitle').textContent = ds;
-      document.getElementById('diaryNoteInput').value = data.note || '';
-      document.getElementById('cutoutBtn').style.display = currentImage ? 'inline-block' : 'none';
-      updatePreview();
-      document.getElementById('diaryEditModal').classList.add('show');
-    }
-
-    function updatePreview(){
-      const preview = document.getElementById('diaryPreview');
-      if (processedImage) {
-        preview.innerHTML = `<img src="${processedImage}" style="max-width:100%;max-height:200px;border-radius:10px;">`;
-      } else {
-        preview.innerHTML = '<span style="color:var(--text-muted);">图片预览</span>';
-      }
-    }
-
-    // 上传图片
-    document.getElementById('uploadImgBtn').addEventListener('click', ()=> document.getElementById('diaryImageInput').click());
-    document.getElementById('diaryImageInput').addEventListener('change', function(e){
-      const f = e.target.files[0]; if(!f) return;
-      const reader = new FileReader();
-      reader.onload = function(ev){ currentImage = ev.target.result; processedImage = currentImage; document.getElementById('cutoutBtn').style.display='inline-block'; updatePreview(); };
-      reader.readAsDataURL(f);
-    });
-
-    // 拍照
-    document.getElementById('cameraBtn').addEventListener('click', ()=>{
-      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-        navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
-          const video = document.getElementById('diaryVideo');
-          video.srcObject = stream;
-          video.style.display = 'block';
-          video.play();
-          setTimeout(()=>{
-            const canvas = document.getElementById('diaryCanvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video,0,0);
-            currentImage = canvas.toDataURL('image/jpeg',0.8);
-            processedImage = currentImage;
-            stream.getTracks().forEach(t=>t.stop());
-            video.style.display = 'none';
-            document.getElementById('cutoutBtn').style.display='inline-block';
-            updatePreview();
-          },1000);
-        }).catch(()=> alert('无法访问摄像头'));
-      } else {
-        // 回退：用文件选择
-        document.getElementById('diaryCameraInput').click();
-      }
-    });
-    document.getElementById('diaryCameraInput').addEventListener('change', function(e){
-      const f = e.target.files[0]; if(!f) return;
-      const reader = new FileReader();
-      reader.onload = function(ev){ currentImage = ev.target.result; processedImage = currentImage; document.getElementById('cutoutBtn').style.display='inline-block'; updatePreview(); };
-      reader.readAsDataURL(f);
-    });
-
-    // 抠图加白边
-    document.getElementById('cutoutBtn').addEventListener('click', ()=>{
-      if (!currentImage) return;
-      const img = new Image();
-      img.src = currentImage;
-      img.onload = function(){
-        const canvas = document.getElementById('diaryCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img,0,0);
-        const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-        const data = imageData.data;
-        // 简单边缘检测：检测透明/接近白色的边缘
-        const edgeMap = new Uint8Array(canvas.width * canvas.height);
-        for(let y=1;y<canvas.height-1;y++){
-          for(let x=1;x<canvas.width-1;x++){
-            const idx = (y*canvas.width+x)*4;
-            const r=data[idx], g=data[idx+1], b=data[idx+2];
-            const brightness = (r+g+b)/3;
-            // 检测邻近视差
-            const nIdx = ((y-1)*canvas.width+x)*4;
-            const nr=data[nIdx], ng=data[nIdx+1], nb=data[nIdx+2];
-            const diff = Math.abs(brightness - (nr+ng+nb)/3);
-            if(diff>30) edgeMap[y*canvas.width+x]=1;
-          }
-        }
-        // 创建新画布加白边
-        const newCanvas = document.createElement('canvas');
-        const border = 20;
-        newCanvas.width = canvas.width + border*2;
-        newCanvas.height = canvas.height + border*2;
-        const nctx = newCanvas.getContext('2d');
-        nctx.fillStyle = 'white';
-        nctx.fillRect(0,0,newCanvas.width,newCanvas.height);
-        // 把原图贴到中间，边缘检测区域留白
-        nctx.drawImage(canvas, border, border);
-        processedImage = newCanvas.toDataURL('image/png');
-        updatePreview();
-      };
-    });
-
-    // 保存
-    document.getElementById('saveDiaryBtn').addEventListener('click', ()=>{
-      if(!selectedDate) return;
-      saveData(selectedDate, {image:processedImage||'', note:document.getElementById('diaryNoteInput').value.trim()});
-      document.getElementById('diaryEditModal').classList.remove('show');
-      renderGrid();
-    });
-
-    // 删除
-    document.getElementById('deleteDiaryBtn').addEventListener('click', ()=>{
-      if(!selectedDate) return;
-      if(confirm('确定删除这一天的记录吗？')){
-        delData(selectedDate);
-        document.getElementById('diaryEditModal').classList.remove('show');
-        renderGrid();
-      }
-    });
-
-    // 取消
-    document.getElementById('cancelDiaryBtn').addEventListener('click', ()=>{
-      document.getElementById('diaryEditModal').classList.remove('show');
-    });
-    document.getElementById('diaryEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
-
-    document.getElementById('diaryPrevMonth').addEventListener('click', ()=>{ diaryMonth--; if(diaryMonth<1){diaryMonth=12;diaryYear--;} renderGrid(); });
-    document.getElementById('diaryNextMonth').addEventListener('click', ()=>{ diaryMonth++; if(diaryMonth>12){diaryMonth=1;diaryYear++;} renderGrid(); });
-
-    renderGrid();
-  })();
-}
 </script>
 </body>
 </html>
