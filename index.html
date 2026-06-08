@@ -443,6 +443,10 @@
     <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8c97a;">📸 日记相册</span></div>
     <div class="func-content" id="diaryContent"></div>
   </div>
+  <div class="func-page" id="funcCommunity">
+    <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8c97a;">💬 树洞社区</span></div>
+    <div class="func-content" id="communityContent"></div>
+  </div>
 </div>
 
 <script>
@@ -544,6 +548,7 @@ const modules = [
   { id:'recipe', name:'菜谱选购', icon:'🍳', desc:'选菜、生成采购清单', size:'lg' },
   { id:'work', name:'钱钱钱💰', icon:'💰', desc:'防止裸辞神器', size:'lg' },
   { id:'diary', name:'日记相册', icon:'📸', desc:'拍照抠图记录生活', size:'lg' },
+  { id:'community', name:'树洞社区（没开发完）', icon:'💬', desc:'发帖回复记录生活', size:'lg' },
   { id:'more', name:'更多', icon:'📦', desc:'即将上线', size:'sm' }
 ];
 let isJMode = true;
@@ -572,6 +577,9 @@ function openModule(id){
   if(id === 'period'){
     document.getElementById('funcPeriod').classList.add('active');
     if(!window._periodLoaded){ loadPeriodModule(); window._periodLoaded = true; }
+  } else if(id === 'community'){
+    document.getElementById('funcCommunity').classList.add('active');
+    if(!window._communityLoaded){ loadCommunityModule(); window._communityLoaded = true; }
   } else if(id === 'diary'){
     document.getElementById('funcDiary').classList.add('active');
     if(!window._diaryLoaded){ loadDiaryModule(); window._diaryLoaded = true; }  
@@ -683,7 +691,7 @@ function loadRecipeModule(){
     <div class="modal-overlay" id="receiptModal"><div class="receipt-modal"><h3 style="text-align:center;color:var(--gold-light);">🧾 采购清单</h3><div id="receiptList"></div><button class="close-receipt" id="closeReceiptBtn">关闭</button></div></div>
     <div class="edit-modal" id="editModal"><div class="edit-box"><h3 id="editTitle" style="color:var(--gold-light);">添加新菜</h3><input type="text" id="editName" placeholder="菜名（必填）"><select id="editCategory"><option value="荤菜">荤菜</option><option value="素菜">素菜</option><option value="汤羹">汤羹</option><option value="甜品">甜品</option><option value="主食">主食</option><option value="其他">其他</option></select><input type="text" id="editIngredients" placeholder="食材，用逗号分隔（如：番茄,鸡蛋,葱）"><div class="row"><label for="editImage" style="flex:1;background:var(--bg-elevated);border:1px solid var(--border);padding:8px;border-radius:12px;text-align:center;cursor:pointer;color:var(--text-secondary);">📷 选择图片</label><input type="file" id="editImage" accept="image/*" style="display:none;"><span id="editImagePreview" style="font-size:0.7rem;color:var(--text-secondary);"></span></div><div class="row" style="justify-content:space-between;"><button class="btn btn-primary" id="saveDishBtn">保存</button><button class="btn btn-danger" id="deleteDishBtn" style="display:none;">删除</button><button class="btn btn-neutral" id="cancelEditBtn">取消</button></div></div></div>
   `;
-  (function(){ const STORAGE_KEY='my_menu_data',STORAGE_CART='my_menu_cart'; const defaultMenu=[{name:'番茄炒蛋',category:'荤菜',ingredients:['番茄','鸡蛋','葱','盐','糖'],image:''},{name:'青椒肉丝',category:'荤菜',ingredients:['青椒','猪肉','蒜','酱油','淀粉'],image:''},{name:'蒜蓉西兰花',category:'素菜',ingredients:['西兰花','蒜','蚝油','盐'],image:''},{name:'可乐鸡翅',category:'荤菜',ingredients:['鸡翅','可乐','姜','料酒','生抽'],image:''}]; let menuData=[],selectedDishes={},currentCategory='全部',editingIndex=-1,tempImageData=''; function loadMenu(){ const r=localStorage.getItem(STORAGE_KEY); menuData=r?JSON.parse(r):defaultMenu; if(!r) localStorage.setItem(STORAGE_KEY,JSON.stringify(defaultMenu)); } function saveMenu(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(menuData)); } function loadCart(){ const r=localStorage.getItem(STORAGE_CART); selectedDishes=r?JSON.parse(r):{}; } function saveCart(){ localStorage.setItem(STORAGE_CART,JSON.stringify(selectedDishes)); } function getCategories(){ const cats=new Set(menuData.map(d=>d.category)); return['全部',...Array.from(cats)]; } function renderCategories(){ document.getElementById('categorySidebar').innerHTML=getCategories().map(c=>`<div class="category-item${c===currentCategory?' active':''}" data-cat="${c}">${c}</div>`).join(''); document.querySelectorAll('.category-item').forEach(item=>{ item.addEventListener('click',function(){ currentCategory=this.getAttribute('data-cat'); renderCategories(); renderDishes(); }); }); } function renderDishes(){ const filtered=currentCategory==='全部'?menuData:menuData.filter(d=>d.category===currentCategory); document.getElementById('dishList').innerHTML=filtered.map(dish=>{ const gi=menuData.indexOf(dish); const is=dish.image?`background-image:url('${dish.image}')`:''; const qty=selectedDishes[gi]||0; const rightHTML=qty>0?`<div class="qty-wrap"><button class="qty-btn minus" data-index="${gi}">−</button><span class="qty-num">${qty}</span><button class="qty-btn plus" data-index="${gi}">+</button></div>`:`<button class="add-btn" data-index="${gi}">➕</button>`; return`<div class="dish-card"><div class="dish-img" style="${is}"></div><div class="dish-info"><div class="dish-name">${dish.name}</div><div class="dish-ingredients">${dish.ingredients.map(i=>`<span class="ingredient-tag">${i}</span>`).join('')}</div></div>${rightHTML}</div>`; }).join(''); document.querySelectorAll('.add-btn').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.plus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=(selectedDishes[i]||0)+1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.minus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]--; if(selectedDishes[i]<=0) delete selectedDishes[i]; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.dish-card').forEach((card,i)=>{ let pressTimer; card.addEventListener('touchstart',function(e){ pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('touchend',function(){ clearTimeout(pressTimer); }); card.addEventListener('touchmove',function(){ clearTimeout(pressTimer); }); card.addEventListener('mousedown',function(e){ pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('mouseup',function(){ clearTimeout(pressTimer); }); card.addEventListener('mouseleave',function(){ clearTimeout(pressTimer); }); }); } function updateCartInfo(){ const total=Object.values(selectedDishes).reduce((a,b)=>a+b,0); document.getElementById('cartInfo').textContent=`已选 ${total} 份`; } function renderReceipt(){ const all=[]; Object.keys(selectedDishes).forEach(i=>{ const d=menuData[parseInt(i)]; const qty=selectedDishes[i]||1; if(d) d.ingredients.forEach(ing=>{ for(let n=0;n<qty;n++) all.push(ing); }); }); const counts={}; all.forEach(ing=>{ counts[ing]=(counts[ing]||0)+1; }); const unique=Object.keys(counts).map(ing=>counts[ing]>1?`${ing} x${counts[ing]}`:ing); document.getElementById('receiptList').innerHTML=unique.map(ing=>`<div class="receipt-item" data-ing="${ing.split(' x')[0]}"><div class="check-box"></div><span>${ing}</span></div>`).join(''); document.querySelectorAll('.receipt-item').forEach(item=>{ item.addEventListener('click',function(){ this.classList.toggle('checked'); }); }); } function openEditor(index){ editingIndex=index; const dish=index>=0?menuData[index]:null; document.getElementById('editTitle').textContent=index>=0?'编辑菜品':'添加新菜'; document.getElementById('editName').value=dish?dish.name:''; document.getElementById('editCategory').value=dish?dish.category:'荤菜'; document.getElementById('editIngredients').value=dish?dish.ingredients.join(','):''; document.getElementById('editImagePreview').textContent=dish&&dish.image?'✅ 已有图':''; tempImageData=dish?dish.image||'':''; document.getElementById('deleteDishBtn').style.display=index>=0?'inline-block':'none'; document.getElementById('editModal').classList.add('show'); } document.getElementById('addDishHeaderBtn').addEventListener('click',()=>openEditor(-1)); document.getElementById('editImage').addEventListener('change',function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ tempImageData=ev.target.result; document.getElementById('editImagePreview').textContent='✅ 已选图'; }; r.readAsDataURL(f); }); document.getElementById('saveDishBtn').addEventListener('click',function(){ const name=document.getElementById('editName').value.trim(); if(!name) return alert('菜名不能为空'); const category=document.getElementById('editCategory').value; const raw=document.getElementById('editIngredients').value.trim(); const ingredients=raw?raw.split(/[,，]/).map(s=>s.trim()).filter(s=>s):[]; let finalImage=tempImageData; if(tempImageData&&tempImageData.length>200000){ const img=new Image(); img.src=tempImageData; img.onload=function(){ const canvas=document.createElement('canvas'); const maxW=300; const scale=maxW/img.width; canvas.width=maxW; canvas.height=img.height*scale; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); finalImage=canvas.toDataURL('image/jpeg',0.6); saveDish(finalImage); }; return; } saveDish(finalImage); function saveDish(img){ const dish={name,category,ingredients,image:img}; if(editingIndex>=0) menuData[editingIndex]=dish; else menuData.push(dish); saveMenu(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); } }); document.getElementById('deleteDishBtn').addEventListener('click',function(){ if(editingIndex>=0&&confirm('确定删除这道菜吗？')){ delete selectedDishes[editingIndex]; menuData.splice(editingIndex,1); saveMenu(); saveCart(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); updateCartInfo(); } }); document.getElementById('cancelEditBtn').addEventListener('click',()=>{ document.getElementById('editModal').classList.remove('show'); }); document.getElementById('editModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); document.getElementById('viewListBtn').addEventListener('click',()=>{ renderReceipt(); document.getElementById('receiptModal').classList.add('show'); }); document.getElementById('closeReceiptBtn').addEventListener('click',()=>{ document.getElementById('receiptModal').classList.remove('show'); }); document.getElementById('receiptModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); loadMenu(); loadCart(); renderCategories(); renderDishes(); updateCartInfo(); })();
+  (function(){ const STORAGE_KEY='my_menu_data',STORAGE_CART='my_menu_cart'; const defaultMenu=[{name:'番茄炒蛋',category:'荤菜',ingredients:['番茄','鸡蛋','葱','盐','糖'],image:''},{name:'青椒肉丝',category:'荤菜',ingredients:['青椒','猪肉','蒜','酱油','淀粉'],image:''},{name:'蒜蓉西兰花',category:'素菜',ingredients:['西兰花','蒜','蚝油','盐'],image:''},{name:'可乐鸡翅',category:'荤菜',ingredients:['鸡翅','可乐','姜','料酒','生抽'],image:''}]; let menuData=[],selectedDishes={},currentCategory='全部',editingIndex=-1,tempImageData=''; function loadMenu(){ const r=localStorage.getItem(STORAGE_KEY); menuData=r?JSON.parse(r):defaultMenu; if(!r) localStorage.setItem(STORAGE_KEY,JSON.stringify(defaultMenu)); } function saveMenu(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(menuData)); } function loadCart(){ const r=localStorage.getItem(STORAGE_CART); selectedDishes=r?JSON.parse(r):{}; } function saveCart(){ localStorage.setItem(STORAGE_CART,JSON.stringify(selectedDishes)); } function getCategories(){ const cats=new Set(menuData.map(d=>d.category)); return['全部',...Array.from(cats)]; } function renderCategories(){ document.getElementById('categorySidebar').innerHTML=getCategories().map(c=>`<div class="category-item${c===currentCategory?' active':''}" data-cat="${c}">${c}</div>`).join(''); document.querySelectorAll('.category-item').forEach(item=>{ item.addEventListener('click',function(){ currentCategory=this.getAttribute('data-cat'); renderCategories(); renderDishes(); }); }); } function renderDishes(){ const filtered=currentCategory==='全部'?menuData:menuData.filter(d=>d.category===currentCategory); document.getElementById('dishList').innerHTML=filtered.map(dish=>{ const gi=menuData.indexOf(dish); const is=dish.image?`background-image:url('${dish.image}')`:''; const qty=selectedDishes[gi]||0; const rightHTML=qty>0?`<div class="qty-wrap"><button class="qty-btn minus" data-index="${gi}">−</button><span class="qty-num">${qty}</span><button class="qty-btn plus" data-index="${gi}">+</button></div>`:`<button class="add-btn" data-index="${gi}">➕</button>`; return`<div class="dish-card"><div class="dish-img" style="${is}"></div><div class="dish-info"><div class="dish-name">${dish.name}</div><div class="dish-ingredients">${dish.ingredients.map(i=>`<span class="ingredient-tag">${i}</span>`).join('')}</div></div>${rightHTML}</div>`; }).join(''); document.querySelectorAll('.add-btn').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.plus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=(selectedDishes[i]||0)+1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.minus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]--; if(selectedDishes[i]<=0) delete selectedDishes[i]; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.dish-card').forEach((card,i)=>{ let pressTimer; card.addEventListener('touchstart',function(e){ e.preventDefault(); e.stopPropagation(); pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('touchend',function(){ clearTimeout(pressTimer); }); card.addEventListener('touchmove',function(){ clearTimeout(pressTimer); }); card.addEventListener('mousedown',function(e){ e.preventDefault(); e.stopPropagation(); pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('mouseup',function(){ clearTimeout(pressTimer); }); card.addEventListener('mouseleave',function(){ clearTimeout(pressTimer); }); }); } function updateCartInfo(){ const total=Object.values(selectedDishes).reduce((a,b)=>a+b,0); document.getElementById('cartInfo').textContent=`已选 ${total} 份`; } function renderReceipt(){ const all=[]; Object.keys(selectedDishes).forEach(i=>{ const d=menuData[parseInt(i)]; const qty=selectedDishes[i]||1; if(d) d.ingredients.forEach(ing=>{ for(let n=0;n<qty;n++) all.push(ing); }); }); const counts={}; all.forEach(ing=>{ counts[ing]=(counts[ing]||0)+1; }); const unique=Object.keys(counts).map(ing=>counts[ing]>1?`${ing} x${counts[ing]}`:ing); document.getElementById('receiptList').innerHTML=unique.map(ing=>`<div class="receipt-item" data-ing="${ing.split(' x')[0]}"><div class="check-box"></div><span>${ing}</span></div>`).join(''); document.querySelectorAll('.receipt-item').forEach(item=>{ item.addEventListener('click',function(){ this.classList.toggle('checked'); }); }); } function openEditor(index){ editingIndex=index; const dish=index>=0?menuData[index]:null; document.getElementById('editTitle').textContent=index>=0?'编辑菜品':'添加新菜'; document.getElementById('editName').value=dish?dish.name:''; document.getElementById('editCategory').value=dish?dish.category:'荤菜'; document.getElementById('editIngredients').value=dish?dish.ingredients.join(','):''; document.getElementById('editImagePreview').textContent=dish&&dish.image?'✅ 已有图':''; tempImageData=dish?dish.image||'':''; document.getElementById('deleteDishBtn').style.display=index>=0?'inline-block':'none'; document.getElementById('editModal').classList.add('show'); } document.getElementById('addDishHeaderBtn').addEventListener('click',()=>openEditor(-1)); document.getElementById('editImage').addEventListener('change',function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ tempImageData=ev.target.result; document.getElementById('editImagePreview').textContent='✅ 已选图'; }; r.readAsDataURL(f); }); document.getElementById('saveDishBtn').addEventListener('click',function(){ const name=document.getElementById('editName').value.trim(); if(!name) return alert('菜名不能为空'); const category=document.getElementById('editCategory').value; const raw=document.getElementById('editIngredients').value.trim(); const ingredients=raw?raw.split(/[,，]/).map(s=>s.trim()).filter(s=>s):[]; let finalImage=tempImageData; if(tempImageData&&tempImageData.length>200000){ const img=new Image(); img.src=tempImageData; img.onload=function(){ const canvas=document.createElement('canvas'); const maxW=300; const scale=maxW/img.width; canvas.width=maxW; canvas.height=img.height*scale; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); finalImage=canvas.toDataURL('image/jpeg',0.6); saveDish(finalImage); }; return; } saveDish(finalImage); function saveDish(img){ const dish={name,category,ingredients,image:img}; if(editingIndex>=0) menuData[editingIndex]=dish; else menuData.push(dish); saveMenu(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); } }); document.getElementById('deleteDishBtn').addEventListener('click',function(){ if(editingIndex>=0&&confirm('确定删除这道菜吗？')){ delete selectedDishes[editingIndex]; menuData.splice(editingIndex,1); saveMenu(); saveCart(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); updateCartInfo(); } }); document.getElementById('cancelEditBtn').addEventListener('click',()=>{ document.getElementById('editModal').classList.remove('show'); }); document.getElementById('editModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); document.getElementById('viewListBtn').addEventListener('click',()=>{ renderReceipt(); document.getElementById('receiptModal').classList.add('show'); }); document.getElementById('closeReceiptBtn').addEventListener('click',()=>{ document.getElementById('receiptModal').classList.remove('show'); }); document.getElementById('receiptModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); loadMenu(); loadCart(); renderCategories(); renderDishes(); updateCartInfo(); })();
 }
 
 // ==================== 打工续命模块 ====================
@@ -1261,6 +1269,258 @@ let dragSrcIndex = null;
 function dragStart(e) { dragSrcIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); e.dataTransfer.effectAllowed = 'move'; }
 function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
 function dropItem(e) { e.preventDefault(); const targetIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) { const items = getCurtainItems(); const draggedItem = items.splice(dragSrcIndex, 1)[0]; items.splice(targetIndex, 0, draggedItem); localStorage.setItem('my_curtain_order', JSON.stringify(items.map(i => i.id))); renderCurtain(); } dragSrcIndex = null; }
+
+// ==================== 树洞社区模块（可删除） ====================
+function loadCommunityModule(){
+  document.getElementById('communityContent').innerHTML = `
+    <div class="app-card" id="communityMainView">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <h2 style="margin:0;">💬 树洞社区</h2>
+        <button id="newPostBtn" style="background:linear-gradient(135deg, var(--gold-dim), var(--gold));color:var(--bg-deep);border:none;padding:8px 16px;border-radius:16px;font-weight:bold;cursor:pointer;font-size:0.8rem;">+ 发帖</button>
+      </div>
+      <div id="postList" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+    <div id="communityDetailView" style="display:none;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <button id="backToListBtn" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--gold-dim);border-radius:12px;width:36px;height:36px;cursor:pointer;">←</button>
+        <span style="font-weight:bold;color:var(--gold-light);">帖子详情</span>
+      </div>
+      <div id="detailContent" style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;position:relative;"></div>
+      <div style="font-weight:bold;color:var(--text-secondary);margin-bottom:8px;">评论</div>
+      <div id="replyList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+      <div style="display:flex;gap:8px;">
+        <textarea id="newReplyInput" placeholder="写评论……" rows="2" style="flex:1;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
+        <button id="submitReplyBtn" style="background:linear-gradient(135deg, var(--gold-dim), var(--gold));color:var(--bg-deep);border:none;padding:10px 16px;border-radius:16px;font-weight:bold;cursor:pointer;font-size:0.8rem;align-self:flex-end;">发送</button>
+      </div>
+    </div>
+    <div class="edit-modal" id="postEditModal">
+      <div class="edit-box">
+        <h3>发新帖</h3>
+        <input type="text" id="postTitleInput" placeholder="标题" style="width:100%;padding:8px;border-radius:12px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:0.9rem;">
+        <textarea id="postContentInput" placeholder="内容……" rows="4" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" id="savePostBtn" style="flex:1;">💾 发布</button>
+          <button class="btn btn-close" id="cancelPostBtn">取消</button>
+        </div>
+      </div>
+    </div>
+    <div class="edit-modal" id="subReplyModal">
+      <div class="edit-box">
+        <h3>回复评论</h3>
+        <textarea id="subReplyInput" placeholder="写回复……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-primary" id="saveSubReplyBtn" style="flex:1;">💾 回复</button>
+          <button class="btn btn-close" id="cancelSubReplyBtn">取消</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const STORAGE_POSTS = 'community_posts';
+  let currentPostIndex = null, currentReplyPath = null;
+
+  function loadPosts(){ const r=localStorage.getItem(STORAGE_POSTS); return r?JSON.parse(r):[]; }
+  function savePosts(arr){ localStorage.setItem(STORAGE_POSTS,JSON.stringify(arr)); }
+
+  function countAllReplies(replies){
+    if(!replies) return 0;
+    let count = replies.length;
+    replies.forEach(r => { if(r.replies) count += r.replies.length; });
+    return count;
+  }
+
+  function renderPostList(){
+    const posts = loadPosts();
+    const container = document.getElementById('postList');
+    if(posts.length === 0){
+      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">✨ 还没有帖子，发一个吧</div>';
+      return;
+    }
+    container.innerHTML = posts.map((p,i) => `
+      <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer;position:relative;" data-index="${i}">
+        <div style="font-weight:bold;color:var(--text-primary);margin-bottom:4px;padding-right:20px;">${p.title}</div>
+        <div style="font-size:0.8rem;color:var(--text-secondary);white-space:pre-wrap;overflow:hidden;text-overflow:ellipsis;max-height:60px;">${p.content}</div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.65rem;color:var(--text-muted);">
+          <span>${p.time} · ${countAllReplies(p.replies)} 评论</span>
+          <button class="deletePostBtn" data-index="${i}" style="background:transparent;border:none;color:rgba(232,160,176,0.7);font-size:0.6rem;cursor:pointer;">🗑 删除</button>
+        </div>
+      </div>
+    `).join('');
+    // 点击帖子进入详情
+    container.querySelectorAll('[data-index]').forEach(item=>{
+      item.addEventListener('click', function(e){
+        if(e.target.classList.contains('deletePostBtn')) return;
+        currentPostIndex = parseInt(this.getAttribute('data-index'));
+        showDetail(currentPostIndex);
+      });
+    });
+    // 删除帖子
+    container.querySelectorAll('.deletePostBtn').forEach(btn=>{
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        const index = parseInt(this.getAttribute('data-index'));
+        if(confirm('确定删除这个帖子吗？')){
+          const posts = loadPosts();
+          posts.splice(index, 1);
+          savePosts(posts);
+          renderPostList();
+        }
+      });
+    });
+  }
+
+  function showDetail(index){
+    const posts = loadPosts();
+    const post = posts[index];
+    document.getElementById('communityMainView').style.display = 'none';
+    document.getElementById('communityDetailView').style.display = 'block';
+    document.getElementById('detailContent').innerHTML = `
+      <div style="font-weight:bold;color:var(--text-primary);font-size:1.1rem;margin-bottom:8px;">${post.title}</div>
+      <div style="color:var(--text-secondary);white-space:pre-wrap;margin-bottom:8px;">${post.content}</div>
+      <div style="font-size:0.65rem;color:var(--text-muted);">${post.time}</div>
+    `;
+    renderReplies();
+  }
+
+  function renderReplies(){
+    const posts = loadPosts();
+    const post = posts[currentPostIndex];
+    const container = document.getElementById('replyList');
+    if(!post.replies || post.replies.length === 0){
+      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:10px;">暂无评论</div>';
+      return;
+    }
+    const flatReplies = [];
+    function flatten(replies, path){
+      replies.forEach((r, i) => {
+        flatReplies.push({...r, path: [...path, i]});
+        if(r.replies) flatten(r.replies, [...path, i]);
+      });
+    }
+    flatten(post.replies, []);
+    container.innerHTML = flatReplies.map((r) => {
+      const depth = r.path.length - 1;
+      const indent = Math.min(depth * 8, 40);
+      const prefix = depth > 0 ? `<span style="color:var(--gold-dim);font-size:0.65rem;">↳ </span>` : '';
+      return `
+        <div style="margin-left:${indent}px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:12px;">
+          <div style="color:var(--text-secondary);white-space:pre-wrap;font-size:0.85rem;">${prefix}${r.content}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+            <span style="font-size:0.6rem;color:var(--text-muted);">${r.time}</span>
+            <div style="display:flex;gap:6px;">
+              <button class="subReplyBtn" data-path='${JSON.stringify(r.path)}' style="background:transparent;border:none;color:var(--gold-dim);font-size:0.65rem;cursor:pointer;">回复</button>
+              <button class="deleteReplyBtn" data-path='${JSON.stringify(r.path)}' style="background:transparent;border:none;color:rgba(232,160,176,0.7);font-size:0.6rem;cursor:pointer;">🗑</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    // 回复按钮
+    document.querySelectorAll('.subReplyBtn').forEach(btn=>{
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        currentReplyPath = JSON.parse(this.getAttribute('data-path'));
+        document.getElementById('subReplyInput').value = '';
+        document.getElementById('subReplyModal').classList.add('show');
+      });
+    });
+    // 删除评论
+    document.querySelectorAll('.deleteReplyBtn').forEach(btn=>{
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        const path = JSON.parse(this.getAttribute('data-path'));
+        if(confirm('确定删除这条评论吗？')){
+          const posts = loadPosts();
+          const replies = posts[currentPostIndex].replies;
+          deleteByPath(replies, path);
+          savePosts(posts);
+          renderReplies();
+        }
+      });
+    });
+  }
+
+  function deleteByPath(replies, path){
+    if(path.length === 1){
+      replies.splice(path[0], 1);
+      return;
+    }
+    const [first, ...rest] = path;
+    if(replies[first] && replies[first].replies){
+      deleteByPath(replies[first].replies, rest);
+    }
+  }
+
+  function getReplyByPath(replies, path){
+    let target = replies;
+    for(let i=0; i<path.length; i++){
+      if(!target[path[i]]) return null;
+      if(i < path.length-1){
+        if(!target[path[i]].replies) target[path[i]].replies = [];
+        target = target[path[i]].replies;
+      }
+    }
+    return target[path.length-1];
+  }
+
+  document.getElementById('backToListBtn').addEventListener('click', ()=>{
+    document.getElementById('communityDetailView').style.display = 'none';
+    document.getElementById('communityMainView').style.display = 'block';
+    renderPostList();
+  });
+
+  document.getElementById('newPostBtn').addEventListener('click', ()=>{
+    document.getElementById('postTitleInput').value = '';
+    document.getElementById('postContentInput').value = '';
+    document.getElementById('postEditModal').classList.add('show');
+  });
+  document.getElementById('savePostBtn').addEventListener('click', ()=>{
+    const title = document.getElementById('postTitleInput').value.trim();
+    const content = document.getElementById('postContentInput').value.trim();
+    if(!title) return alert('标题不能为空');
+    const posts = loadPosts();
+    posts.unshift({title, content, time: new Date().toLocaleString(), replies:[]});
+    savePosts(posts);
+    document.getElementById('postEditModal').classList.remove('show');
+    renderPostList();
+  });
+  document.getElementById('cancelPostBtn').addEventListener('click', ()=> document.getElementById('postEditModal').classList.remove('show'));
+  document.getElementById('postEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+
+  document.getElementById('submitReplyBtn').addEventListener('click', ()=>{
+    const reply = document.getElementById('newReplyInput').value.trim();
+    if(!reply) return alert('回复不能为空');
+    const posts = loadPosts();
+    if(currentPostIndex !== null && posts[currentPostIndex]){
+      if(!posts[currentPostIndex].replies) posts[currentPostIndex].replies = [];
+      posts[currentPostIndex].replies.push({content:reply, time: new Date().toLocaleString(), replies:[]});
+      savePosts(posts);
+    }
+    document.getElementById('newReplyInput').value = '';
+    renderReplies();
+  });
+
+  document.getElementById('saveSubReplyBtn').addEventListener('click', ()=>{
+    const reply = document.getElementById('subReplyInput').value.trim();
+    if(!reply) return alert('回复不能为空');
+    const posts = loadPosts();
+    if(currentPostIndex !== null && currentReplyPath !== null && posts[currentPostIndex]){
+      const target = getReplyByPath(posts[currentPostIndex].replies, currentReplyPath);
+      if(target){
+        if(!target.replies) target.replies = [];
+        target.replies.push({content:reply, time: new Date().toLocaleString(), replies:[]});
+        savePosts(posts);
+      }
+    }
+    document.getElementById('subReplyModal').classList.remove('show');
+    renderReplies();
+  });
+  document.getElementById('cancelSubReplyBtn').addEventListener('click', ()=> document.getElementById('subReplyModal').classList.remove('show'));
+  document.getElementById('subReplyModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+
+  renderPostList();
+}
+
 </script>
 </body>
 </html>
