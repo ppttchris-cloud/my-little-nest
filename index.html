@@ -30,8 +30,8 @@
       --font-body: 'Noto Serif SC', serif;
     }
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    body { background:#0d0b08; font-family:var(--font-body); display:flex; justify-content:center; align-items:center; min-height:100vh; padding:16px; margin:0; }
-    .app-frame { width:100%; max-width:420px; height:85vh; max-height:750px; background:var(--bg-deep); border-radius:40px; box-shadow:0 0 60px rgba(201,168,76,0.08),0 40px 80px rgba(0,0,0,0.8); overflow:hidden; display:flex; flex-direction:column; border:1px solid rgba(201,168,76,0.3); position:relative; }
+    body { background:#0d0b08; font-family:var(--font-body); padding:0; margin:0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .app-frame { width:100%; max-width:100%; height:100vh; max-height:100vh; background:var(--bg-deep); border-radius:0; box-shadow:none; overflow:hidden; display:flex; flex-direction:column; border:none; position:relative; }
     @keyframes bgFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,30px)} }
     @keyframes bgFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-15px,-20px)} }
     @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
@@ -200,7 +200,15 @@
     .achieve-card .ach-name { font-weight: bold; color: var(--text-primary); font-size: 0.8rem; margin: 4px 0; }
     .achieve-card .ach-cond { font-size: 0.6rem; color: var(--text-muted); }
     .achieve-card .ach-date { font-size: 0.55rem; color: var(--gold-dim); margin-top: 4px; }
-  </style>
+    @keyframes cellPop {
+      from { opacity: 0; transform: scale(0.6); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .diary-cell-img:active {
+      transform: scale(0.94);
+      transition: transform 0.15s;
+    }  
+</style>
 </head>
 <body>
 <div class="app-frame" id="appFrame">
@@ -386,10 +394,35 @@ function loadWorkModule(){
 
 // ==================== 日记相册模块 ====================
 function loadDiaryModule(){
-  document.getElementById('diaryContent').innerHTML = `<div class="app-card"><h2>📸 日记相册</h2><div class="month-header"><button class="month-nav" id="diaryPrevMonth">◀</button><span id="diaryMonthLabel"></span><button class="month-nav" id="diaryNextMonth">▶</button></div><div id="diaryGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div></div><div class="edit-modal" id="diaryEditModal"><div class="edit-box" style="max-width:380px;"><h3 id="diaryEditTitle">编辑日记</h3><div style="display:flex;gap:8px;flex-wrap:wrap;"><label class="btn btn-primary" for="diaryImageInput" style="cursor:pointer;">📷 上传图片</label><input type="file" id="diaryImageInput" accept="image/*" style="display:none;"><button class="btn btn-primary" id="cameraBtn">📸 拍照</button><input type="file" id="diaryCameraInput" accept="image/*" capture="environment" style="display:none;"></div><div id="diaryPreview" style="text-align:center;min-height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);border-radius:14px;padding:10px;margin-top:8px;"><span style="color:var(--text-muted);">图片预览</span></div><textarea id="diaryNoteInput" placeholder="写点什么……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea><div style="display:flex;gap:6px;"><button class="btn btn-primary" id="saveDiaryBtn" style="flex:1;">💾 保存</button><button class="btn btn-delete" id="deleteDiaryBtn">🗑 删除</button><button class="btn btn-close" id="cancelDiaryBtn">取消</button></div></div></div><canvas id="diaryCanvas" style="display:none;"></canvas><video id="diaryVideo" autoplay playsinline style="display:none;"></video>`;
+  document.getElementById('diaryContent').innerHTML = `<div class="app-card"><h2>📸 日记相册</h2><div class="month-header"><button class="month-nav" id="diaryPrevMonth">◀</button><span id="diaryMonthLabel"></span><button class="month-nav" id="diaryNextMonth">▶</button></div><div id="diaryGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;"></div></div><div class="edit-modal" id="diaryEditModal"><div class="edit-box" style="max-width:380px;"><h3 id="diaryEditTitle">编辑日记</h3><div style="display:flex;gap:8px;flex-wrap:wrap;"><label class="btn btn-primary" for="diaryImageInput" style="cursor:pointer;">📷 上传图片</label><input type="file" id="diaryImageInput" accept="image/*" style="display:none;"><button class="btn btn-primary" id="cameraBtn">📸 拍照</button><input type="file" id="diaryCameraInput" accept="image/*" capture="environment" style="display:none;"></div><div id="diaryPreview" style="text-align:center;min-height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);border-radius:14px;padding:10px;margin-top:8px;"><span style="color:var(--text-muted);">图片预览</span></div><textarea id="diaryNoteInput" placeholder="写点什么……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea><div style="display:flex;gap:6px;"><button class="btn btn-primary" id="saveDiaryBtn" style="flex:1;">💾 保存</button><button class="btn btn-delete" id="deleteDiaryBtn">🗑 删除</button><button class="btn btn-close" id="cancelDiaryBtn">取消</button></div></div></div><canvas id="diaryCanvas" style="display:none;"></canvas><video id="diaryVideo" autoplay playsinline style="display:none;"></video>`;
   const STORAGE_DIARY = 'diary_v1_'; let diaryYear, diaryMonth; const now = new Date(); diaryYear = now.getFullYear(); diaryMonth = now.getMonth() + 1; let selectedDate = null, currentImage = null, processedImage = null;
   function daysInMonth(y,m){ return new Date(y,m,0).getDate(); } function getData(ds){ const r=localStorage.getItem(STORAGE_DIARY+ds); return r?JSON.parse(r):{image:'',note:''}; } function saveData(ds,obj){ localStorage.setItem(STORAGE_DIARY+ds,JSON.stringify(obj)); } function delData(ds){ localStorage.removeItem(STORAGE_DIARY+ds); }
-  function renderGrid(){ document.getElementById('diaryMonthLabel').textContent = `${diaryYear}年${diaryMonth}月`; const dim = daysInMonth(diaryYear, diaryMonth); const fd = new Date(diaryYear, diaryMonth-1, 1).getDay(); let html = ''; ['日','一','二','三','四','五','六'].forEach(d=>{ html+=`<div style="font-size:0.6rem;color:var(--text-muted);padding:4px 0;">${d}</div>`; }); for(let i=0;i<fd;i++) html+='<div></div>'; for(let d=1;d<=dim;d++){ const ds = `${diaryYear}-${String(diaryMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const data = getData(ds); let imgTag = ''; if(data.image){ imgTag = `<div style="position:absolute;bottom:2px;right:2px;width:28px;height:28px;border-radius:6px;background-image:url(${data.image});background-size:cover;background-position:center;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>`; } html += `<div data-date="${ds}" style="aspect-ratio:1;background:var(--bg-elevated);border:2px solid rgba(201,168,76,0.2);border-radius:10px;cursor:pointer;position:relative;display:flex;align-items:flex-start;justify-content:flex-start;font-size:0.8rem;font-weight:bold;color:var(--text-secondary);padding:4px;"><span>${d}</span>${imgTag}</div>`; } document.getElementById('diaryGrid').innerHTML = html; document.querySelectorAll('#diaryGrid [data-date]').forEach(cell=>{ cell.addEventListener('click', function(){ selectedDate = this.getAttribute('data-date'); openEditor(selectedDate); }); }); }
+  function renderGrid(){
+    document.getElementById('diaryMonthLabel').textContent = `${diaryYear}年${diaryMonth}月`;
+    const dim = daysInMonth(diaryYear, diaryMonth);
+    const fd = new Date(diaryYear, diaryMonth-1, 1).getDay();
+    let html = '';
+    ['日','一','二','三','四','五','六'].forEach(d=>{ html+=`<div style="font-size:0.6rem;color:var(--text-muted);padding:4px 0;">${d}</div>`; });
+    for(let i=0;i<fd;i++) html+='<div></div>';
+    let delay = 0;
+    for(let d=1;d<=dim;d++){
+      const ds = `${diaryYear}-${String(diaryMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const data = getData(ds);
+      if(data.image){
+        html += `<div data-date="${ds}" class="diary-cell-img" style="aspect-ratio:1;background-image:url(${data.image});background-size:cover;background-position:center;border-radius:14px;cursor:pointer;animation:cellPop 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards;animation-delay:${delay}ms;"></div>`;
+      } else {
+        html += `<div data-date="${ds}" style="aspect-ratio:1;background:var(--bg-elevated);border:2px solid rgba(201,168,76,0.2);border-radius:14px;cursor:pointer;display:flex;align-items:flex-start;justify-content:flex-start;font-size:0.8rem;font-weight:bold;color:var(--text-secondary);padding:4px;animation:cellPop 0.3s cubic-bezier(0.34,1.56,0.64,1) backwards;animation-delay:${delay}ms;"><span>${d}</span></div>`;
+      }
+      delay += 30;
+    }
+    document.getElementById('diaryGrid').innerHTML = html;
+    document.querySelectorAll('#diaryGrid [data-date]').forEach(cell=>{
+      cell.addEventListener('click', function(){
+        selectedDate = this.getAttribute('data-date');
+        openEditor(selectedDate);
+      });
+    });
+  }
   function openEditor(ds){ selectedDate = ds; const data = getData(ds); currentImage = data.image || null; processedImage = data.image || null; document.getElementById('diaryEditTitle').textContent = ds; document.getElementById('diaryNoteInput').value = data.note || ''; updatePreview(); document.getElementById('diaryEditModal').classList.add('show'); }
   function updatePreview(){ const preview = document.getElementById('diaryPreview'); if (processedImage) { preview.innerHTML = `<img src="${processedImage}" style="max-width:100%;max-height:200px;border-radius:10px;">`; } else { preview.innerHTML = '<span style="color:var(--text-muted);">图片预览</span>'; } }
   function autoCutout(src, callback) { const apiKey = 'e874DJMsR5wLwsegs1DtpBwE'; const base64Data = src.split(',')[1]; const byteCharacters = atob(base64Data); const byteNumbers = new Array(byteCharacters.length); for (let i = 0; i < byteCharacters.length; i++) { byteNumbers[i] = byteCharacters.charCodeAt(i); } const byteArray = new Uint8Array(byteNumbers); const blob = new Blob([byteArray], { type: 'image/png' }); const formData = new FormData(); formData.append('image_file', blob, 'photo.png'); formData.append('size', 'auto'); fetch('https://api.remove.bg/v1.0/removebg', { method: 'POST', headers: { 'X-Api-Key': apiKey }, body: formData }).then(response => { if (!response.ok) throw new Error('API 请求失败'); return response.blob(); }).then(blob => { const reader = new FileReader(); reader.onload = function() { const removedBgImage = reader.result; const img = new Image(); img.src = removedBgImage; img.onload = function() { const canvas = document.getElementById('diaryCanvas'); const ctx = canvas.getContext('2d'); canvas.width = img.width; canvas.height = img.height; ctx.drawImage(img, 0, 0); const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); const data = imageData.data; const w = canvas.width, h = canvas.height; const alpha = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) { alpha[i] = data[i * 4 + 3] > 128 ? 1 : 0; } ctx.strokeStyle = 'white'; ctx.lineWidth = 12; ctx.beginPath(); for (let y = 0; y < h; y++) { for (let x = 0; x < w; x++) { if (!alpha[y * w + x]) continue; let isEdge = false; for (let dy = -1; dy <= 1; dy++) { for (let dx = -1; dx <= 1; dx++) { if (dx === 0 && dy === 0) continue; const nx = x + dx, ny = y + dy; if (nx < 0 || nx >= w || ny < 0 || ny >= h || !alpha[ny * w + nx]) { isEdge = true; break; } } if (isEdge) break; } if (isEdge) { ctx.moveTo(x, y); ctx.arc(x, y, 6, 0, Math.PI * 2); } } } ctx.stroke(); callback(canvas.toDataURL('image/png')); }; }; reader.readAsDataURL(blob); }).catch(error => { console.error('抠图失败:', error); callback(src); }); }
@@ -464,6 +497,7 @@ window.triggerAchievement = function(icon, name, desc){ const toast = document.g
 function playAchieveSound(){ try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); [523,659,784,1047].forEach((f,i)=>{ const o=ctx.createOscillator(),g=ctx.createGain(); o.type='sine';o.frequency.value=f; g.gain.setValueAtTime(0.15,ctx.currentTime+i*0.12); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.2); o.connect(g);g.connect(ctx.destination); o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+i*0.12+0.25); }); }catch(e){} }
 function loadAchievementModule(){ document.getElementById('achievementContent').innerHTML = `<div class="app-card"><h2>🏅 成就库</h2><div id="achieveList"></div></div>`; renderAchievements(); }
 function renderAchievements(){ const unlocked = getUnlocked(); const cats = ['打工','经期','菜谱','日记','隐藏']; let html = ''; cats.forEach(cat => { const items = ACHIEVEMENTS.filter(a=>a.cat===cat); html += `<div style="color:var(--gold-light);font-weight:bold;margin:12px 0 6px;font-size:0.85rem;">${cat}</div><div class="achieve-grid">`; items.forEach(a => { const isUnlocked = !!unlocked[a.id]; html += `<div class="achieve-card${isUnlocked?'':' locked'}"><div class="ach-icon">${a.icon}</div><div class="ach-name">${a.name}</div><div class="ach-cond">${a.desc}</div>${isUnlocked?`<div class="ach-date">${unlocked[a.id]}</div>`:''}</div>`; }); html += '</div>'; }); document.getElementById('achieveList').innerHTML = html; }
+
 </script>
 </body>
 </html>
