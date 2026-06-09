@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="我的小窝">
+  <meta name="apple-mobile-web-app-title" content="我">
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><rect width='180' height='180' rx='36' fill='#c9a84c'/><text x='90' y='110' font-size='80' text-anchor='middle'>🏠</text></svg>">
-  <title>我的小窝</title>
+  <title>我</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -50,11 +50,10 @@
     @keyframes bgFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-15px,-20px)} }
     @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
-    /* 窗帘 */
     .curtain-handle {
-      width:50px; height:10px;
-      background:linear-gradient(to bottom, var(--gold-dim), transparent);
-      border-radius:0 0 16px 16px; margin:0 auto;
+      width:70px; height:14px;
+      background:linear-gradient(to bottom, var(--gold-dim), var(--gold));
+      border-radius:0 0 18px 18px; margin:0 auto;
       cursor:pointer; z-index:50; position:absolute; top:0; left:50%;
       transform:translateX(-50%); transition:top 0.3s;
     }
@@ -68,6 +67,11 @@
       padding:30px 16px 20px; overflow-y:auto;
       display:flex; flex-direction:column; gap:10px;
     }
+    .curtain-overlay {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      z-index:39; display:none; pointer-events:auto;
+    }
+    .curtain-overlay.open { display:block; }
     .curtain-panel.open { top:0; }
     .curtain-handle.open { top:60%; }
     .curtain-item {
@@ -86,7 +90,6 @@
     .curtain-item.checked .curtain-checkbox { background:var(--gold-dim); border-color:var(--gold-dim); }
     .curtain-item.checked .curtain-checkbox::after { content:'✓'; color:var(--bg-deep); font-weight:bold; font-size:0.8rem; }
 
-    /* 顶部栏 */
     .top-bar {
       display:flex; justify-content:space-between; align-items:center;
       padding:16px 20px 8px; flex-shrink:0;
@@ -99,7 +102,6 @@
       padding:8px 14px; font-weight:bold; cursor:pointer; font-size:0.7rem; letter-spacing:1px;
     }
 
-    /* 主页 */
     .page-area { flex:1; overflow-y:auto; padding:8px 16px 16px; }
     .j-list { display:flex; flex-direction:column; gap:10px; }
     .j-item {
@@ -138,7 +140,6 @@
     .p-icon { font-size:2rem; }
     .p-name { font-weight:bold; font-size:0.85rem; color:var(--text-primary); }
 
-    /* 功能页 */
     .func-page { display:none; flex-direction:column; height:100%; }
     .func-page.active { display:flex; }
     .func-header {
@@ -154,7 +155,6 @@
     .back-btn:active { border-color:var(--border-bright); }
     .func-content { flex:1; overflow-y:auto; padding:0 8px 8px; }
 
-    /* 周期手账 */
     .app-card {
       width:100%; background:var(--bg-card); border:1px solid var(--border);
       border-radius:24px; padding:16px 10px 18px;
@@ -198,7 +198,6 @@
     .legend-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
     .hint-text { font-size:0.65rem; color:var(--text-muted); text-align:center; min-height:14px; }
 
-    /* 弹窗 */
     .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:10; }
     .modal-overlay.show { display:flex; }
     .modal-box {
@@ -229,13 +228,11 @@
     }
     .intimacy-tag.selected { background:rgba(232,160,176,0.15); color:#e8a0b0; border-color:rgba(232,160,176,0.4); }
 
-    /* 大图弹窗 */
     .image-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:20; flex-direction:column; gap:12px; }
     .image-modal.show { display:flex; }
     .image-modal img { max-width:90%; max-height:75%; border-radius:14px; border:4px solid var(--border-bright); }
     .image-modal .close-img-btn { background:var(--bg-elevated); color:var(--text-secondary); border:1px solid var(--border); padding:8px 22px; border-radius:20px; font-weight:bold; cursor:pointer; }
 
-    /* 菜谱 */
     .recipe-container {
       width:100%; background:var(--bg-deep); border:1px solid var(--border);
       border-radius:24px; overflow:hidden; display:flex; flex-direction:column; height:100%;
@@ -297,7 +294,6 @@
       box-shadow:0 3px 10px rgba(201,168,76,0.25);
     }
 
-    /* 小票弹窗 */
     .receipt-modal {
       background:var(--bg-card); border:1px solid var(--border);
       border-radius:24px; padding:20px 14px; width:85%; max-width:340px;
@@ -322,7 +318,6 @@
       margin-top:12px; font-weight:bold; cursor:pointer; width:100%;
     }
 
-    /* 编辑弹窗 */
     .edit-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:30; }
     .edit-modal.show { display:flex; }
     .edit-box {
@@ -340,7 +335,6 @@
     .btn-danger { background:rgba(232,160,176,0.15); color:#e8a0b0; border:1px solid rgba(232,160,176,0.2); }
     .btn-neutral { background:var(--bg-elevated); color:var(--text-secondary); border:1px solid var(--border); }
 
-    /* 打工续命 */
     .work-card {
       width:100%; background:var(--bg-card); border:1px solid rgba(122,184,122,0.2);
       border-radius:24px; padding:24px 20px;
@@ -405,22 +399,78 @@
       background:var(--bg-elevated); color:var(--text-secondary);
       box-shadow:none; border-color:var(--border);
     }
+
+    .achieve-toast {
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      width: 200px;
+      background: #1a1408;
+      border: 2px solid rgba(201,168,76,0.5);
+      border-radius: 16px;
+      padding: 14px;
+      z-index: 200;
+      transform: translateX(220px);
+      transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: 0 0 20px rgba(201,168,76,0.3);
+      animation: achieveGlow 2s ease-in-out infinite;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      pointer-events: none;
+    }
+    .achieve-toast.show { transform: translateX(0); }
+    @keyframes achieveGlow {
+      0%,100% { box-shadow: 0 0 20px rgba(201,168,76,0.3); }
+      50% { box-shadow: 0 0 35px rgba(201,168,76,0.6); }
+    }
+    .achieve-icon { font-size: 2rem; flex-shrink: 0; }
+    .achieve-info { flex: 1; min-width: 0; }
+    .achieve-label { font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 1px; }
+    .achieve-name { font-weight: bold; color: var(--gold-light); font-size: 0.9rem; }
+    .achieve-desc { font-size: 0.65rem; color: var(--text-muted); }
+    .achieve-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .achieve-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .achieve-card.locked { filter: grayscale(1) blur(2px); opacity: 0.4; }
+    .achieve-card .ach-icon { font-size: 2rem; }
+    .achieve-card .ach-name { font-weight: bold; color: var(--text-primary); font-size: 0.8rem; margin: 4px 0; }
+    .achieve-card .ach-cond { font-size: 0.6rem; color: var(--text-muted); }
+    .achieve-card .ach-date { font-size: 0.55rem; color: var(--gold-dim); margin-top: 4px; }
   </style>
 </head>
 <body>
 <div class="app-frame" id="appFrame">
-  <!-- 浮动光晕 -->
   <div style="position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 70%);border-radius:50%;filter:blur(60px);top:-80px;left:-60px;z-index:0;pointer-events:none;animation:bgFloat1 8s ease-in-out infinite;"></div>
   <div style="position:absolute;width:200px;height:200px;background:radial-gradient(circle,rgba(180,120,40,0.06) 0%,transparent 70%);border-radius:50%;filter:blur(60px);bottom:100px;right:-40px;z-index:0;pointer-events:none;animation:bgFloat2 10s ease-in-out infinite;"></div>
-  <!-- 窗帘组件 -->
+
+  <div class="achieve-toast" id="achieveToast">
+    <div class="achieve-icon" id="achieveToastIcon"></div>
+    <div class="achieve-info">
+      <div class="achieve-label">成就解锁</div>
+      <div class="achieve-name" id="achieveToastName"></div>
+      <div class="achieve-desc" id="achieveToastDesc"></div>
+    </div>
+  </div>
+
   <div class="curtain-handle" id="curtainHandle"></div>
   <div class="curtain-panel" id="curtainPanel">
     <h4 style="text-align:center; color:var(--gold-light);">📋 待办清单</h4>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <input type="text" id="manualTodoInput" placeholder="添加一条待办..." style="flex:1;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-primary);padding:8px 12px;border-radius:10px;font-size:0.8rem;">
+      <button id="addManualTodoBtn" style="background:var(--gold-dim);color:var(--bg-deep);border:none;padding:8px 12px;border-radius:10px;font-weight:bold;cursor:pointer;">+</button>
+    </div>
     <div id="curtainList"></div>
   </div>
 
   <div class="top-bar" id="topBar">
-    <h2 id="topTitle" style="cursor:pointer;" onclick="editTitle()">🏠 我的小窝 <span style="font-size:0.7rem;">✏️</span></h2>
+    <h2 id="topTitle" style="cursor:pointer;" onclick="editTitle()">🏠 我 <span style="font-size:0.7rem;">✏️</span></h2>
     <button class="mode-toggle" id="modeToggle">🔄 J人模式</button>
   </div>
   <div class="page-area" id="homePage">
@@ -443,6 +493,10 @@
     <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8c97a;">📸 日记相册</span></div>
     <div class="func-content" id="diaryContent"></div>
   </div>
+  <div class="func-page" id="funcAchievement">
+    <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8c97a;">🏅 成就库</span></div>
+    <div class="func-content" id="achievementContent"></div>
+  </div>
   <div class="func-page" id="funcCommunity">
     <div class="func-header"><button class="back-btn" onclick="goHome()">←</button><span style="font-weight:bold;color:#e8c97a;">💬 树洞社区</span></div>
     <div class="func-content" id="communityContent"></div>
@@ -456,90 +510,42 @@ function getCurtainItems() {
   const cart = JSON.parse(localStorage.getItem('my_menu_cart') || '{}');
   const menu = JSON.parse(localStorage.getItem('my_menu_data') || '[]');
   const receipts = JSON.parse(localStorage.getItem('my_receipt_checked') || '{}');
-  
   const ingredientCounts = {};
-  Object.keys(cart).forEach(index => {
-    const dish = menu[parseInt(index)];
-    const qty = cart[index] || 1;
-    if (dish) {
-      dish.ingredients.forEach(ing => {
-        ingredientCounts[ing] = (ingredientCounts[ing] || 0) + qty;
-      });
-    }
-  });
-  Object.keys(ingredientCounts).forEach(ing => {
-    const key = `ing_${ing}`;
-    if (!receipts[key]) {
-      const count = ingredientCounts[ing];
-      items.push({ id: key, text: `🛒 ${ing}${count > 1 ? ' x' + count : ''}`, source: 'recipe' });
-    }
-  });
-
+  Object.keys(cart).forEach(index => { const dish = menu[parseInt(index)]; const qty = cart[index] || 1; if (dish) { dish.ingredients.forEach(ing => { ingredientCounts[ing] = (ingredientCounts[ing] || 0) + qty; }); } });
+  Object.keys(ingredientCounts).forEach(ing => { const key = `ing_${ing}`; if (!receipts[key]) { items.push({ id: key, text: `🛒 ${ing}${ingredientCounts[ing] > 1 ? ' x' + ingredientCounts[ing] : ''}`, source: 'recipe' }); } });
   const today = new Date();
   const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   const periodData = JSON.parse(localStorage.getItem('cycle_v5_' + dateStr) || '{}');
-  if (periodData.note) {
-    items.push({ id: 'period_note', text: `📝 ${periodData.note}`, source: 'period' });
-  }
-
+  if (periodData.note) { items.push({ id: 'period_note', text: `📝 ${periodData.note}`, source: 'period' }); }
   const savedOrder = JSON.parse(localStorage.getItem('my_curtain_order') || '[]');
-  if (savedOrder.length > 0) {
-    items.sort((a, b) => {
-      const aIdx = savedOrder.indexOf(a.id);
-      const bIdx = savedOrder.indexOf(b.id);
-      if (aIdx === -1) return 1;
-      if (bIdx === -1) return -1;
-      return aIdx - bIdx;
-    });
-  }
-
+  if (savedOrder.length > 0) { items.sort((a, b) => { const aIdx = savedOrder.indexOf(a.id); const bIdx = savedOrder.indexOf(b.id); if (aIdx === -1) return 1; if (bIdx === -1) return -1; return aIdx - bIdx; }); }
+  const manualTodos = JSON.parse(localStorage.getItem('my_manual_todos') || '[]');
+  manualTodos.forEach(todo => { const key = todo.id; if (!receipts[key]) { items.push({ id: key, text: todo.text, source: 'manual' }); } });
   return items;
 }
 
 let curtainOpen = false;
 const curtainPanel = document.getElementById('curtainPanel');
 const curtainHandle = document.getElementById('curtainHandle');
+let curtainOverlay = null;
+curtainHandle.addEventListener('click', toggleCurtain);
 
 function toggleCurtain() {
   curtainOpen = !curtainOpen;
   if (curtainOpen) {
-    curtainPanel.classList.add('open');
-    curtainHandle.classList.add('open');
-    renderCurtain();
-  } else {
-    curtainPanel.classList.remove('open');
-    curtainHandle.classList.remove('open');
-  }
+    if (!curtainOverlay) { curtainOverlay = document.createElement('div'); curtainOverlay.className = 'curtain-overlay'; curtainOverlay.id = 'curtainOverlay'; document.getElementById('appFrame').appendChild(curtainOverlay); curtainOverlay.addEventListener('click', toggleCurtain); }
+    curtainPanel.classList.add('open'); curtainHandle.classList.add('open'); curtainOverlay.classList.add('open'); renderCurtain();
+  } else { curtainPanel.classList.remove('open'); curtainHandle.classList.remove('open'); if (curtainOverlay) curtainOverlay.classList.remove('open'); }
 }
 
-curtainHandle.addEventListener('click', toggleCurtain);
-curtainPanel.addEventListener('click', function(e) { e.stopPropagation(); });
-document.getElementById('appFrame').addEventListener('click', function(e) {
-  if (curtainOpen && !curtainPanel.contains(e.target) && e.target !== curtainHandle) {
-    toggleCurtain();
-  }
-});
+function toggleCurtainItem(id) { const receipts = JSON.parse(localStorage.getItem('my_receipt_checked') || '{}'); if (receipts[id]) { delete receipts[id]; } else { receipts[id] = true; } localStorage.setItem('my_receipt_checked', JSON.stringify(receipts)); renderCurtain(); }
 
 function renderCurtain() {
-  const items = getCurtainItems();
-  const list = document.getElementById('curtainList');
-  if (items.length === 0) {
-    list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">✨ 暂无待办，去逛逛吧</div>';
-    return;
-  }
-list.innerHTML = items.map((item, index) => `
-    <div class="curtain-item" draggable="true" data-index="${index}" data-id="${item.id}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropItem(event)">
-      <div class="curtain-checkbox" onclick="toggleCurtainItem('${item.id}')"></div>
-      <span style="flex:1;">${item.text}</span>
-    </div>
-  `).join('');
-}
-
-function toggleCurtainItem(id) {
-  const receipts = JSON.parse(localStorage.getItem('my_receipt_checked') || '{}');
-  if (receipts[id]) { delete receipts[id]; } else { receipts[id] = true; }
-  localStorage.setItem('my_receipt_checked', JSON.stringify(receipts));
-  renderCurtain();
+  const items = getCurtainItems(); const list = document.getElementById('curtainList'); const manualTodoInput = document.getElementById('manualTodoInput'); const addManualTodoBtn = document.getElementById('addManualTodoBtn');
+  function addManualTodo() { const text = manualTodoInput.value.trim(); if (!text) return; const newItem = { id: 'manual_' + Date.now(), text: '✏️ ' + text, source: 'manual' }; const savedOrder = JSON.parse(localStorage.getItem('my_curtain_order') || '[]'); savedOrder.unshift(newItem.id); localStorage.setItem('my_curtain_order', JSON.stringify(savedOrder)); const manualTodos = JSON.parse(localStorage.getItem('my_manual_todos') || '[]'); manualTodos.unshift({ id: newItem.id, text: newItem.text }); localStorage.setItem('my_manual_todos', JSON.stringify(manualTodos)); manualTodoInput.value = ''; renderCurtain(); }
+  addManualTodoBtn.onclick = addManualTodo; manualTodoInput.onkeydown = function(e) { if (e.key === 'Enter') { e.preventDefault(); addManualTodo(); } };
+  if (items.length === 0) { list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">✨ 暂无待办，去逛逛吧</div>'; return; }
+  list.innerHTML = items.map((item, index) => `<div class="curtain-item" draggable="true" data-index="${index}" data-id="${item.id}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="dropItem(event)"><div class="curtain-checkbox" onclick="toggleCurtainItem('${item.id}')"></div><span style="flex:1;">${item.text}</span></div>`).join('');
 }
 
 // ==================== 主框架 ====================
@@ -548,81 +554,30 @@ const modules = [
   { id:'recipe', name:'菜谱选购', icon:'🍳', desc:'选菜、生成采购清单', size:'lg' },
   { id:'work', name:'钱钱钱💰', icon:'💰', desc:'防止裸辞神器', size:'lg' },
   { id:'diary', name:'日记相册', icon:'📸', desc:'拍照抠图记录生活', size:'lg' },
-  { id:'community', name:'树洞社区（没开发完）', icon:'💬', desc:'发帖回复记录生活', size:'lg' },
+  { id:'community', name:'树洞社区', icon:'💬', desc:'发帖回复记录生活', size:'lg' },
+  { id:'achievement', name:'🏅 成就库', icon:'🏆', desc:'看看你解锁了多少', size:'lg' },
   { id:'more', name:'更多', icon:'📦', desc:'即将上线', size:'sm' }
 ];
 let isJMode = true;
 
-function renderJList(){
-  document.getElementById('jListView').innerHTML = modules.map(m => `
-    <div class="j-item" onclick="openModule('${m.id}')">
-      <div class="j-icon">${m.icon}</div><div class="j-info"><div class="j-name">${m.name}</div><div class="j-desc">${m.desc}</div></div><div class="j-arrow">›</div>
-    </div>`).join('');
-}
-function renderPGrid(){
-  document.getElementById('pGridView').innerHTML = modules.map(m => `
-    <div class="p-bubble size-${m.size}" onclick="openModule('${m.id}')">
-      <div class="p-icon">${m.icon}</div><div class="p-name">${m.name}</div>
-    </div>`).join('');
-}
-document.getElementById('modeToggle').addEventListener('click', function(){
-  isJMode = !isJMode;
-  this.textContent = isJMode ? '🔄 J人模式' : '🔄 P人模式';
-  document.getElementById('jListView').style.display = isJMode ? 'flex' : 'none';
-  document.getElementById('pGridView').style.display = isJMode ? 'none' : 'flex';
-});
+function renderJList(){ document.getElementById('jListView').innerHTML = modules.map(m => `<div class="j-item" onclick="openModule('${m.id}')"><div class="j-icon">${m.icon}</div><div class="j-info"><div class="j-name">${m.name}</div><div class="j-desc">${m.desc}</div></div><div class="j-arrow">›</div></div>`).join(''); }
+function renderPGrid(){ document.getElementById('pGridView').innerHTML = modules.map(m => `<div class="p-bubble size-${m.size}" onclick="openModule('${m.id}')"><div class="p-icon">${m.icon}</div><div class="p-name">${m.name}</div></div>`).join(''); }
+document.getElementById('modeToggle').addEventListener('click', function(){ isJMode = !isJMode; this.textContent = isJMode ? '🔄 J人模式' : '🔄 P人模式'; document.getElementById('jListView').style.display = isJMode ? 'flex' : 'none'; document.getElementById('pGridView').style.display = isJMode ? 'none' : 'flex'; });
 function openModule(id){
-  document.getElementById('homePage').style.display = 'none';
-  document.getElementById('topBar').style.display = 'none';
-  if(id === 'period'){
-    document.getElementById('funcPeriod').classList.add('active');
-    if(!window._periodLoaded){ loadPeriodModule(); window._periodLoaded = true; }
-  } else if(id === 'community'){
-    document.getElementById('funcCommunity').classList.add('active');
-    if(!window._communityLoaded){ loadCommunityModule(); window._communityLoaded = true; }
-  } else if(id === 'diary'){
-    document.getElementById('funcDiary').classList.add('active');
-    if(!window._diaryLoaded){ loadDiaryModule(); window._diaryLoaded = true; }  
-} else if(id === 'work'){
-    document.getElementById('funcWork').classList.add('active');
-    if(!window._workLoaded){ loadWorkModule(); window._workLoaded = true; }
-  } else if(id === 'recipe'){
-    document.getElementById('funcRecipe').classList.add('active');
-    if(!window._recipeLoaded){ loadRecipeModule(); window._recipeLoaded = true; }
-  } else { alert('这个功能还在开发中~'); goHome(); }
+  document.getElementById('homePage').style.display = 'none'; document.getElementById('topBar').style.display = 'none';
+  if(id === 'period'){ document.getElementById('funcPeriod').classList.add('active'); if(!window._periodLoaded){ loadPeriodModule(); window._periodLoaded = true; } }
+  else if(id === 'achievement'){ document.getElementById('funcAchievement').classList.add('active'); if(!window._achievementLoaded){ loadAchievementModule(); window._achievementLoaded = true; } }
+  else if(id === 'community'){ document.getElementById('funcCommunity').classList.add('active'); if(!window._communityLoaded){ loadCommunityModule(); window._communityLoaded = true; } }
+  else if(id === 'diary'){ document.getElementById('funcDiary').classList.add('active'); if(!window._diaryLoaded){ loadDiaryModule(); window._diaryLoaded = true; } }
+  else if(id === 'work'){ document.getElementById('funcWork').classList.add('active'); if(!window._workLoaded){ loadWorkModule(); window._workLoaded = true; } }
+  else if(id === 'recipe'){ document.getElementById('funcRecipe').classList.add('active'); if(!window._recipeLoaded){ loadRecipeModule(); window._recipeLoaded = true; } }
+  else { alert('这个功能还在开发中~'); goHome(); }
 }
-function goHome(){
-  document.getElementById('homePage').style.display = 'block';
-  document.getElementById('topBar').style.display = 'flex';
-  document.querySelectorAll('.func-page').forEach(p => p.classList.remove('active'));
-}
+function goHome(){ document.getElementById('homePage').style.display = 'block'; document.getElementById('topBar').style.display = 'flex'; document.querySelectorAll('.func-page').forEach(p => p.classList.remove('active')); }
 
 // ==================== 周期手账模块 ====================
 function loadPeriodModule(){
-  document.getElementById('periodContent').innerHTML = `
-    <div class="app-card" id="appCard">
-      <h2>🌸 周期手账</h2>
-      <div style="display:flex;justify-content:center;gap:6px;">
-        <button id="changeBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:16px;font-size:0.7rem;font-weight:bold;cursor:pointer;color:var(--text-secondary);">🖼 换背景</button>
-        <button id="resetBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:16px;font-size:0.7rem;font-weight:bold;cursor:pointer;color:var(--text-secondary);">↩ 恢复</button>
-        <input type="file" id="bgFileInput" accept="image/*" style="display:none;">
-      </div>
-      <div class="month-header"><button class="month-nav" id="prevMonth">◀</button><span id="monthLabel"></span><button class="month-nav" id="nextMonth">▶</button></div>
-      <div class="calendar-grid" id="calendarHead"></div>
-      <div class="calendar-grid" id="calendarBody"></div>
-      <div class="legend">
-        <span><span class="legend-dot" style="background:rgba(232,160,176,0.5);"></span>经期</span>
-        <span><span class="legend-dot" style="background:rgba(200,160,220,0.3); border:1px dashed rgba(200,160,220,0.5);"></span>预测</span>
-        <span><span class="legend-dot" style="background:rgba(100,200,180,0.3);"></span>排卵期</span>
-        <span><span class="legend-dot" style="background:rgba(100,200,180,0.5);"></span>排卵日</span>
-        <span><span class="legend-dot" style="background:rgba(201,168,76,0.2);"></span>黄体期</span>
-        <span><span class="legend-dot" style="background:rgba(232,160,176,0.2);"></span>亲密</span>
-      </div>
-      <div class="hint-text" id="cycleHint"></div>
-    </div>
-    <div class="modal-overlay" id="modalOverlay"><div class="modal-box"><strong id="modalDateTitle"></strong><div class="toggle-row" id="periodToggle"><span style="color:var(--text-secondary);">🩸 标记为经期</span><div class="toggle-track" id="toggleTrack"><div class="toggle-thumb"></div></div></div><div class="hint-text" id="periodHint"></div><div class="modal-row"><span style="color:var(--text-secondary);">😣 肚子：</span><span id="painEmojis"></span></div><div class="modal-row"><span style="color:var(--text-secondary);">🩸 血量：</span><span id="flowEmojis"></span></div><div class="modal-row"><span style="color:var(--text-secondary);">💕 亲密：</span><span id="intimacyTags"><span class="intimacy-tag" data-val="none">无</span><span class="intimacy-tag" data-val="condom">🍥戴套</span><span class="intimacy-tag" data-val="pill">💊吃药</span><span class="intimacy-tag" data-val="outside">🚫体外</span><span class="intimacy-tag" data-val="other">❓其他</span></span></div><textarea id="modalNote" placeholder="备注……" rows="2" style="width:100%; border-radius:12px; padding:6px; resize:none; font-size:0.8rem;"></textarea><div class="modal-row"><label style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);padding:6px 10px;border-radius:12px;font-size:0.7rem;cursor:pointer;" for="imageUpload">📷 配图</label><input type="file" id="imageUpload" accept="image/*" style="display:none;"><span id="imagePreview" style="font-size:0.7rem;cursor:pointer;color:var(--text-secondary);"></span></div><div style="display:flex;gap:4px;"><button class="btn btn-delete" id="modalDelete">🗑 删除</button><button class="btn btn-close" id="modalClose">关闭</button></div></div></div>
-    <div class="image-modal" id="imageModal"><img id="largeImage" src="" alt="大图"><button class="close-img-btn" id="closeImageBtn">关闭</button></div>
-  `;
+  document.getElementById('periodContent').innerHTML = `<div class="app-card" id="appCard"><h2>🌸 周期手账</h2><div style="display:flex;justify-content:center;gap:6px;"><button id="changeBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:16px;font-size:0.7rem;font-weight:bold;cursor:pointer;color:var(--text-secondary);">🖼 换背景</button><button id="resetBgBtn" style="background:var(--bg-elevated);border:1px solid var(--border);padding:6px 12px;border-radius:16px;font-size:0.7rem;font-weight:bold;cursor:pointer;color:var(--text-secondary);">↩ 恢复</button><input type="file" id="bgFileInput" accept="image/*" style="display:none;"></div><div class="month-header"><button class="month-nav" id="prevMonth">◀</button><span id="monthLabel"></span><button class="month-nav" id="nextMonth">▶</button></div><div class="calendar-grid" id="calendarHead"></div><div class="calendar-grid" id="calendarBody"></div><div class="legend"><span><span class="legend-dot" style="background:rgba(232,160,176,0.5);"></span>经期</span><span><span class="legend-dot" style="background:rgba(200,160,220,0.3); border:1px dashed rgba(200,160,220,0.5);"></span>预测</span><span><span class="legend-dot" style="background:rgba(100,200,180,0.3);"></span>排卵期</span><span><span class="legend-dot" style="background:rgba(100,200,180,0.5);"></span>排卵日</span><span><span class="legend-dot" style="background:rgba(201,168,76,0.2);"></span>黄体期</span><span><span class="legend-dot" style="background:rgba(232,160,176,0.2);"></span>亲密</span></div><div class="hint-text" id="cycleHint"></div></div><div class="modal-overlay" id="modalOverlay"><div class="modal-box"><strong id="modalDateTitle"></strong><div class="toggle-row" id="periodToggle"><span style="color:var(--text-secondary);">🩸 标记为经期</span><div class="toggle-track" id="toggleTrack"><div class="toggle-thumb"></div></div></div><div class="hint-text" id="periodHint"></div><div class="modal-row"><span style="color:var(--text-secondary);">😣 肚子：</span><span id="painEmojis"></span></div><div class="modal-row"><span style="color:var(--text-secondary);">🩸 血量：</span><span id="flowEmojis"></span></div><div class="modal-row"><span style="color:var(--text-secondary);">💕 亲密：</span><span id="intimacyTags"><span class="intimacy-tag" data-val="none">无</span><span class="intimacy-tag" data-val="condom">🍥戴套</span><span class="intimacy-tag" data-val="pill">💊吃药</span><span class="intimacy-tag" data-val="outside">🚫体外</span><span class="intimacy-tag" data-val="other">❓其他</span></span></div><textarea id="modalNote" placeholder="备注……" rows="2" style="width:100%; border-radius:12px; padding:6px; resize:none; font-size:0.8rem;"></textarea><div class="modal-row"><label style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);padding:6px 10px;border-radius:12px;font-size:0.7rem;cursor:pointer;" for="imageUpload">📷 配图</label><input type="file" id="imageUpload" accept="image/*" style="display:none;"><span id="imagePreview" style="font-size:0.7rem;cursor:pointer;color:var(--text-secondary);"></span></div><div style="display:flex;gap:4px;"><button class="btn btn-delete" id="modalDelete">🗑 删除</button><button class="btn btn-close" id="modalClose">关闭</button></div></div></div><div class="image-modal" id="imageModal"><img id="largeImage" src="" alt="大图"><button class="close-img-btn" id="closeImageBtn">关闭</button></div>`;
   (function(){
     const STORAGE_CYCLE='cycle_v5_',STORAGE_SETTINGS='cycle_settings_v5';
     function todayStr(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
@@ -636,891 +591,131 @@ function loadPeriodModule(){
     let calYear,calMonth; const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth()+1;
     const monthLabel=document.getElementById('monthLabel'),calHead=document.getElementById('calendarHead'),calBody=document.getElementById('calendarBody'),cycleHint=document.getElementById('cycleHint');
     function daysInMonth(y,m){ return new Date(y,m,0).getDate(); }
-    function getPredictions(year,month){
-      const s=getSettings(); const res={predicted:[],fertile:[],ovulation:[],luteal:[]};
-      if(!s.lastPeriodStart) return res;
-      const plen=s.periodLength||5,clen=s.cycleLength||28,llen=s.lutealLength||14;
-      let ns=new Date(s.lastPeriodStart); ns.setDate(ns.getDate()-clen*3);
-      for(let i=0;i<12;i++){ ns.setDate(ns.getDate()+clen); const ss=`${ns.getFullYear()}-${String(ns.getMonth()+1).padStart(2,'0')}-${String(ns.getDate()).padStart(2,'0')}`; for(let j=0;j<plen;j++){ const pd=addDays(ss,j); const [py,pm]=pd.split('-').map(Number); if(py===year&&pm===month) res.predicted.push(parseInt(pd.split('-')[2])); } const ovDate=addDays(ss,-llen); const [oy,om,od]=ovDate.split('-').map(Number); if(oy===year&&om===month) res.ovulation.push(od); let fc=addDays(ovDate,-5); while(dateCompare(fc,ovDate)<=0){ const [fy,fm,fd]=fc.split('-').map(Number); if(fy===year&&fm===month) res.fertile.push(fd); fc=addDays(fc,1); } let lc=addDays(ovDate,1),le=addDays(ss,-1); while(dateCompare(lc,le)<=0){ const [ly,lm,ld]=lc.split('-').map(Number); if(ly===year&&lm===month) res.luteal.push(ld); lc=addDays(lc,1); } }
-      const hasRecord=Array.from({length:daysInMonth(year,month)},(_,i)=>i+1).some(d=>getData(`${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`).isPeriod);
-      if(hasRecord) res.predicted=[];
-      return res;
-    }
-    function renderCalendar(){
-      monthLabel.textContent=`${calYear}年${calMonth}月`; calHead.innerHTML=''; ['日','一','二','三','四','五','六'].forEach(d=>{ const el=document.createElement('div'); el.className='day-header'; el.textContent=d; calHead.appendChild(el); });
-      const dim=daysInMonth(calYear,calMonth),fd=new Date(calYear,calMonth-1,1).getDay(),pred=getPredictions(calYear,calMonth),tt=todayStr();
-      const periodSet=new Set(); for(let d=1;d<=dim;d++){ const ds=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`; if(getData(ds).isPeriod) periodSet.add(d); }
-      const expanded=new Set(periodSet); const arr=[...periodSet].sort((a,b)=>a-b);
-      if(arr.length>=2){ for(let i=0;i<arr.length-1;i++){ for(let d=arr[i]+1;d<arr[i+1];d++) expanded.add(d); } }
-      let html=''; for(let i=0;i<fd;i++) html+='<div></div>';
-      for(let d=1;d<=dim;d++){ const ds=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`,data=getData(ds); let cls='day-cell',ovu=''; if(expanded.has(d)) cls+=' period'; else if(pred.ovulation.includes(d)){ cls+=' ovulation'; ovu='<span class="ovu-icon">🌸</span>'; } else if(pred.fertile.includes(d)) cls+=' fertile'; else if(pred.predicted.includes(d)) cls+=' predicted'; else if(pred.luteal.includes(d)) cls+=' luteal'; else if(data.intimacy&&data.intimacy!=='none') cls+=' intimacy-only'; if(ds===tt) cls+=' today'; let extra=''; if(data.note||data.pain||data.flow||(data.intimacy&&data.intimacy!=='none')) extra+='<div class="mini-dot"></div>'; if(data.image) extra+=`<div class="mini-img" style="background-image:url(${data.image})"></div>`; if(ovu) extra+=ovu; html+=`<div class="${cls}" data-date="${ds}">${d}${extra}</div>`; }
-      calBody.innerHTML=html; calBody.querySelectorAll('.day-cell').forEach(cell=>{ cell.addEventListener('click',function(){ openModal(this.getAttribute('data-date')); }); });
-    }
-    const appCard=document.getElementById('appCard'),changeBgBtn=document.getElementById('changeBgBtn'),resetBgBtn=document.getElementById('resetBgBtn'),bgFileInput=document.getElementById('bgFileInput'),SKIN_KEY='my_skin_bg';
-    const savedBg=localStorage.getItem(SKIN_KEY); if(savedBg&&appCard) appCard.style.backgroundImage=`url(${savedBg})`;
-    changeBgBtn.addEventListener('click',()=>{ bgFileInput.click(); });
-    bgFileInput.addEventListener('change',(e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=(ev)=>{ const d=ev.target.result; appCard.style.backgroundImage=`url(${d})`; localStorage.setItem(SKIN_KEY,d); }; r.readAsDataURL(f); });
-    resetBgBtn.addEventListener('click',()=>{ appCard.style.backgroundImage=''; localStorage.removeItem(SKIN_KEY); });
-    document.getElementById('prevMonth').addEventListener('click',()=>{ calMonth--; if(calMonth<1){calMonth=12;calYear--;} renderCalendar(); });
-    document.getElementById('nextMonth').addEventListener('click',()=>{ calMonth++; if(calMonth>12){calMonth=1;calYear++;} renderCalendar(); });
-    const modalOverlay=document.getElementById('modalOverlay'),modalDateTitle=document.getElementById('modalDateTitle'),toggleTrack=document.getElementById('toggleTrack'),periodHint=document.getElementById('periodHint'),painEmojis=document.getElementById('painEmojis'),flowEmojis=document.getElementById('flowEmojis'),modalNote=document.getElementById('modalNote'),imageUpload=document.getElementById('imageUpload'),imagePreview=document.getElementById('imagePreview'),largeImage=document.getElementById('largeImage'),imageModal=document.getElementById('imageModal');
-    let curDate=null,curImg='',curPain='',curFlow='',curIntimacy='none',curPeriod=false;
-    const painOpts=['😊','😐','😖'],flowOpts=['🩸','🩸🩸','🩸🩸🩸'];
-    function renderPain(){ painEmojis.innerHTML=painOpts.map(e=>`<span class="modal-emoji${curPain===e?' selected':''}" data-v="${e}">${e}</span>`).join(''); painEmojis.querySelectorAll('.modal-emoji').forEach(el=>{ el.addEventListener('click',function(){ curPain=this.getAttribute('data-v'); renderPain(); }); }); }
-    function renderFlow(){ flowEmojis.innerHTML=flowOpts.map(e=>`<span class="modal-emoji${curFlow===e?' selected':''}" data-v="${e}">${e}</span>`).join(''); flowEmojis.querySelectorAll('.modal-emoji').forEach(el=>{ el.addEventListener('click',function(){ curFlow=this.getAttribute('data-v'); renderFlow(); }); }); }
-    function renderIntimacy(){ document.querySelectorAll('#intimacyTags .intimacy-tag').forEach(tag=>{ tag.classList.toggle('selected',tag.getAttribute('data-val')===curIntimacy); tag.onclick=function(){ curIntimacy=this.getAttribute('data-val'); renderIntimacy(); }; }); }
-    function updatePeriodHint(){ if(!curPeriod){ periodHint.textContent=''; return; } const prev=getData(addDays(curDate,-1)),next=getData(addDays(curDate,1)); if(prev.isPeriod&&!next.isPeriod) periodHint.textContent='💡 可能是经期最后一天'; else if(!prev.isPeriod&&next.isPeriod) periodHint.textContent='💡 可能是经期第一天'; else if(prev.isPeriod&&next.isPeriod) periodHint.textContent='💡 经期中'; else periodHint.textContent='💡 标记为经期日'; }
-    document.getElementById('periodToggle').addEventListener('click',function(){ curPeriod=!curPeriod; toggleTrack.classList.toggle('on',curPeriod); updatePeriodHint(); });
-    function autoSaveAndClose(){ if(!curDate) return; setData(curDate,{isPeriod:curPeriod,pain:curPain,flow:curFlow,intimacy:curIntimacy,note:modalNote.value.trim(),image:curImg}); if(curPeriod){ const s=getSettings(); let all=[]; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k.startsWith(STORAGE_CYCLE)){ const d=k.replace(STORAGE_CYCLE,''); if(getData(d).isPeriod) all.push(d); } } all.sort((a,b)=>dateCompare(a,b)); if(all.length>0){ s.lastPeriodStart=all[all.length-1]; saveSettings(s); } } modalOverlay.classList.remove('show'); renderCalendar(); }
-    function openModal(ds){ curDate=ds; modalDateTitle.textContent=ds; const data=getData(ds); curPeriod=data.isPeriod||false; toggleTrack.classList.toggle('on',curPeriod); curPain=data.pain||''; curFlow=data.flow||''; curIntimacy=data.intimacy||'none'; modalNote.value=data.note||''; curImg=data.image||''; imagePreview.textContent=curImg?'✅ 已附图 (点我看大图)':''; imagePreview.style.cursor=curImg?'pointer':'default'; imageUpload.value=''; updatePeriodHint(); renderPain(); renderFlow(); renderIntimacy(); modalOverlay.classList.add('show'); }
-    imagePreview.addEventListener('click',function(){ if(curImg){ largeImage.src=curImg; imageModal.classList.add('show'); } });
-    imageUpload.addEventListener('change',function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ curImg=ev.target.result; imagePreview.textContent='✅ 已选图'; imagePreview.style.cursor='pointer'; }; r.readAsDataURL(f); });
-    document.getElementById('modalDelete').addEventListener('click',function(){ if(!curDate) return; if(confirm('确定删除这一天的记录吗？')){ delData(curDate); modalOverlay.classList.remove('show'); renderCalendar(); cycleHint.textContent='🗑 已删除'; setTimeout(()=>{cycleHint.textContent='';},1500); } });
-    document.getElementById('modalClose').addEventListener('click',autoSaveAndClose);
-    modalOverlay.addEventListener('click',function(e){ if(e.target===modalOverlay) autoSaveAndClose(); });
-    document.getElementById('closeImageBtn').addEventListener('click',function(){ imageModal.classList.remove('show'); });
-    imageModal.addEventListener('click',function(e){ if(e.target===imageModal) imageModal.classList.remove('show'); });
-    renderCalendar();
+    function getPredictions(year,month){ const s=getSettings(); const res={predicted:[],fertile:[],ovulation:[],luteal:[]}; if(!s.lastPeriodStart) return res; const plen=s.periodLength||5,clen=s.cycleLength||28,llen=s.lutealLength||14; let ns=new Date(s.lastPeriodStart); ns.setDate(ns.getDate()-clen*3); for(let i=0;i<12;i++){ ns.setDate(ns.getDate()+clen); const ss=`${ns.getFullYear()}-${String(ns.getMonth()+1).padStart(2,'0')}-${String(ns.getDate()).padStart(2,'0')}`; for(let j=0;j<plen;j++){ const pd=addDays(ss,j); const [py,pm]=pd.split('-').map(Number); if(py===year&&pm===month) res.predicted.push(parseInt(pd.split('-')[2])); } const ovDate=addDays(ss,-llen); const [oy,om,od]=ovDate.split('-').map(Number); if(oy===year&&om===month) res.ovulation.push(od); let fc=addDays(ovDate,-5); while(dateCompare(fc,ovDate)<=0){ const [fy,fm,fd]=fc.split('-').map(Number); if(fy===year&&fm===month) res.fertile.push(fd); fc=addDays(fc,1); } let lc=addDays(ovDate,1),le=addDays(ss,-1); while(dateCompare(lc,le)<=0){ const [ly,lm,ld]=lc.split('-').map(Number); if(ly===year&&lm===month) res.luteal.push(ld); lc=addDays(lc,1); } } const hasRecord=Array.from({length:daysInMonth(year,month)},(_,i)=>i+1).some(d=>getData(`${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`).isPeriod); if(hasRecord) res.predicted=[]; return res; }
+    function renderCalendar(){ monthLabel.textContent=`${calYear}年${calMonth}月`; calHead.innerHTML=''; ['日','一','二','三','四','五','六'].forEach(d=>{ const el=document.createElement('div'); el.className='day-header'; el.textContent=d; calHead.appendChild(el); }); const dim=daysInMonth(calYear,calMonth),fd=new Date(calYear,calMonth-1,1).getDay(),pred=getPredictions(calYear,calMonth),tt=todayStr(); const periodSet=new Set(); for(let d=1;d<=dim;d++){ const ds=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`; if(getData(ds).isPeriod) periodSet.add(d); } const expanded=new Set(periodSet); const arr=[...periodSet].sort((a,b)=>a-b); if(arr.length>=2){ for(let i=0;i<arr.length-1;i++){ for(let d=arr[i]+1;d<arr[i+1];d++) expanded.add(d); } } let html=''; for(let i=0;i<fd;i++) html+='<div></div>'; for(let d=1;d<=dim;d++){ const ds=`${calYear}-${String(calMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`,data=getData(ds); let cls='day-cell',ovu=''; if(expanded.has(d)) cls+=' period'; else if(pred.ovulation.includes(d)){ cls+=' ovulation'; ovu='<span class="ovu-icon">🌸</span>'; } else if(pred.fertile.includes(d)) cls+=' fertile'; else if(pred.predicted.includes(d)) cls+=' predicted'; else if(pred.luteal.includes(d)) cls+=' luteal'; else if(data.intimacy&&data.intimacy!=='none') cls+=' intimacy-only'; if(ds===tt) cls+=' today'; let extra=''; if(data.note||data.pain||data.flow||(data.intimacy&&data.intimacy!=='none')) extra+='<div class="mini-dot"></div>'; if(data.image) extra+=`<div class="mini-img" style="background-image:url(${data.image})"></div>`; if(ovu) extra+=ovu; html+=`<div class="${cls}" data-date="${ds}">${d}${extra}</div>`; } calBody.innerHTML=html; calBody.querySelectorAll('.day-cell').forEach(cell=>{ cell.addEventListener('click',function(){ openModal(this.getAttribute('data-date')); }); }); }
+    const appCard=document.getElementById('appCard'),changeBgBtn=document.getElementById('changeBgBtn'),resetBgBtn=document.getElementById('resetBgBtn'),bgFileInput=document.getElementById('bgFileInput'),SKIN_KEY='my_skin_bg'; const savedBg=localStorage.getItem(SKIN_KEY); if(savedBg&&appCard) appCard.style.backgroundImage=`url(${savedBg})`; changeBgBtn.addEventListener('click',()=>{ bgFileInput.click(); }); bgFileInput.addEventListener('change',(e)=>{ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=(ev)=>{ const d=ev.target.result; appCard.style.backgroundImage=`url(${d})`; localStorage.setItem(SKIN_KEY,d); }; r.readAsDataURL(f); }); resetBgBtn.addEventListener('click',()=>{ appCard.style.backgroundImage=''; localStorage.removeItem(SKIN_KEY); }); document.getElementById('prevMonth').addEventListener('click',()=>{ calMonth--; if(calMonth<1){calMonth=12;calYear--;} renderCalendar(); }); document.getElementById('nextMonth').addEventListener('click',()=>{ calMonth++; if(calMonth>12){calMonth=1;calYear++;} renderCalendar(); });
+    const modalOverlay=document.getElementById('modalOverlay'),modalDateTitle=document.getElementById('modalDateTitle'),toggleTrack=document.getElementById('toggleTrack'),periodHint=document.getElementById('periodHint'),painEmojis=document.getElementById('painEmojis'),flowEmojis=document.getElementById('flowEmojis'),modalNote=document.getElementById('modalNote'),imageUpload=document.getElementById('imageUpload'),imagePreview=document.getElementById('imagePreview'),largeImage=document.getElementById('largeImage'),imageModal=document.getElementById('imageModal'); let curDate=null,curImg='',curPain='',curFlow='',curIntimacy='none',curPeriod=false; const painOpts=['😊','😐','😖'],flowOpts=['🩸','🩸🩸','🩸🩸🩸']; function renderPain(){ painEmojis.innerHTML=painOpts.map(e=>`<span class="modal-emoji${curPain===e?' selected':''}" data-v="${e}">${e}</span>`).join(''); painEmojis.querySelectorAll('.modal-emoji').forEach(el=>{ el.addEventListener('click',function(){ curPain=this.getAttribute('data-v'); renderPain(); }); }); } function renderFlow(){ flowEmojis.innerHTML=flowOpts.map(e=>`<span class="modal-emoji${curFlow===e?' selected':''}" data-v="${e}">${e}</span>`).join(''); flowEmojis.querySelectorAll('.modal-emoji').forEach(el=>{ el.addEventListener('click',function(){ curFlow=this.getAttribute('data-v'); renderFlow(); }); }); } function renderIntimacy(){ document.querySelectorAll('#intimacyTags .intimacy-tag').forEach(tag=>{ tag.classList.toggle('selected',tag.getAttribute('data-val')===curIntimacy); tag.onclick=function(){ curIntimacy=this.getAttribute('data-val'); renderIntimacy(); }; }); } function updatePeriodHint(){ if(!curPeriod){ periodHint.textContent=''; return; } const prev=getData(addDays(curDate,-1)),next=getData(addDays(curDate,1)); if(prev.isPeriod&&!next.isPeriod) periodHint.textContent='💡 可能是经期最后一天'; else if(!prev.isPeriod&&next.isPeriod) periodHint.textContent='💡 可能是经期第一天'; else if(prev.isPeriod&&next.isPeriod) periodHint.textContent='💡 经期中'; else periodHint.textContent='💡 标记为经期日'; } document.getElementById('periodToggle').addEventListener('click',function(){ curPeriod=!curPeriod; toggleTrack.classList.toggle('on',curPeriod); updatePeriodHint(); });
+    function autoSaveAndClose(){ if(!curDate) return; setData(curDate,{isPeriod:curPeriod,pain:curPain,flow:curFlow,intimacy:curIntimacy,note:modalNote.value.trim(),image:curImg}); if(curPeriod){ unlockAchievement('period_first'); const pc=(parseInt(localStorage.getItem('period_day_count')||'0'))+1; localStorage.setItem('period_day_count',pc); if(pc>=7) unlockAchievement('period_7streak'); if(pc>=30) unlockAchievement('period_30streak'); if(modalNote.value.trim()) unlockAchievement('period_note'); const s=getSettings(); let all=[]; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k.startsWith(STORAGE_CYCLE)){ const d=k.replace(STORAGE_CYCLE,''); if(getData(d).isPeriod) all.push(d); } } all.sort((a,b)=>dateCompare(a,b)); if(all.length>0){ s.lastPeriodStart=all[all.length-1]; saveSettings(s); } } modalOverlay.classList.remove('show'); renderCalendar(); }
+    function openModal(ds){ curDate=ds; modalDateTitle.textContent=ds; const data=getData(ds); curPeriod=data.isPeriod||false; toggleTrack.classList.toggle('on',curPeriod); curPain=data.pain||''; curFlow=data.flow||''; curIntimacy=data.intimacy||'none'; modalNote.value=data.note||''; curImg=data.image||''; imagePreview.textContent=curImg?'✅ 已附图 (点我看大图)':''; imagePreview.style.cursor=curImg?'pointer':'default'; imageUpload.value=''; updatePeriodHint(); renderPain(); renderFlow(); renderIntimacy(); modalOverlay.classList.add('show'); } imagePreview.addEventListener('click',function(){ if(curImg){ largeImage.src=curImg; imageModal.classList.add('show'); } }); imageUpload.addEventListener('change',function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ curImg=ev.target.result; imagePreview.textContent='✅ 已选图'; imagePreview.style.cursor='pointer'; }; r.readAsDataURL(f); }); document.getElementById('modalDelete').addEventListener('click',function(){ if(!curDate) return; if(confirm('确定删除这一天的记录吗？')){ delData(curDate); modalOverlay.classList.remove('show'); renderCalendar(); cycleHint.textContent='🗑 已删除'; setTimeout(()=>{cycleHint.textContent='';},1500); } }); document.getElementById('modalClose').addEventListener('click',autoSaveAndClose); modalOverlay.addEventListener('click',function(e){ if(e.target===modalOverlay) autoSaveAndClose(); }); document.getElementById('closeImageBtn').addEventListener('click',function(){ imageModal.classList.remove('show'); }); imageModal.addEventListener('click',function(e){ if(e.target===imageModal) imageModal.classList.remove('show'); }); renderCalendar();
   })();
 }
 
 // ==================== 菜谱选购模块 ====================
 function loadRecipeModule(){
-  document.getElementById('recipeContent').innerHTML = `
-    <div class="recipe-container"><div class="recipe-header"><h1>🍳 今天吃什么</h1><button class="add-dish-header-btn" id="addDishHeaderBtn">+</button></div><div class="recipe-main"><div class="category-sidebar" id="categorySidebar"></div><div class="dish-list" id="dishList"></div></div><div class="recipe-bottom-bar"><span class="cart-info" id="cartInfo">已选 0 份</span><button class="view-list-btn" id="viewListBtn">📋 采购小票</button></div></div>
-    <div class="modal-overlay" id="receiptModal"><div class="receipt-modal"><h3 style="text-align:center;color:var(--gold-light);">🧾 采购清单</h3><div id="receiptList"></div><button class="close-receipt" id="closeReceiptBtn">关闭</button></div></div>
-    <div class="edit-modal" id="editModal"><div class="edit-box"><h3 id="editTitle" style="color:var(--gold-light);">添加新菜</h3><input type="text" id="editName" placeholder="菜名（必填）"><select id="editCategory"><option value="荤菜">荤菜</option><option value="素菜">素菜</option><option value="汤羹">汤羹</option><option value="甜品">甜品</option><option value="主食">主食</option><option value="其他">其他</option></select><input type="text" id="editIngredients" placeholder="食材，用逗号分隔（如：番茄,鸡蛋,葱）"><div class="row"><label for="editImage" style="flex:1;background:var(--bg-elevated);border:1px solid var(--border);padding:8px;border-radius:12px;text-align:center;cursor:pointer;color:var(--text-secondary);">📷 选择图片</label><input type="file" id="editImage" accept="image/*" style="display:none;"><span id="editImagePreview" style="font-size:0.7rem;color:var(--text-secondary);"></span></div><div class="row" style="justify-content:space-between;"><button class="btn btn-primary" id="saveDishBtn">保存</button><button class="btn btn-danger" id="deleteDishBtn" style="display:none;">删除</button><button class="btn btn-neutral" id="cancelEditBtn">取消</button></div></div></div>
-  `;
-  (function(){ const STORAGE_KEY='my_menu_data',STORAGE_CART='my_menu_cart'; const defaultMenu=[{name:'番茄炒蛋',category:'荤菜',ingredients:['番茄','鸡蛋','葱','盐','糖'],image:''},{name:'青椒肉丝',category:'荤菜',ingredients:['青椒','猪肉','蒜','酱油','淀粉'],image:''},{name:'蒜蓉西兰花',category:'素菜',ingredients:['西兰花','蒜','蚝油','盐'],image:''},{name:'可乐鸡翅',category:'荤菜',ingredients:['鸡翅','可乐','姜','料酒','生抽'],image:''}]; let menuData=[],selectedDishes={},currentCategory='全部',editingIndex=-1,tempImageData=''; function loadMenu(){ const r=localStorage.getItem(STORAGE_KEY); menuData=r?JSON.parse(r):defaultMenu; if(!r) localStorage.setItem(STORAGE_KEY,JSON.stringify(defaultMenu)); } function saveMenu(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(menuData)); } function loadCart(){ const r=localStorage.getItem(STORAGE_CART); selectedDishes=r?JSON.parse(r):{}; } function saveCart(){ localStorage.setItem(STORAGE_CART,JSON.stringify(selectedDishes)); } function getCategories(){ const cats=new Set(menuData.map(d=>d.category)); return['全部',...Array.from(cats)]; } function renderCategories(){ document.getElementById('categorySidebar').innerHTML=getCategories().map(c=>`<div class="category-item${c===currentCategory?' active':''}" data-cat="${c}">${c}</div>`).join(''); document.querySelectorAll('.category-item').forEach(item=>{ item.addEventListener('click',function(){ currentCategory=this.getAttribute('data-cat'); renderCategories(); renderDishes(); }); }); } function renderDishes(){ const filtered=currentCategory==='全部'?menuData:menuData.filter(d=>d.category===currentCategory); document.getElementById('dishList').innerHTML=filtered.map(dish=>{ const gi=menuData.indexOf(dish); const is=dish.image?`background-image:url('${dish.image}')`:''; const qty=selectedDishes[gi]||0; const rightHTML=qty>0?`<div class="qty-wrap"><button class="qty-btn minus" data-index="${gi}">−</button><span class="qty-num">${qty}</span><button class="qty-btn plus" data-index="${gi}">+</button></div>`:`<button class="add-btn" data-index="${gi}">➕</button>`; return`<div class="dish-card"><div class="dish-img" style="${is}"></div><div class="dish-info"><div class="dish-name">${dish.name}</div><div class="dish-ingredients">${dish.ingredients.map(i=>`<span class="ingredient-tag">${i}</span>`).join('')}</div></div>${rightHTML}</div>`; }).join(''); document.querySelectorAll('.add-btn').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.plus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=(selectedDishes[i]||0)+1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.minus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]--; if(selectedDishes[i]<=0) delete selectedDishes[i]; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.dish-card').forEach((card,i)=>{ let pressTimer; card.addEventListener('touchstart',function(e){ e.preventDefault(); e.stopPropagation(); pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('touchend',function(){ clearTimeout(pressTimer); }); card.addEventListener('touchmove',function(){ clearTimeout(pressTimer); }); card.addEventListener('mousedown',function(e){ e.preventDefault(); e.stopPropagation(); pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('mouseup',function(){ clearTimeout(pressTimer); }); card.addEventListener('mouseleave',function(){ clearTimeout(pressTimer); }); }); } function updateCartInfo(){ const total=Object.values(selectedDishes).reduce((a,b)=>a+b,0); document.getElementById('cartInfo').textContent=`已选 ${total} 份`; } function renderReceipt(){ const all=[]; Object.keys(selectedDishes).forEach(i=>{ const d=menuData[parseInt(i)]; const qty=selectedDishes[i]||1; if(d) d.ingredients.forEach(ing=>{ for(let n=0;n<qty;n++) all.push(ing); }); }); const counts={}; all.forEach(ing=>{ counts[ing]=(counts[ing]||0)+1; }); const unique=Object.keys(counts).map(ing=>counts[ing]>1?`${ing} x${counts[ing]}`:ing); document.getElementById('receiptList').innerHTML=unique.map(ing=>`<div class="receipt-item" data-ing="${ing.split(' x')[0]}"><div class="check-box"></div><span>${ing}</span></div>`).join(''); document.querySelectorAll('.receipt-item').forEach(item=>{ item.addEventListener('click',function(){ this.classList.toggle('checked'); }); }); } function openEditor(index){ editingIndex=index; const dish=index>=0?menuData[index]:null; document.getElementById('editTitle').textContent=index>=0?'编辑菜品':'添加新菜'; document.getElementById('editName').value=dish?dish.name:''; document.getElementById('editCategory').value=dish?dish.category:'荤菜'; document.getElementById('editIngredients').value=dish?dish.ingredients.join(','):''; document.getElementById('editImagePreview').textContent=dish&&dish.image?'✅ 已有图':''; tempImageData=dish?dish.image||'':''; document.getElementById('deleteDishBtn').style.display=index>=0?'inline-block':'none'; document.getElementById('editModal').classList.add('show'); } document.getElementById('addDishHeaderBtn').addEventListener('click',()=>openEditor(-1)); document.getElementById('editImage').addEventListener('change',function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ tempImageData=ev.target.result; document.getElementById('editImagePreview').textContent='✅ 已选图'; }; r.readAsDataURL(f); }); document.getElementById('saveDishBtn').addEventListener('click',function(){ const name=document.getElementById('editName').value.trim(); if(!name) return alert('菜名不能为空'); const category=document.getElementById('editCategory').value; const raw=document.getElementById('editIngredients').value.trim(); const ingredients=raw?raw.split(/[,，]/).map(s=>s.trim()).filter(s=>s):[]; let finalImage=tempImageData; if(tempImageData&&tempImageData.length>200000){ const img=new Image(); img.src=tempImageData; img.onload=function(){ const canvas=document.createElement('canvas'); const maxW=300; const scale=maxW/img.width; canvas.width=maxW; canvas.height=img.height*scale; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); finalImage=canvas.toDataURL('image/jpeg',0.6); saveDish(finalImage); }; return; } saveDish(finalImage); function saveDish(img){ const dish={name,category,ingredients,image:img}; if(editingIndex>=0) menuData[editingIndex]=dish; else menuData.push(dish); saveMenu(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); } }); document.getElementById('deleteDishBtn').addEventListener('click',function(){ if(editingIndex>=0&&confirm('确定删除这道菜吗？')){ delete selectedDishes[editingIndex]; menuData.splice(editingIndex,1); saveMenu(); saveCart(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); updateCartInfo(); } }); document.getElementById('cancelEditBtn').addEventListener('click',()=>{ document.getElementById('editModal').classList.remove('show'); }); document.getElementById('editModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); document.getElementById('viewListBtn').addEventListener('click',()=>{ renderReceipt(); document.getElementById('receiptModal').classList.add('show'); }); document.getElementById('closeReceiptBtn').addEventListener('click',()=>{ document.getElementById('receiptModal').classList.remove('show'); }); document.getElementById('receiptModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); loadMenu(); loadCart(); renderCategories(); renderDishes(); updateCartInfo(); })();
+  document.getElementById('recipeContent').innerHTML = `<div class="recipe-container"><div class="recipe-header"><h1>🍳 今天吃什么</h1><button class="add-dish-header-btn" id="addDishHeaderBtn">+</button></div><div class="recipe-main"><div class="category-sidebar" id="categorySidebar"></div><div class="dish-list" id="dishList"></div></div><div class="recipe-bottom-bar"><span class="cart-info" id="cartInfo">已选 0 份</span><button class="view-list-btn" id="viewListBtn">📋 采购小票</button></div></div><div class="modal-overlay" id="receiptModal"><div class="receipt-modal"><h3 style="text-align:center;color:var(--gold-light);">🧾 采购清单</h3><div id="receiptList"></div><button class="close-receipt" id="closeReceiptBtn">关闭</button></div></div><div class="edit-modal" id="editModal"><div class="edit-box"><h3 id="editTitle" style="color:var(--gold-light);">添加新菜</h3><input type="text" id="editName" placeholder="菜名（必填）"><select id="editCategory"><option value="荤菜">荤菜</option><option value="素菜">素菜</option><option value="汤羹">汤羹</option><option value="甜品">甜品</option><option value="主食">主食</option><option value="其他">其他</option></select><input type="text" id="editIngredients" placeholder="食材，用逗号分隔（如：番茄,鸡蛋,葱）"><div class="row"><label for="editImage" style="flex:1;background:var(--bg-elevated);border:1px solid var(--border);padding:8px;border-radius:12px;text-align:center;cursor:pointer;color:var(--text-secondary);">📷 选择图片</label><input type="file" id="editImage" accept="image/*" style="display:none;"><span id="editImagePreview" style="font-size:0.7rem;color:var(--text-secondary);"></span></div><div class="row" style="justify-content:space-between;"><button class="btn btn-primary" id="saveDishBtn">保存</button><button class="btn btn-danger" id="deleteDishBtn" style="display:none;">删除</button><button class="btn btn-neutral" id="cancelEditBtn">取消</button></div></div></div>`;
+  (function(){ const STORAGE_KEY='my_menu_data',STORAGE_CART='my_menu_cart'; const defaultMenu=[{name:'番茄炒蛋',category:'荤菜',ingredients:['番茄','鸡蛋','葱','盐','糖'],image:''},{name:'青椒肉丝',category:'荤菜',ingredients:['青椒','猪肉','蒜','酱油','淀粉'],image:''},{name:'蒜蓉西兰花',category:'素菜',ingredients:['西兰花','蒜','蚝油','盐'],image:''},{name:'可乐鸡翅',category:'荤菜',ingredients:['鸡翅','可乐','姜','料酒','生抽'],image:''}]; let menuData=[],selectedDishes={},currentCategory='全部',editingIndex=-1,tempImageData=''; function loadMenu(){ const r=localStorage.getItem(STORAGE_KEY); menuData=r?JSON.parse(r):defaultMenu; if(!r) localStorage.setItem(STORAGE_KEY,JSON.stringify(defaultMenu)); } function saveMenu(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(menuData)); } function loadCart(){ const r=localStorage.getItem(STORAGE_CART); selectedDishes=r?JSON.parse(r):{}; } function saveCart(){ localStorage.setItem(STORAGE_CART,JSON.stringify(selectedDishes)); } function getCategories(){ const cats=new Set(menuData.map(d=>d.category)); return['全部',...Array.from(cats)]; } function renderCategories(){ document.getElementById('categorySidebar').innerHTML=getCategories().map(c=>`<div class="category-item${c===currentCategory?' active':''}" data-cat="${c}">${c}</div>`).join(''); document.querySelectorAll('.category-item').forEach(item=>{ item.addEventListener('click',function(){ currentCategory=this.getAttribute('data-cat'); renderCategories(); renderDishes(); }); }); } function renderDishes(){ const filtered=currentCategory==='全部'?menuData:menuData.filter(d=>d.category===currentCategory); document.getElementById('dishList').innerHTML=filtered.map(dish=>{ const gi=menuData.indexOf(dish); const is=dish.image?`background-image:url('${dish.image}')`:''; const qty=selectedDishes[gi]||0; const rightHTML=qty>0?`<div class="qty-wrap"><button class="qty-btn minus" data-index="${gi}">−</button><span class="qty-num">${qty}</span><button class="qty-btn plus" data-index="${gi}">+</button></div>`:`<button class="add-btn" data-index="${gi}">➕</button>`; return`<div class="dish-card"><div class="dish-img" style="${is}"></div><div class="dish-info"><div class="dish-name">${dish.name}</div><div class="dish-ingredients">${dish.ingredients.map(i=>`<span class="ingredient-tag">${i}</span>`).join('')}</div></div>${rightHTML}</div>`; }).join(''); document.querySelectorAll('.add-btn').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=1; saveCart(); renderDishes(); updateCartInfo(); unlockAchievement('recipe_first'); const rc=(parseInt(localStorage.getItem('recipe_buy_count')||'0'))+1; localStorage.setItem('recipe_buy_count',rc); if(rc>=10) unlockAchievement('recipe_10dishes'); }); }); document.querySelectorAll('.qty-btn.plus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]=(selectedDishes[i]||0)+1; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.qty-btn.minus').forEach(btn=>{ btn.addEventListener('click',function(e){ e.stopPropagation(); const i=parseInt(this.getAttribute('data-index')); selectedDishes[i]--; if(selectedDishes[i]<=0) delete selectedDishes[i]; saveCart(); renderDishes(); updateCartInfo(); }); }); document.querySelectorAll('.dish-card').forEach((card,i)=>{ let pressTimer; card.addEventListener('touchstart',function(e){ e.preventDefault(); e.stopPropagation(); pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('touchend',function(){ clearTimeout(pressTimer); }); card.addEventListener('touchmove',function(){ clearTimeout(pressTimer); }); card.addEventListener('mousedown',function(e){ e.preventDefault(); e.stopPropagation(); pressTimer=setTimeout(()=>{ openEditor(menuData.indexOf(filtered[i])); },500); }); card.addEventListener('mouseup',function(){ clearTimeout(pressTimer); }); card.addEventListener('mouseleave',function(){ clearTimeout(pressTimer); }); }); } function updateCartInfo(){ const total=Object.values(selectedDishes).reduce((a,b)=>a+b,0); document.getElementById('cartInfo').textContent=`已选 ${total} 份`; } function renderReceipt(){ const all=[]; Object.keys(selectedDishes).forEach(i=>{ const d=menuData[parseInt(i)]; const qty=selectedDishes[i]||1; if(d) d.ingredients.forEach(ing=>{ for(let n=0;n<qty;n++) all.push(ing); }); }); const counts={}; all.forEach(ing=>{ counts[ing]=(counts[ing]||0)+1; }); const unique=Object.keys(counts).map(ing=>counts[ing]>1?`${ing} x${counts[ing]}`:ing); document.getElementById('receiptList').innerHTML=unique.map(ing=>`<div class="receipt-item" data-ing="${ing.split(' x')[0]}"><div class="check-box"></div><span>${ing}</span></div>`).join(''); document.querySelectorAll('.receipt-item').forEach(item=>{ item.addEventListener('click',function(){ this.classList.toggle('checked'); }); }); } function openEditor(index){ editingIndex=index; const dish=index>=0?menuData[index]:null; document.getElementById('editTitle').textContent=index>=0?'编辑菜品':'添加新菜'; document.getElementById('editName').value=dish?dish.name:''; document.getElementById('editCategory').value=dish?dish.category:'荤菜'; document.getElementById('editIngredients').value=dish?dish.ingredients.join(','):''; document.getElementById('editImagePreview').textContent=dish&&dish.image?'✅ 已有图':''; tempImageData=dish?dish.image||'':''; document.getElementById('deleteDishBtn').style.display=index>=0?'inline-block':'none'; document.getElementById('editModal').classList.add('show'); } document.getElementById('addDishHeaderBtn').addEventListener('click',()=>openEditor(-1)); document.getElementById('editImage').addEventListener('change',function(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=function(ev){ tempImageData=ev.target.result; document.getElementById('editImagePreview').textContent='✅ 已选图'; }; r.readAsDataURL(f); }); document.getElementById('saveDishBtn').addEventListener('click',function(){ const name=document.getElementById('editName').value.trim(); if(!name) return alert('菜名不能为空'); const category=document.getElementById('editCategory').value; const raw=document.getElementById('editIngredients').value.trim(); const ingredients=raw?raw.split(/[,，]/).map(s=>s.trim()).filter(s=>s):[]; let finalImage=tempImageData; if(tempImageData&&tempImageData.length>200000){ const img=new Image(); img.src=tempImageData; img.onload=function(){ const canvas=document.createElement('canvas'); const maxW=300; const scale=maxW/img.width; canvas.width=maxW; canvas.height=img.height*scale; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,canvas.width,canvas.height); finalImage=canvas.toDataURL('image/jpeg',0.6); saveDish(finalImage); }; return; } saveDish(finalImage); function saveDish(img){ const dish={name,category,ingredients,image:img}; if(editingIndex>=0) menuData[editingIndex]=dish; else { menuData.push(dish); unlockAchievement('recipe_add_dish'); } saveMenu(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); } }); document.getElementById('deleteDishBtn').addEventListener('click',function(){ if(editingIndex>=0&&confirm('确定删除这道菜吗？')){ delete selectedDishes[editingIndex]; menuData.splice(editingIndex,1); saveMenu(); saveCart(); document.getElementById('editModal').classList.remove('show'); renderCategories(); renderDishes(); updateCartInfo(); } }); document.getElementById('cancelEditBtn').addEventListener('click',()=>{ document.getElementById('editModal').classList.remove('show'); }); document.getElementById('editModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); document.getElementById('viewListBtn').addEventListener('click',()=>{ renderReceipt(); document.getElementById('receiptModal').classList.add('show'); }); document.getElementById('closeReceiptBtn').addEventListener('click',()=>{ document.getElementById('receiptModal').classList.remove('show'); }); document.getElementById('receiptModal').addEventListener('click',function(e){ if(e.target===this) this.classList.remove('show'); }); loadMenu(); loadCart(); renderCategories(); renderDishes(); updateCartInfo(); })();
 }
 
 // ==================== 打工续命模块 ====================
 function loadWorkModule(){
-  document.getElementById('workContent').innerHTML = `
-    <div class="work-card">
-      <h2 style="font-family:var(--font-title);color:#a8e8a8;">💰 钱钱钱</h2>
-      <div class="money-display" id="moneyDisplay">
-        <small id="moneyLabel">今天已赚（估算）</small>
-        <div class="big-number" id="moneyValue">¥0.0000</div>
-        <div class="toggle-row">
-          <button class="toggle-btn active" data-mode="today">今天</button>
-          <button class="toggle-btn" data-mode="hour">时薪</button>
-          <button class="toggle-btn" data-mode="month">月薪</button>
-          <button class="toggle-btn" data-mode="year">年薪</button>
-        </div>
-      </div>
-      <div class="time-section">
-        <div class="time-row">
-          <div class="time-box"><label>上班打卡</label><input type="time" id="startTimeInput" value=""></div>
-          <div class="time-box"><label>下班打卡</label><input type="time" id="endTimeInput" value=""></div>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-work" id="clockInBtn" style="flex:1;">🏃 上班</button>
-          <button class="btn-work secondary" id="clockOutBtn" style="flex:1;">🏁 下班</button>
-        </div>
-      </div>
-      <div id="flipCard" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;padding:20px;text-align:center;cursor:pointer;min-height:100px;display:flex;flex-direction:column;justify-content:center;">
-        <div id="flipLabel" style="font-size:0.8rem;color:var(--text-muted);"></div>
-        <div id="flipValue" style="font-size:2.5rem;font-weight:bold;color:var(--gold-light);"></div>
-      </div>
-      <div class="info-section">
-        <div class="info-row"><span>已上班</span><span id="workedTime">--</span></div>
-        <div class="info-row"><span>距下班</span><span id="untilOff">--</span></div>
-        <div class="info-row"><span>本月已赚</span><span id="monthlyTotal">¥0.00</span></div>
-        <div style="text-align:right;margin-top:-4px;"><button id="clearMonthBtn" style="background:transparent;border:none;color:rgba(232,160,176,0.6);font-size:0.65rem;cursor:pointer;">清空本月数据</button></div>
-      </div>
-      <div class="settings-section">
-        <div class="setting-row"><label>上班时间</label><input type="time" id="setStart" value="09:00"></div>
-        <div class="setting-row"><label>下班时间</label><input type="time" id="setEnd" value="18:00"></div>
-        <div class="setting-row"><label>月薪</label><input type="number" id="monthlySalary" value="8000" step="100" min="100"></div>
-        <div class="setting-row"><label>发薪日</label><input type="number" id="paydayInput" value="10" min="1" max="31"></div>
-      </div>
-    </div>
-  `;
+  document.getElementById('workContent').innerHTML = `<div class="work-card"><h2 style="font-family:var(--font-title);color:#a8e8a8;">💰 钱钱钱</h2><div class="money-display" id="moneyDisplay"><small id="moneyLabel">今天已赚（估算）</small><div class="big-number" id="moneyValue">¥0.0000</div><div class="toggle-row"><button class="toggle-btn active" data-mode="today">今天</button><button class="toggle-btn" data-mode="hour">时薪</button><button class="toggle-btn" data-mode="month">月薪</button><button class="toggle-btn" data-mode="year">年薪</button></div></div><div class="time-section"><div class="time-row"><div class="time-box"><label>上班打卡</label><input type="time" id="startTimeInput" value=""></div><div class="time-box"><label>下班打卡</label><input type="time" id="endTimeInput" value=""></div></div><div style="display:flex;gap:8px;"><button class="btn-work" id="clockInBtn" style="flex:1;">🏃 上班</button><button class="btn-work secondary" id="clockOutBtn" style="flex:1;">🏁 下班</button></div></div><div id="flipCard" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:20px;padding:20px;text-align:center;cursor:pointer;min-height:100px;display:flex;flex-direction:column;justify-content:center;"><div id="flipLabel" style="font-size:0.8rem;color:var(--text-muted);"></div><div id="flipValue" style="font-size:2.5rem;font-weight:bold;color:var(--gold-light);"></div></div><div class="info-section"><div class="info-row"><span>已上班</span><span id="workedTime">--</span></div><div class="info-row"><span>距下班</span><span id="untilOff">--</span></div><div class="info-row"><span>本月已赚</span><span id="monthlyTotal">¥0.00</span></div><div style="text-align:right;margin-top:-4px;"><button id="clearMonthBtn" style="background:transparent;border:none;color:rgba(232,160,176,0.6);font-size:0.65rem;cursor:pointer;">清空本月数据</button></div></div><div class="settings-section"><div class="setting-row"><label>上班时间</label><input type="time" id="setStart" value="09:00"></div><div class="setting-row"><label>下班时间</label><input type="time" id="setEnd" value="18:00"></div><div class="setting-row"><label>月薪</label><input type="number" id="monthlySalary" value="8000" step="100" min="100"></div><div class="setting-row"><label>发薪日</label><input type="number" id="paydayInput" value="10" min="1" max="31"></div></div></div>`;
   (function(){
-    const moneyValue = document.getElementById('moneyValue');
-    const moneyLabel = document.getElementById('moneyLabel');
-    const startInput = document.getElementById('startTimeInput');
-    const endInput = document.getElementById('endTimeInput');
-    const setStart = document.getElementById('setStart');
-    const setEnd = document.getElementById('setEnd');
-    const salaryInput = document.getElementById('monthlySalary');
-    const paydayInput = document.getElementById('paydayInput');
-    const monthlyTotalEl = document.getElementById('monthlyTotal');
-    const flipLabel = document.getElementById('flipLabel');
-    const flipValue = document.getElementById('flipValue');
-    let timer = null, clockedIn = false, startActual = null, currentMode = 'today';
-    let flipIndex = 0;
-    const flipItems = [
-      { label: '距周末', get: ()=>{
-        const now = new Date();
-        const dayOfWeek = now.getDay();
-        let days = 0;
-        for (let i=0;i<7;i++){ const check=(dayOfWeek+i)%7; if(check===0||check===6){ days=i; break; } }
-        return days===0&&(dayOfWeek===0||dayOfWeek===6) ? '休息中🎉' : `${days}天`;
-      }},
-      { label: '距发薪', get: ()=>{
-        const now = new Date();
-        const payday = parseInt(paydayInput.value)||10;
-        const today = now.getDate();
-        let d = payday-today;
-        if(d<0) d += new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
-        return d===0?'今天发薪💰':`${d}天`;
-      }}
-    ];
-
-    function updateFlip() {
-      const item = flipItems[flipIndex];
-      flipLabel.textContent = item.label;
-      flipValue.textContent = item.get();
-    }
-
-    document.getElementById('flipCard').addEventListener('click', ()=>{
-      flipIndex = (flipIndex+1) % flipItems.length;
-      updateFlip();
-    });
-
-    if(localStorage.getItem('workStart')) setStart.value = localStorage.getItem('workStart');
-    if(localStorage.getItem('workEnd')) setEnd.value = localStorage.getItem('workEnd');
-    if(localStorage.getItem('monthlySalary')) salaryInput.value = localStorage.getItem('monthlySalary');
-    if(localStorage.getItem('payday')) paydayInput.value = localStorage.getItem('payday');
-    setStart.addEventListener('change', ()=> { localStorage.setItem('workStart', setStart.value); if(clockedIn) resetTimer(); });
-    setEnd.addEventListener('change', ()=> { localStorage.setItem('workEnd', setEnd.value); if(clockedIn) resetTimer(); });
-    salaryInput.addEventListener('change', ()=> localStorage.setItem('monthlySalary', salaryInput.value));
-    paydayInput.addEventListener('change', ()=> { localStorage.setItem('payday', paydayInput.value); updateFlip(); });
-
-    function getWage() {
-      const monthlySalary = parseFloat(salaryInput.value) || 8000;
-      const [startH, startM] = setStart.value.split(':').map(Number);
-      const [endH, endM] = setEnd.value.split(':').map(Number);
-      const workHoursPerDay = (endH + endM/60) - (startH + startM/60);
-      return workHoursPerDay > 0 ? monthlySalary / (workHoursPerDay * 22) : 0;
-    }
-
-    function getMonthlyTotal() {
-      const records = JSON.parse(localStorage.getItem('work_records') || '{}');
-      const now = new Date();
-      const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-      return records[monthKey] || 0;
-    }
-
-    function addMonthlyTotal(amount) {
-      const records = JSON.parse(localStorage.getItem('work_records') || '{}');
-      const now = new Date();
-      const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-      records[monthKey] = (records[monthKey] || 0) + amount;
-      localStorage.setItem('work_records', JSON.stringify(records));
-    }
-
-    function updateMonthlyDisplay() {
-      const total = getMonthlyTotal();
-      monthlyTotalEl.textContent = `¥${total.toFixed(2)}`;
-    }
-
-    document.getElementById('clearMonthBtn').addEventListener('click', ()=>{
-      if(confirm('确定清空本月所有赚钱记录吗？此操作不可恢复。')){
-        const records = JSON.parse(localStorage.getItem('work_records') || '{}');
-        const now = new Date();
-        const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-        delete records[monthKey];
-        localStorage.setItem('work_records', JSON.stringify(records));
-        updateMonthlyDisplay();
-      }
-    });
-
-    function resetTimer() {
-      if (timer) clearInterval(timer);
-      if (clockedIn) timer = setInterval(updateDisplay, 100);
-      updateDisplay();
-    }
-
-    function updateInfo() {
-      if (startActual && clockedIn) {
-        const now = new Date();
-        const diffMs = now - startActual;
-        if (diffMs > 0) {
-          const h = Math.floor(diffMs / 3600000);
-          const m = Math.floor((diffMs % 3600000) / 60000);
-          document.getElementById('workedTime').textContent = `${h}小时${m}分钟`;
-        }
-        const [endH, endM] = setEnd.value.split(':').map(Number);
-        const endActual = new Date(); endActual.setHours(endH, endM, 0, 0);
-        const remainMs = endActual - now;
-        if (remainMs > 0) {
-          const rh = Math.floor(remainMs / 3600000);
-          const rm = Math.floor((remainMs % 3600000) / 60000);
-          document.getElementById('untilOff').textContent = `${rh}小时${rm}分钟`;
-        } else { document.getElementById('untilOff').textContent = '已下班'; }
-      } else {
-        document.getElementById('workedTime').textContent = '--';
-        document.getElementById('untilOff').textContent = '--';
-      }
-      updateFlip();
-    }
-
-    function updateDisplay() {
-      const wage = getWage();
-      const monthlySalary = parseFloat(salaryInput.value) || 8000;
-      if (currentMode === 'today' && clockedIn && startActual) {
-        const now = new Date();
-        const endActual = new Date();
-        const [endH, endM] = setEnd.value.split(':').map(Number);
-        endActual.setHours(endH, endM, 0, 0);
-        const effectiveEnd = now > endActual ? endActual : now;
-        const diffMs = effectiveEnd - startActual;
-        if (diffMs < 0) { moneyValue.textContent = '¥0.0000'; moneyLabel.textContent = '还没到上班时间'; return; }
-        moneyValue.textContent = `¥${(diffMs / 3600000 * wage).toFixed(4)}`;
-        moneyLabel.textContent = '今天已赚（估算）';
-      } else if (currentMode === 'hour') {
-        moneyValue.textContent = `¥${wage.toFixed(4)}`;
-        moneyLabel.textContent = '每秒都在赚';
-      } else if (currentMode === 'month') {
-        moneyValue.textContent = `¥${monthlySalary.toLocaleString()}`;
-        moneyLabel.textContent = '每月工资';
-      } else if (currentMode === 'year') {
-        moneyValue.textContent = `¥${(monthlySalary*12).toLocaleString()}`;
-        moneyLabel.textContent = '每年预计收入';
-      }
-      updateInfo();
-    }
-
-    document.querySelectorAll('.toggle-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        currentMode = this.getAttribute('data-mode');
-        updateDisplay();
-      });
-    });
-
-    startInput.addEventListener('change', ()=>{
-      if (startInput.value) {
-        const [sh, sm] = startInput.value.split(':').map(Number);
-        startActual = new Date(); startActual.setHours(sh, sm, 0, 0);
-        clockedIn = true;
-        localStorage.setItem('clockInTimestamp', startActual.getTime());
-        localStorage.setItem('clockInDate', `${startActual.getFullYear()}-${String(startActual.getMonth()+1).padStart(2,'0')}-${String(startActual.getDate()).padStart(2,'0')}`);
-        resetTimer();
-      }
-    });
-
-    endInput.addEventListener('change', ()=>{
-      if (startInput.value && endInput.value && clockedIn) {
-        const [eh, em] = endInput.value.split(':').map(Number);
-        const endActual = new Date(); endActual.setHours(eh, em, 0, 0);
-        const diffMs = endActual - startActual;
-        const earned = diffMs / 3600000 * getWage();
-        addMonthlyTotal(earned);
-        updateMonthlyDisplay();
-        clockedIn = false;
-        startActual = null;
-        localStorage.removeItem('clockInTimestamp');
-        localStorage.removeItem('clockInDate');
-        if (timer) clearInterval(timer);
-        updateDisplay();
-        alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`);
-      }
-    });
-
-    document.getElementById('clockInBtn').addEventListener('click', ()=>{
-      const now = new Date();
-      startInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      startActual = new Date(); startActual.setHours(now.getHours(), now.getMinutes(), 0, 0);
-      clockedIn = true;
-      endInput.value = '';
-      moneyValue.textContent = '¥0.0000';
-      moneyLabel.textContent = '今天已赚（估算）';
-      localStorage.setItem('clockInTimestamp', startActual.getTime());
-      localStorage.setItem('clockInDate', `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`);
-      resetTimer();
-    });
-
-    document.getElementById('clockOutBtn').addEventListener('click', ()=>{
-      if (!clockedIn) return alert('还没打卡上班呢～');
-      const now = new Date();
-      endInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-      const diffMs = now - startActual;
-      const earned = diffMs / 3600000 * getWage();
-      addMonthlyTotal(earned);
-      updateMonthlyDisplay();
-      clockedIn = false;
-      startActual = null;
-      localStorage.removeItem('clockInTimestamp');
-      localStorage.removeItem('clockInDate');
-      if (timer) clearInterval(timer);
-      updateDisplay();
-      alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`);
-    });
-
-    // 页面加载时恢复后台计时
-    const savedTimestamp = localStorage.getItem('clockInTimestamp');
-    const savedDate = localStorage.getItem('clockInDate');
-    const todayStr = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`;
-    if (savedTimestamp && savedDate === todayStr) {
-      startActual = new Date(parseInt(savedTimestamp));
-      clockedIn = true;
-      startInput.value = `${String(startActual.getHours()).padStart(2,'0')}:${String(startActual.getMinutes()).padStart(2,'0')}`;
-      endInput.value = '';
-      resetTimer();
-    }
-
-    updateMonthlyDisplay();
-    updateDisplay();
+    const moneyValue = document.getElementById('moneyValue'); const moneyLabel = document.getElementById('moneyLabel'); const startInput = document.getElementById('startTimeInput'); const endInput = document.getElementById('endTimeInput'); const setStart = document.getElementById('setStart'); const setEnd = document.getElementById('setEnd'); const salaryInput = document.getElementById('monthlySalary'); const paydayInput = document.getElementById('paydayInput'); const monthlyTotalEl = document.getElementById('monthlyTotal'); const flipLabel = document.getElementById('flipLabel'); const flipValue = document.getElementById('flipValue');
+    let timer = null, clockedIn = false, startActual = null, currentMode = 'today'; let flipIndex = 0;
+    const flipItems = [{ label: '距周末', get: ()=>{ const now = new Date(); const dayOfWeek = now.getDay(); let days = 0; for (let i=0;i<7;i++){ const check=(dayOfWeek+i)%7; if(check===0||check===6){ days=i; break; } } return days===0&&(dayOfWeek===0||dayOfWeek===6) ? '休息中🎉' : `${days}天`; }},{ label: '距发薪', get: ()=>{ const now = new Date(); const payday = parseInt(paydayInput.value)||10; const today = now.getDate(); let d = payday-today; if(d<0) d += new Date(now.getFullYear(),now.getMonth()+1,0).getDate(); return d===0?'今天发薪💰':`${d}天`; }}];
+    function updateFlip() { const item = flipItems[flipIndex]; flipLabel.textContent = item.label; flipValue.textContent = item.get(); }
+    document.getElementById('flipCard').addEventListener('click', ()=>{ flipIndex = (flipIndex+1) % flipItems.length; updateFlip(); });
+    if(localStorage.getItem('workStart')) setStart.value = localStorage.getItem('workStart'); if(localStorage.getItem('workEnd')) setEnd.value = localStorage.getItem('workEnd'); if(localStorage.getItem('monthlySalary')) salaryInput.value = localStorage.getItem('monthlySalary'); if(localStorage.getItem('payday')) paydayInput.value = localStorage.getItem('payday');
+    setStart.addEventListener('change', ()=> { localStorage.setItem('workStart', setStart.value); if(clockedIn) resetTimer(); }); setEnd.addEventListener('change', ()=> { localStorage.setItem('workEnd', setEnd.value); if(clockedIn) resetTimer(); }); salaryInput.addEventListener('change', ()=> localStorage.setItem('monthlySalary', salaryInput.value)); paydayInput.addEventListener('change', ()=> { localStorage.setItem('payday', paydayInput.value); updateFlip(); });
+    function getWage() { const monthlySalary = parseFloat(salaryInput.value) || 8000; const [startH, startM] = setStart.value.split(':').map(Number); const [endH, endM] = setEnd.value.split(':').map(Number); const workHoursPerDay = (endH + endM/60) - (startH + startM/60); return workHoursPerDay > 0 ? monthlySalary / (workHoursPerDay * 22) : 0; }
+    function getMonthlyTotal() { const records = JSON.parse(localStorage.getItem('work_records') || '{}'); const now = new Date(); const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`; return records[monthKey] || 0; }
+    function addMonthlyTotal(amount) { const records = JSON.parse(localStorage.getItem('work_records') || '{}'); const now = new Date(); const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`; records[monthKey] = (records[monthKey] || 0) + amount; localStorage.setItem('work_records', JSON.stringify(records)); }
+    function updateMonthlyDisplay() { const total = getMonthlyTotal(); monthlyTotalEl.textContent = `¥${total.toFixed(2)}`; }
+    document.getElementById('clearMonthBtn').addEventListener('click', ()=>{ if(confirm('确定清空本月所有赚钱记录吗？此操作不可恢复。')){ const records = JSON.parse(localStorage.getItem('work_records') || '{}'); const now = new Date(); const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`; delete records[monthKey]; localStorage.setItem('work_records', JSON.stringify(records)); updateMonthlyDisplay(); } });
+    function resetTimer() { if (timer) clearInterval(timer); if (clockedIn) timer = setInterval(updateDisplay, 100); updateDisplay(); }
+    function updateInfo() { if (startActual && clockedIn) { const now = new Date(); const diffMs = now - startActual; if (diffMs > 0) { const h = Math.floor(diffMs / 3600000); const m = Math.floor((diffMs % 3600000) / 60000); document.getElementById('workedTime').textContent = `${h}小时${m}分钟`; } const [endH, endM] = setEnd.value.split(':').map(Number); const endActual = new Date(); endActual.setHours(endH, endM, 0, 0); const remainMs = endActual - now; if (remainMs > 0) { const rh = Math.floor(remainMs / 3600000); const rm = Math.floor((remainMs % 3600000) / 60000); document.getElementById('untilOff').textContent = `${rh}小时${rm}分钟`; } else { document.getElementById('untilOff').textContent = '已下班'; } } else { document.getElementById('workedTime').textContent = '--'; document.getElementById('untilOff').textContent = '--'; } updateFlip(); }
+    function updateDisplay() { const wage = getWage(); const monthlySalary = parseFloat(salaryInput.value) || 8000; if (currentMode === 'today' && clockedIn && startActual) { const now = new Date(); const endActual = new Date(); const [endH, endM] = setEnd.value.split(':').map(Number); endActual.setHours(endH, endM, 0, 0); const effectiveEnd = now > endActual ? endActual : now; const diffMs = effectiveEnd - startActual; if (diffMs < 0) { moneyValue.textContent = '¥0.0000'; moneyLabel.textContent = '还没到上班时间'; return; } moneyValue.textContent = `¥${(diffMs / 3600000 * wage).toFixed(4)}`; moneyLabel.textContent = '今天已赚（估算）'; } else if (currentMode === 'hour') { moneyValue.textContent = `¥${wage.toFixed(4)}`; moneyLabel.textContent = '每秒都在赚'; } else if (currentMode === 'month') { moneyValue.textContent = `¥${monthlySalary.toLocaleString()}`; moneyLabel.textContent = '每月工资'; } else if (currentMode === 'year') { moneyValue.textContent = `¥${(monthlySalary*12).toLocaleString()}`; moneyLabel.textContent = '每年预计收入'; } updateInfo(); }
+    document.querySelectorAll('.toggle-btn').forEach(btn => { btn.addEventListener('click', function() { document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); currentMode = this.getAttribute('data-mode'); updateDisplay(); }); });
+    startInput.addEventListener('change', ()=>{ if (startInput.value) { const [sh, sm] = startInput.value.split(':').map(Number); startActual = new Date(); startActual.setHours(sh, sm, 0, 0); clockedIn = true; localStorage.setItem('clockInTimestamp', startActual.getTime()); localStorage.setItem('clockInDate', `${startActual.getFullYear()}-${String(startActual.getMonth()+1).padStart(2,'0')}-${String(startActual.getDate()).padStart(2,'0')}`); resetTimer(); } });
+    endInput.addEventListener('change', ()=>{ if (startInput.value && endInput.value && clockedIn) { const [eh, em] = endInput.value.split(':').map(Number); const endActual = new Date(); endActual.setHours(eh, em, 0, 0); const diffMs = endActual - startActual; const earned = diffMs / 3600000 * getWage(); addMonthlyTotal(earned); updateMonthlyDisplay(); clockedIn = false; startActual = null; localStorage.removeItem('clockInTimestamp'); localStorage.removeItem('clockInDate'); if (timer) clearInterval(timer); updateDisplay(); if(earned>=100) unlockAchievement('work_earn100'); if(earned>=500) unlockAchievement('work_earn500'); if(getMonthlyTotal()>=5000) unlockAchievement('work_monthly_5000'); alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`); } });
+    document.getElementById('clockInBtn').addEventListener('click', ()=>{ const now = new Date(); startInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`; startActual = new Date(); startActual.setHours(now.getHours(), now.getMinutes(), 0, 0); clockedIn = true; endInput.value = ''; moneyValue.textContent = '¥0.0000'; moneyLabel.textContent = '今天已赚（估算）'; unlockAchievement('work_first'); const wc=(parseInt(localStorage.getItem('work_day_count')||'0'))+1; localStorage.setItem('work_day_count',wc); if(wc>=7) unlockAchievement('work_7days'); if(wc>=30) unlockAchievement('work_30days'); localStorage.setItem('clockInTimestamp', startActual.getTime()); localStorage.setItem('clockInDate', `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`); resetTimer(); });
+    document.getElementById('clockOutBtn').addEventListener('click', ()=>{ if (!clockedIn) return alert('还没打卡上班呢～'); const now = new Date(); endInput.value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`; const diffMs = now - startActual; const earned = diffMs / 3600000 * getWage(); addMonthlyTotal(earned); updateMonthlyDisplay(); clockedIn = false; startActual = null; localStorage.removeItem('clockInTimestamp'); localStorage.removeItem('clockInDate'); if (timer) clearInterval(timer); updateDisplay(); if(earned>=100) unlockAchievement('work_earn100'); if(earned>=500) unlockAchievement('work_earn500'); if(getMonthlyTotal()>=5000) unlockAchievement('work_monthly_5000'); alert(`🎉 恭喜！今天已赚 ¥${earned.toFixed(2)}\n本月已赚 ¥${getMonthlyTotal().toFixed(2)}\n明天继续加油吧！`); });
+    const savedTimestamp = localStorage.getItem('clockInTimestamp'); const savedDate = localStorage.getItem('clockInDate'); const todayStr = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}-${String(new Date().getDate()).padStart(2,'0')}`; if (savedTimestamp && savedDate === todayStr) { startActual = new Date(parseInt(savedTimestamp)); clockedIn = true; startInput.value = `${String(startActual.getHours()).padStart(2,'0')}:${String(startActual.getMinutes()).padStart(2,'0')}`; endInput.value = ''; resetTimer(); }
+    updateMonthlyDisplay(); updateDisplay();
   })();
 }
 
 // ==================== 日记相册模块 ====================
 function loadDiaryModule(){
-  document.getElementById('diaryContent').innerHTML = `
-    <div class="app-card">
-      <h2>📸 日记相册</h2>
-      <div class="month-header">
-        <button class="month-nav" id="diaryPrevMonth">◀</button>
-        <span id="diaryMonthLabel"></span>
-        <button class="month-nav" id="diaryNextMonth">▶</button>
-      </div>
-      <div id="diaryGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div>
-    </div>
-    <div class="edit-modal" id="diaryEditModal">
-      <div class="edit-box" style="max-width:380px;">
-        <h3 id="diaryEditTitle">编辑日记</h3>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <label class="btn btn-primary" for="diaryImageInput" style="cursor:pointer;">📷 上传图片</label>
-          <input type="file" id="diaryImageInput" accept="image/*" style="display:none;">
-          <button class="btn btn-primary" id="cameraBtn">📸 拍照</button>
-          <input type="file" id="diaryCameraInput" accept="image/*" capture="environment" style="display:none;">
-        </div>
-        <div id="diaryPreview" style="text-align:center;min-height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);border-radius:14px;padding:10px;margin-top:8px;">
-          <span style="color:var(--text-muted);">图片预览</span>
-        </div>
-        <textarea id="diaryNoteInput" placeholder="写点什么……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-primary" id="saveDiaryBtn" style="flex:1;">💾 保存</button>
-          <button class="btn btn-delete" id="deleteDiaryBtn">🗑 删除</button>
-          <button class="btn btn-close" id="cancelDiaryBtn">取消</button>
-        </div>
-      </div>
-    </div>
-    <canvas id="diaryCanvas" style="display:none;"></canvas>
-    <video id="diaryVideo" autoplay playsinline style="display:none;"></video>
-  `;
-
-  const STORAGE_DIARY = 'diary_v1_';
-  let diaryYear, diaryMonth;
-  const now = new Date(); diaryYear = now.getFullYear(); diaryMonth = now.getMonth() + 1;
-  let selectedDate = null, currentImage = null, processedImage = null;
-
-  function daysInMonth(y,m){ return new Date(y,m,0).getDate(); }
-  function getData(ds){ const r=localStorage.getItem(STORAGE_DIARY+ds); return r?JSON.parse(r):{image:'',note:''}; }
-  function saveData(ds,obj){ localStorage.setItem(STORAGE_DIARY+ds,JSON.stringify(obj)); }
-  function delData(ds){ localStorage.removeItem(STORAGE_DIARY+ds); }
-
-  function renderGrid(){
-    document.getElementById('diaryMonthLabel').textContent = `${diaryYear}年${diaryMonth}月`;
-    const dim = daysInMonth(diaryYear, diaryMonth);
-    const fd = new Date(diaryYear, diaryMonth-1, 1).getDay();
-    let html = '';
-    ['日','一','二','三','四','五','六'].forEach(d=>{ html+=`<div style="font-size:0.6rem;color:var(--text-muted);padding:4px 0;">${d}</div>`; });
-    for(let i=0;i<fd;i++) html+='<div></div>';
-    for(let d=1;d<=dim;d++){
-      const ds = `${diaryYear}-${String(diaryMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const data = getData(ds);
-      let imgTag = '';
-      if(data.image){
-        imgTag = `<div style="position:absolute;bottom:2px;right:2px;width:28px;height:28px;border-radius:6px;background-image:url(${data.image});background-size:cover;background-position:center;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>`;
-      }
-      html += `<div data-date="${ds}" style="aspect-ratio:1;background:var(--bg-elevated);border:2px solid rgba(201,168,76,0.2);border-radius:10px;cursor:pointer;position:relative;display:flex;align-items:flex-start;justify-content:flex-start;font-size:0.8rem;font-weight:bold;color:var(--text-secondary);padding:4px;">
-        <span>${d}</span>
-        ${imgTag}
-      </div>`;
-    }
-    document.getElementById('diaryGrid').innerHTML = html;
-    document.querySelectorAll('#diaryGrid [data-date]').forEach(cell=>{
-      cell.addEventListener('click', function(){
-        selectedDate = this.getAttribute('data-date');
-        openEditor(selectedDate);
-      });
-    });
-  }
-
-  function openEditor(ds){
-    selectedDate = ds;
-    const data = getData(ds);
-    currentImage = data.image || null;
-    processedImage = data.image || null;
-    document.getElementById('diaryEditTitle').textContent = ds;
-    document.getElementById('diaryNoteInput').value = data.note || '';
-    updatePreview();
-    document.getElementById('diaryEditModal').classList.add('show');
-  }
-
-  function updatePreview(){
-    const preview = document.getElementById('diaryPreview');
-    if (processedImage) {
-      preview.innerHTML = `<img src="${processedImage}" style="max-width:100%;max-height:200px;border-radius:10px;">`;
-    } else {
-      preview.innerHTML = '<span style="color:var(--text-muted);">图片预览</span>';
-    }
-  }
-
-  // 调用 remove.bg API 去背景 + 白边描边
-  function autoCutout(src, callback) {
-    const apiKey = 'e874DJMsR5wLwsegs1DtpBwE';
-    const base64Data = src.split(',')[1];
-    const byteCharacters = atob(base64Data);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'image/png' });
-
-    const formData = new FormData();
-    formData.append('image_file', blob, 'photo.png');
-    formData.append('size', 'auto');
-
-    fetch('https://api.remove.bg/v1.0/removebg', {
-      method: 'POST',
-      headers: { 'X-Api-Key': apiKey },
-      body: formData,
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('API 请求失败');
-      return response.blob();
-    })
-    .then(blob => {
-      const reader = new FileReader();
-      reader.onload = function() {
-        const removedBgImage = reader.result;
-        const img = new Image();
-        img.src = removedBgImage;
-        img.onload = function() {
-          const canvas = document.getElementById('diaryCanvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          ctx.drawImage(img, 0, 0);
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const data = imageData.data;
-          const w = canvas.width, h = canvas.height;
-          const alpha = new Uint8Array(w * h);
-          for (let i = 0; i < w * h; i++) {
-            alpha[i] = data[i * 4 + 3] > 128 ? 1 : 0;
-          }
-          ctx.strokeStyle = 'white';
-          ctx.lineWidth = 12;
-          ctx.beginPath();
-          for (let y = 0; y < h; y++) {
-            for (let x = 0; x < w; x++) {
-              if (!alpha[y * w + x]) continue;
-              let isEdge = false;
-              for (let dy = -1; dy <= 1; dy++) {
-                for (let dx = -1; dx <= 1; dx++) {
-                  if (dx === 0 && dy === 0) continue;
-                  const nx = x + dx, ny = y + dy;
-                  if (nx < 0 || nx >= w || ny < 0 || ny >= h || !alpha[ny * w + nx]) {
-                    isEdge = true; break;
-                  }
-                }
-                if (isEdge) break;
-              }
-              if (isEdge) {
-                ctx.moveTo(x, y);
-                ctx.arc(x, y, 6, 0, Math.PI * 2);
-              }
-            }
-          }
-          ctx.stroke();
-          callback(canvas.toDataURL('image/png'));
-        };
-      };
-      reader.readAsDataURL(blob);
-    })
-    .catch(error => {
-      console.error('抠图失败:', error);
-      callback(src);
-    });
-  }
-
-  // 上传图片
-  document.getElementById('diaryImageInput').addEventListener('change', function(e){
-    const f = e.target.files[0]; if(!f) return;
-    const reader = new FileReader();
-    reader.onload = function(ev){
-      currentImage = ev.target.result;
-      updatePreview();
-      autoCutout(currentImage, (result) => {
-        processedImage = result;
-        updatePreview();
-      });
-    };
-    reader.readAsDataURL(f);
-  });
-
-  // 拍照（带取景画面）
-  document.getElementById('cameraBtn').addEventListener('click', ()=>{
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-      navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
-        const video = document.getElementById('diaryVideo');
-        video.srcObject = stream;
-        video.style.display = 'block';
-        video.style.position = 'fixed';
-        video.style.top = '0';
-        video.style.left = '0';
-        video.style.width = '100%';
-        video.style.height = '100%';
-        video.style.zIndex = '999';
-        video.style.objectFit = 'cover';
-        video.play();
-
-        // 拍摄按钮
-        const shootBtn = document.createElement('button');
-        shootBtn.textContent = '📷 拍摄';
-        shootBtn.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:1000;background:#c9a84c;color:#1a1510;border:none;padding:16px 40px;border-radius:30px;font-size:1.2rem;font-weight:bold;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
-        document.body.appendChild(shootBtn);
-
-        shootBtn.addEventListener('click', ()=>{
-          const canvas = document.getElementById('diaryCanvas');
-          canvas.width = video.videoWidth || 640;
-          canvas.height = video.videoHeight || 480;
-          canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
-          currentImage = canvas.toDataURL('image/jpeg',0.8);
-          stream.getTracks().forEach(t=>t.stop());
-          video.style.display = 'none';
-          video.style.position = '';
-          shootBtn.remove();
-          updatePreview();
-          autoCutout(currentImage, (result) => {
-            processedImage = result;
-            updatePreview();
-          });
-        });
-      }).catch(()=> alert('无法访问摄像头'));
-    } else {
-      document.getElementById('diaryCameraInput').click();
-    }
-  });
-  document.getElementById('diaryCameraInput').addEventListener('change', function(e){
-    const f = e.target.files[0]; if(!f) return;
-    const reader = new FileReader();
-    reader.onload = function(ev){
-      currentImage = ev.target.result;
-      updatePreview();
-      autoCutout(currentImage, (result) => {
-        processedImage = result;
-        updatePreview();
-      });
-    };
-    reader.readAsDataURL(f);
-  });
-
-  // 保存
-document.getElementById('saveDiaryBtn').addEventListener('click', ()=>{
-    if(!selectedDate) return;
-    if(!processedImage && currentImage){
-      alert('图片还在处理中，请稍等几秒再保存');
-      return;
-    }
-    saveData(selectedDate, {image:processedImage||'', note:document.getElementById('diaryNoteInput').value.trim()});
-    document.getElementById('diaryEditModal').classList.remove('show');
-    renderGrid();
-  });
-
-  // 删除
-  document.getElementById('deleteDiaryBtn').addEventListener('click', ()=>{
-    if(!selectedDate) return;
-    if(confirm('确定删除吗？')){
-      delData(selectedDate);
-      document.getElementById('diaryEditModal').classList.remove('show');
-      renderGrid();
-    }
-  });
-
-  // 取消
-  document.getElementById('cancelDiaryBtn').addEventListener('click', ()=>{
-    document.getElementById('diaryEditModal').classList.remove('show');
-  });
-  document.getElementById('diaryEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
-
-  document.getElementById('diaryPrevMonth').addEventListener('click', ()=>{ diaryMonth--; if(diaryMonth<1){diaryMonth=12;diaryYear--;} renderGrid(); });
-  document.getElementById('diaryNextMonth').addEventListener('click', ()=>{ diaryMonth++; if(diaryMonth>12){diaryMonth=1;diaryYear++;} renderGrid(); });
-
+  document.getElementById('diaryContent').innerHTML = `<div class="app-card"><h2>📸 日记相册</h2><div class="month-header"><button class="month-nav" id="diaryPrevMonth">◀</button><span id="diaryMonthLabel"></span><button class="month-nav" id="diaryNextMonth">▶</button></div><div id="diaryGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;"></div></div><div class="edit-modal" id="diaryEditModal"><div class="edit-box" style="max-width:380px;"><h3 id="diaryEditTitle">编辑日记</h3><div style="display:flex;gap:8px;flex-wrap:wrap;"><label class="btn btn-primary" for="diaryImageInput" style="cursor:pointer;">📷 上传图片</label><input type="file" id="diaryImageInput" accept="image/*" style="display:none;"><button class="btn btn-primary" id="cameraBtn">📸 拍照</button><input type="file" id="diaryCameraInput" accept="image/*" capture="environment" style="display:none;"></div><div id="diaryPreview" style="text-align:center;min-height:100px;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);border-radius:14px;padding:10px;margin-top:8px;"><span style="color:var(--text-muted);">图片预览</span></div><textarea id="diaryNoteInput" placeholder="写点什么……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea><div style="display:flex;gap:6px;"><button class="btn btn-primary" id="saveDiaryBtn" style="flex:1;">💾 保存</button><button class="btn btn-delete" id="deleteDiaryBtn">🗑 删除</button><button class="btn btn-close" id="cancelDiaryBtn">取消</button></div></div></div><canvas id="diaryCanvas" style="display:none;"></canvas><video id="diaryVideo" autoplay playsinline style="display:none;"></video>`;
+  const STORAGE_DIARY = 'diary_v1_'; let diaryYear, diaryMonth; const now = new Date(); diaryYear = now.getFullYear(); diaryMonth = now.getMonth() + 1; let selectedDate = null, currentImage = null, processedImage = null;
+  function daysInMonth(y,m){ return new Date(y,m,0).getDate(); } function getData(ds){ const r=localStorage.getItem(STORAGE_DIARY+ds); return r?JSON.parse(r):{image:'',note:''}; } function saveData(ds,obj){ localStorage.setItem(STORAGE_DIARY+ds,JSON.stringify(obj)); } function delData(ds){ localStorage.removeItem(STORAGE_DIARY+ds); }
+  function renderGrid(){ document.getElementById('diaryMonthLabel').textContent = `${diaryYear}年${diaryMonth}月`; const dim = daysInMonth(diaryYear, diaryMonth); const fd = new Date(diaryYear, diaryMonth-1, 1).getDay(); let html = ''; ['日','一','二','三','四','五','六'].forEach(d=>{ html+=`<div style="font-size:0.6rem;color:var(--text-muted);padding:4px 0;">${d}</div>`; }); for(let i=0;i<fd;i++) html+='<div></div>'; for(let d=1;d<=dim;d++){ const ds = `${diaryYear}-${String(diaryMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const data = getData(ds); let imgTag = ''; if(data.image){ imgTag = `<div style="position:absolute;bottom:2px;right:2px;width:28px;height:28px;border-radius:6px;background-image:url(${data.image});background-size:cover;background-position:center;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>`; } html += `<div data-date="${ds}" style="aspect-ratio:1;background:var(--bg-elevated);border:2px solid rgba(201,168,76,0.2);border-radius:10px;cursor:pointer;position:relative;display:flex;align-items:flex-start;justify-content:flex-start;font-size:0.8rem;font-weight:bold;color:var(--text-secondary);padding:4px;"><span>${d}</span>${imgTag}</div>`; } document.getElementById('diaryGrid').innerHTML = html; document.querySelectorAll('#diaryGrid [data-date]').forEach(cell=>{ cell.addEventListener('click', function(){ selectedDate = this.getAttribute('data-date'); openEditor(selectedDate); }); }); }
+  function openEditor(ds){ selectedDate = ds; const data = getData(ds); currentImage = data.image || null; processedImage = data.image || null; document.getElementById('diaryEditTitle').textContent = ds; document.getElementById('diaryNoteInput').value = data.note || ''; updatePreview(); document.getElementById('diaryEditModal').classList.add('show'); }
+  function updatePreview(){ const preview = document.getElementById('diaryPreview'); if (processedImage) { preview.innerHTML = `<img src="${processedImage}" style="max-width:100%;max-height:200px;border-radius:10px;">`; } else { preview.innerHTML = '<span style="color:var(--text-muted);">图片预览</span>'; } }
+  function autoCutout(src, callback) { const apiKey = 'e874DJMsR5wLwsegs1DtpBwE'; const base64Data = src.split(',')[1]; const byteCharacters = atob(base64Data); const byteNumbers = new Array(byteCharacters.length); for (let i = 0; i < byteCharacters.length; i++) { byteNumbers[i] = byteCharacters.charCodeAt(i); } const byteArray = new Uint8Array(byteNumbers); const blob = new Blob([byteArray], { type: 'image/png' }); const formData = new FormData(); formData.append('image_file', blob, 'photo.png'); formData.append('size', 'auto'); fetch('https://api.remove.bg/v1.0/removebg', { method: 'POST', headers: { 'X-Api-Key': apiKey }, body: formData }).then(response => { if (!response.ok) throw new Error('API 请求失败'); return response.blob(); }).then(blob => { const reader = new FileReader(); reader.onload = function() { const removedBgImage = reader.result; const img = new Image(); img.src = removedBgImage; img.onload = function() { const canvas = document.getElementById('diaryCanvas'); const ctx = canvas.getContext('2d'); canvas.width = img.width; canvas.height = img.height; ctx.drawImage(img, 0, 0); const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); const data = imageData.data; const w = canvas.width, h = canvas.height; const alpha = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) { alpha[i] = data[i * 4 + 3] > 128 ? 1 : 0; } ctx.strokeStyle = 'white'; ctx.lineWidth = 12; ctx.beginPath(); for (let y = 0; y < h; y++) { for (let x = 0; x < w; x++) { if (!alpha[y * w + x]) continue; let isEdge = false; for (let dy = -1; dy <= 1; dy++) { for (let dx = -1; dx <= 1; dx++) { if (dx === 0 && dy === 0) continue; const nx = x + dx, ny = y + dy; if (nx < 0 || nx >= w || ny < 0 || ny >= h || !alpha[ny * w + nx]) { isEdge = true; break; } } if (isEdge) break; } if (isEdge) { ctx.moveTo(x, y); ctx.arc(x, y, 6, 0, Math.PI * 2); } } } ctx.stroke(); callback(canvas.toDataURL('image/png')); }; }; reader.readAsDataURL(blob); }).catch(error => { console.error('抠图失败:', error); callback(src); }); }
+  document.getElementById('diaryImageInput').addEventListener('change', function(e){ const f = e.target.files[0]; if(!f) return; const reader = new FileReader(); reader.onload = function(ev){ currentImage = ev.target.result; updatePreview(); autoCutout(currentImage, (result) => { processedImage = result; updatePreview(); }); }; reader.readAsDataURL(f); });
+  document.getElementById('cameraBtn').addEventListener('click', ()=>{ if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){ navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{ const video = document.getElementById('diaryVideo'); video.srcObject = stream; video.style.display = 'block'; video.style.position = 'fixed'; video.style.top = '0'; video.style.left = '0'; video.style.width = '100%'; video.style.height = '100%'; video.style.zIndex = '999'; video.style.objectFit = 'cover'; video.play(); const shootBtn = document.createElement('button'); shootBtn.textContent = '📷 拍摄'; shootBtn.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:1000;background:#c9a84c;color:#1a1510;border:none;padding:16px 40px;border-radius:30px;font-size:1.2rem;font-weight:bold;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5);'; document.body.appendChild(shootBtn); shootBtn.addEventListener('click', ()=>{ const canvas = document.getElementById('diaryCanvas'); canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480; canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height); currentImage = canvas.toDataURL('image/jpeg',0.8); stream.getTracks().forEach(t=>t.stop()); video.style.display = 'none'; video.style.position = ''; shootBtn.remove(); updatePreview(); autoCutout(currentImage, (result) => { processedImage = result; updatePreview(); }); }); }).catch(()=> alert('无法访问摄像头')); } else { document.getElementById('diaryCameraInput').click(); } });
+  document.getElementById('diaryCameraInput').addEventListener('change', function(e){ const f = e.target.files[0]; if(!f) return; const reader = new FileReader(); reader.onload = function(ev){ currentImage = ev.target.result; updatePreview(); autoCutout(currentImage, (result) => { processedImage = result; updatePreview(); }); }; reader.readAsDataURL(f); });
+  document.getElementById('saveDiaryBtn').addEventListener('click', ()=>{ if(!selectedDate) return; if(!processedImage && currentImage){ alert('图片还在处理中，请稍等几秒再保存'); return; } saveData(selectedDate, {image:processedImage||'', note:document.getElementById('diaryNoteInput').value.trim()}); unlockAchievement('diary_first'); const dc=(parseInt(localStorage.getItem('diary_day_count')||'0'))+1; localStorage.setItem('diary_day_count',dc); if(dc>=7) unlockAchievement('diary_7days'); if(processedImage && processedImage !== currentImage) unlockAchievement('diary_cutout'); document.getElementById('diaryEditModal').classList.remove('show'); renderGrid(); });
+  document.getElementById('deleteDiaryBtn').addEventListener('click', ()=>{ if(!selectedDate) return; if(confirm('确定删除吗？')){ delData(selectedDate); document.getElementById('diaryEditModal').classList.remove('show'); renderGrid(); } });
+  document.getElementById('cancelDiaryBtn').addEventListener('click', ()=>{ document.getElementById('diaryEditModal').classList.remove('show'); }); document.getElementById('diaryEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+  document.getElementById('diaryPrevMonth').addEventListener('click', ()=>{ diaryMonth--; if(diaryMonth<1){diaryMonth=12;diaryYear--;} renderGrid(); }); document.getElementById('diaryNextMonth').addEventListener('click', ()=>{ diaryMonth++; if(diaryMonth>12){diaryMonth=1;diaryYear++;} renderGrid(); });
   renderGrid();
 }
+
 // ==================== 初始化主页 ====================
-renderJList();
-renderPGrid();
-function editTitle(){
-  const newTitle = prompt('输入新名称：', document.getElementById('topTitle').textContent.replace('✏️','').trim());
-  if(newTitle){
-    document.getElementById('topTitle').innerHTML = newTitle + ' <span style="font-size:0.7rem;">✏️</span>';
-    document.title = newTitle;
-    localStorage.setItem('my_app_title', newTitle);
-  }
-}
-(function(){
-  const saved = localStorage.getItem('my_app_title');
-  if(saved){
-    document.getElementById('topTitle').innerHTML = saved + ' <span style="font-size:0.7rem;">✏️</span>';
-    document.title = saved;
-  }
-})();
+renderJList(); renderPGrid();
+function editTitle(){ const newTitle = prompt('输入新名称：', document.getElementById('topTitle').textContent.replace('✏️','').trim()); if(newTitle){ document.getElementById('topTitle').innerHTML = newTitle + ' <span style="font-size:0.7rem;">✏️</span>'; document.title = newTitle; localStorage.setItem('my_app_title', newTitle); unlockAchievement('secret_title_edit'); } }
+(function(){ const saved = localStorage.getItem('my_app_title'); if(saved){ document.getElementById('topTitle').innerHTML = saved + ' <span style="font-size:0.7rem;">✏️</span>'; document.title = saved; } })();
+const h = new Date().getHours(); if(h>=0 && h<5) unlockAchievement('secret_midnight');
 let dragSrcIndex = null;
 function dragStart(e) { dragSrcIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); e.dataTransfer.effectAllowed = 'move'; }
 function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
 function dropItem(e) { e.preventDefault(); const targetIndex = parseInt(e.target.closest('.curtain-item').getAttribute('data-index')); if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) { const items = getCurtainItems(); const draggedItem = items.splice(dragSrcIndex, 1)[0]; items.splice(targetIndex, 0, draggedItem); localStorage.setItem('my_curtain_order', JSON.stringify(items.map(i => i.id))); renderCurtain(); } dragSrcIndex = null; }
 
-// ==================== 树洞社区模块（可删除） ====================
+// ==================== 树洞社区模块 ====================
 function loadCommunityModule(){
-  document.getElementById('communityContent').innerHTML = `
-    <div class="app-card" id="communityMainView">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <h2 style="margin:0;">💬 树洞社区</h2>
-        <button id="newPostBtn" style="background:linear-gradient(135deg, var(--gold-dim), var(--gold));color:var(--bg-deep);border:none;padding:8px 16px;border-radius:16px;font-weight:bold;cursor:pointer;font-size:0.8rem;">+ 发帖</button>
-      </div>
-      <div id="postList" style="display:flex;flex-direction:column;gap:10px;"></div>
-    </div>
-    <div id="communityDetailView" style="display:none;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-        <button id="backToListBtn" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--gold-dim);border-radius:12px;width:36px;height:36px;cursor:pointer;">←</button>
-        <span style="font-weight:bold;color:var(--gold-light);">帖子详情</span>
-      </div>
-      <div id="detailContent" style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;position:relative;"></div>
-      <div style="font-weight:bold;color:var(--text-secondary);margin-bottom:8px;">评论</div>
-      <div id="replyList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
-      <div style="display:flex;gap:8px;">
-        <textarea id="newReplyInput" placeholder="写评论……" rows="2" style="flex:1;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
-        <button id="submitReplyBtn" style="background:linear-gradient(135deg, var(--gold-dim), var(--gold));color:var(--bg-deep);border:none;padding:10px 16px;border-radius:16px;font-weight:bold;cursor:pointer;font-size:0.8rem;align-self:flex-end;">发送</button>
-      </div>
-    </div>
-    <div class="edit-modal" id="postEditModal">
-      <div class="edit-box">
-        <h3>发新帖</h3>
-        <input type="text" id="postTitleInput" placeholder="标题" style="width:100%;padding:8px;border-radius:12px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:0.9rem;">
-        <textarea id="postContentInput" placeholder="内容……" rows="4" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-primary" id="savePostBtn" style="flex:1;">💾 发布</button>
-          <button class="btn btn-close" id="cancelPostBtn">取消</button>
-        </div>
-      </div>
-    </div>
-    <div class="edit-modal" id="subReplyModal">
-      <div class="edit-box">
-        <h3>回复评论</h3>
-        <textarea id="subReplyInput" placeholder="写回复……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea>
-        <div style="display:flex;gap:6px;">
-          <button class="btn btn-primary" id="saveSubReplyBtn" style="flex:1;">💾 回复</button>
-          <button class="btn btn-close" id="cancelSubReplyBtn">取消</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  const STORAGE_POSTS = 'community_posts';
-  let currentPostIndex = null, currentReplyPath = null;
-
-  function loadPosts(){ const r=localStorage.getItem(STORAGE_POSTS); return r?JSON.parse(r):[]; }
-  function savePosts(arr){ localStorage.setItem(STORAGE_POSTS,JSON.stringify(arr)); }
-
-  function countAllReplies(replies){
-    if(!replies) return 0;
-    let count = replies.length;
-    replies.forEach(r => { if(r.replies) count += r.replies.length; });
-    return count;
-  }
-
-  function renderPostList(){
-    const posts = loadPosts();
-    const container = document.getElementById('postList');
-    if(posts.length === 0){
-      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">✨ 还没有帖子，发一个吧</div>';
-      return;
-    }
-    container.innerHTML = posts.map((p,i) => `
-      <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer;position:relative;" data-index="${i}">
-        <div style="font-weight:bold;color:var(--text-primary);margin-bottom:4px;padding-right:20px;">${p.title}</div>
-        <div style="font-size:0.8rem;color:var(--text-secondary);white-space:pre-wrap;overflow:hidden;text-overflow:ellipsis;max-height:60px;">${p.content}</div>
-        <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.65rem;color:var(--text-muted);">
-          <span>${p.time} · ${countAllReplies(p.replies)} 评论</span>
-          <button class="deletePostBtn" data-index="${i}" style="background:transparent;border:none;color:rgba(232,160,176,0.7);font-size:0.6rem;cursor:pointer;">🗑 删除</button>
-        </div>
-      </div>
-    `).join('');
-    // 点击帖子进入详情
-    container.querySelectorAll('[data-index]').forEach(item=>{
-      item.addEventListener('click', function(e){
-        if(e.target.classList.contains('deletePostBtn')) return;
-        currentPostIndex = parseInt(this.getAttribute('data-index'));
-        showDetail(currentPostIndex);
-      });
-    });
-    // 删除帖子
-    container.querySelectorAll('.deletePostBtn').forEach(btn=>{
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        const index = parseInt(this.getAttribute('data-index'));
-        if(confirm('确定删除这个帖子吗？')){
-          const posts = loadPosts();
-          posts.splice(index, 1);
-          savePosts(posts);
-          renderPostList();
-        }
-      });
-    });
-  }
-
-  function showDetail(index){
-    const posts = loadPosts();
-    const post = posts[index];
-    document.getElementById('communityMainView').style.display = 'none';
-    document.getElementById('communityDetailView').style.display = 'block';
-    document.getElementById('detailContent').innerHTML = `
-      <div style="font-weight:bold;color:var(--text-primary);font-size:1.1rem;margin-bottom:8px;">${post.title}</div>
-      <div style="color:var(--text-secondary);white-space:pre-wrap;margin-bottom:8px;">${post.content}</div>
-      <div style="font-size:0.65rem;color:var(--text-muted);">${post.time}</div>
-    `;
-    renderReplies();
-  }
-
-  function renderReplies(){
-    const posts = loadPosts();
-    const post = posts[currentPostIndex];
-    const container = document.getElementById('replyList');
-    if(!post.replies || post.replies.length === 0){
-      container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:10px;">暂无评论</div>';
-      return;
-    }
-    const flatReplies = [];
-    function flatten(replies, path){
-      replies.forEach((r, i) => {
-        flatReplies.push({...r, path: [...path, i]});
-        if(r.replies) flatten(r.replies, [...path, i]);
-      });
-    }
-    flatten(post.replies, []);
-    container.innerHTML = flatReplies.map((r) => {
-      const depth = r.path.length - 1;
-      const indent = Math.min(depth * 8, 40);
-      const prefix = depth > 0 ? `<span style="color:var(--gold-dim);font-size:0.65rem;">↳ </span>` : '';
-      return `
-        <div style="margin-left:${indent}px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:12px;">
-          <div style="color:var(--text-secondary);white-space:pre-wrap;font-size:0.85rem;">${prefix}${r.content}</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
-            <span style="font-size:0.6rem;color:var(--text-muted);">${r.time}</span>
-            <div style="display:flex;gap:6px;">
-              <button class="subReplyBtn" data-path='${JSON.stringify(r.path)}' style="background:transparent;border:none;color:var(--gold-dim);font-size:0.65rem;cursor:pointer;">回复</button>
-              <button class="deleteReplyBtn" data-path='${JSON.stringify(r.path)}' style="background:transparent;border:none;color:rgba(232,160,176,0.7);font-size:0.6rem;cursor:pointer;">🗑</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-    // 回复按钮
-    document.querySelectorAll('.subReplyBtn').forEach(btn=>{
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        currentReplyPath = JSON.parse(this.getAttribute('data-path'));
-        document.getElementById('subReplyInput').value = '';
-        document.getElementById('subReplyModal').classList.add('show');
-      });
-    });
-    // 删除评论
-    document.querySelectorAll('.deleteReplyBtn').forEach(btn=>{
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        const path = JSON.parse(this.getAttribute('data-path'));
-        if(confirm('确定删除这条评论吗？')){
-          const posts = loadPosts();
-          const replies = posts[currentPostIndex].replies;
-          deleteByPath(replies, path);
-          savePosts(posts);
-          renderReplies();
-        }
-      });
-    });
-  }
-
-  function deleteByPath(replies, path){
-    if(path.length === 1){
-      replies.splice(path[0], 1);
-      return;
-    }
-    const [first, ...rest] = path;
-    if(replies[first] && replies[first].replies){
-      deleteByPath(replies[first].replies, rest);
-    }
-  }
-
-  function getReplyByPath(replies, path){
-    let target = replies;
-    for(let i=0; i<path.length; i++){
-      if(!target[path[i]]) return null;
-      if(i < path.length-1){
-        if(!target[path[i]].replies) target[path[i]].replies = [];
-        target = target[path[i]].replies;
-      }
-    }
-    return target[path.length-1];
-  }
-
-  document.getElementById('backToListBtn').addEventListener('click', ()=>{
-    document.getElementById('communityDetailView').style.display = 'none';
-    document.getElementById('communityMainView').style.display = 'block';
-    renderPostList();
-  });
-
-  document.getElementById('newPostBtn').addEventListener('click', ()=>{
-    document.getElementById('postTitleInput').value = '';
-    document.getElementById('postContentInput').value = '';
-    document.getElementById('postEditModal').classList.add('show');
-  });
-  document.getElementById('savePostBtn').addEventListener('click', ()=>{
-    const title = document.getElementById('postTitleInput').value.trim();
-    const content = document.getElementById('postContentInput').value.trim();
-    if(!title) return alert('标题不能为空');
-    const posts = loadPosts();
-    posts.unshift({title, content, time: new Date().toLocaleString(), replies:[]});
-    savePosts(posts);
-    document.getElementById('postEditModal').classList.remove('show');
-    renderPostList();
-  });
-  document.getElementById('cancelPostBtn').addEventListener('click', ()=> document.getElementById('postEditModal').classList.remove('show'));
-  document.getElementById('postEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
-
-  document.getElementById('submitReplyBtn').addEventListener('click', ()=>{
-    const reply = document.getElementById('newReplyInput').value.trim();
-    if(!reply) return alert('回复不能为空');
-    const posts = loadPosts();
-    if(currentPostIndex !== null && posts[currentPostIndex]){
-      if(!posts[currentPostIndex].replies) posts[currentPostIndex].replies = [];
-      posts[currentPostIndex].replies.push({content:reply, time: new Date().toLocaleString(), replies:[]});
-      savePosts(posts);
-    }
-    document.getElementById('newReplyInput').value = '';
-    renderReplies();
-  });
-
-  document.getElementById('saveSubReplyBtn').addEventListener('click', ()=>{
-    const reply = document.getElementById('subReplyInput').value.trim();
-    if(!reply) return alert('回复不能为空');
-    const posts = loadPosts();
-    if(currentPostIndex !== null && currentReplyPath !== null && posts[currentPostIndex]){
-      const target = getReplyByPath(posts[currentPostIndex].replies, currentReplyPath);
-      if(target){
-        if(!target.replies) target.replies = [];
-        target.replies.push({content:reply, time: new Date().toLocaleString(), replies:[]});
-        savePosts(posts);
-      }
-    }
-    document.getElementById('subReplyModal').classList.remove('show');
-    renderReplies();
-  });
-  document.getElementById('cancelSubReplyBtn').addEventListener('click', ()=> document.getElementById('subReplyModal').classList.remove('show'));
-  document.getElementById('subReplyModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
-
+  document.getElementById('communityContent').innerHTML = `<div class="app-card" id="communityMainView"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><h2 style="margin:0;">💬 树洞社区</h2><button id="newPostBtn" style="background:linear-gradient(135deg, var(--gold-dim), var(--gold));color:var(--bg-deep);border:none;padding:8px 16px;border-radius:16px;font-weight:bold;cursor:pointer;font-size:0.8rem;">+ 发帖</button></div><div id="postList" style="display:flex;flex-direction:column;gap:10px;"></div></div><div id="communityDetailView" style="display:none;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><button id="backToListBtn" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--gold-dim);border-radius:12px;width:36px;height:36px;cursor:pointer;">←</button><span style="font-weight:bold;color:var(--gold-light);">帖子详情</span></div><div id="detailContent" style="background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;position:relative;"></div><div style="font-weight:bold;color:var(--text-secondary);margin-bottom:8px;">评论</div><div id="replyList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div><div style="display:flex;gap:8px;"><textarea id="newReplyInput" placeholder="写评论……" rows="2" style="flex:1;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea><button id="submitReplyBtn" style="background:linear-gradient(135deg, var(--gold-dim), var(--gold));color:var(--bg-deep);border:none;padding:10px 16px;border-radius:16px;font-weight:bold;cursor:pointer;font-size:0.8rem;align-self:flex-end;">发送</button></div></div><div class="edit-modal" id="postEditModal"><div class="edit-box"><h3>发新帖</h3><input type="text" id="postTitleInput" placeholder="标题" style="width:100%;padding:8px;border-radius:12px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:0.9rem;"><textarea id="postContentInput" placeholder="内容……" rows="4" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea><div style="display:flex;gap:6px;"><button class="btn btn-primary" id="savePostBtn" style="flex:1;">💾 发布</button><button class="btn btn-close" id="cancelPostBtn">取消</button></div></div></div><div class="edit-modal" id="subReplyModal"><div class="edit-box"><h3>回复评论</h3><textarea id="subReplyInput" placeholder="写回复……" rows="3" style="width:100%;border-radius:14px;border:1px solid var(--border);padding:10px;font-size:0.85rem;background:var(--bg-elevated);color:var(--text-primary);resize:none;"></textarea><div style="display:flex;gap:6px;"><button class="btn btn-primary" id="saveSubReplyBtn" style="flex:1;">💾 回复</button><button class="btn btn-close" id="cancelSubReplyBtn">取消</button></div></div></div>`;
+  const STORAGE_POSTS = 'community_posts'; let currentPostIndex = null, currentReplyPath = null;
+  function loadPosts(){ const r=localStorage.getItem(STORAGE_POSTS); return r?JSON.parse(r):[]; } function savePosts(arr){ localStorage.setItem(STORAGE_POSTS,JSON.stringify(arr)); }
+  function countAllReplies(replies){ if(!replies) return 0; let count = replies.length; replies.forEach(r => { if(r.replies) count += r.replies.length; }); return count; }
+  function renderPostList(){ const posts = loadPosts(); const container = document.getElementById('postList'); if(posts.length === 0){ container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">✨ 还没有帖子，发一个吧</div>'; return; } container.innerHTML = posts.map((p,i) => `<div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:14px;cursor:pointer;position:relative;" data-index="${i}"><div style="font-weight:bold;color:var(--text-primary);margin-bottom:4px;padding-right:20px;">${p.title}</div><div style="font-size:0.8rem;color:var(--text-secondary);white-space:pre-wrap;overflow:hidden;text-overflow:ellipsis;max-height:60px;">${p.content}</div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.65rem;color:var(--text-muted);"><span>${p.time} · ${countAllReplies(p.replies)} 评论</span><button class="deletePostBtn" data-index="${i}" style="background:transparent;border:none;color:rgba(232,160,176,0.7);font-size:0.6rem;cursor:pointer;">🗑 删除</button></div></div>`).join(''); container.querySelectorAll('[data-index]').forEach(item=>{ item.addEventListener('click', function(e){ if(e.target.classList.contains('deletePostBtn')) return; currentPostIndex = parseInt(this.getAttribute('data-index')); showDetail(currentPostIndex); }); }); container.querySelectorAll('.deletePostBtn').forEach(btn=>{ btn.addEventListener('click', function(e){ e.stopPropagation(); const index = parseInt(this.getAttribute('data-index')); if(confirm('确定删除这个帖子吗？')){ const posts = loadPosts(); posts.splice(index, 1); savePosts(posts); renderPostList(); } }); }); }
+  function showDetail(index){ const posts = loadPosts(); const post = posts[index]; document.getElementById('communityMainView').style.display = 'none'; document.getElementById('communityDetailView').style.display = 'block'; document.getElementById('detailContent').innerHTML = `<div style="font-weight:bold;color:var(--text-primary);font-size:1.1rem;margin-bottom:8px;">${post.title}</div><div style="color:var(--text-secondary);white-space:pre-wrap;margin-bottom:8px;">${post.content}</div><div style="font-size:0.65rem;color:var(--text-muted);">${post.time}</div>`; renderReplies(); }
+  function renderReplies(){ const posts = loadPosts(); const post = posts[currentPostIndex]; const container = document.getElementById('replyList'); if(!post.replies || post.replies.length === 0){ container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:10px;">暂无评论</div>'; return; } const flatReplies = []; function flatten(replies, path){ replies.forEach((r, i) => { flatReplies.push({...r, path: [...path, i]}); if(r.replies) flatten(r.replies, [...path, i]); }); } flatten(post.replies, []); container.innerHTML = flatReplies.map((r) => { const depth = r.path.length - 1; const indent = Math.min(depth * 8, 40); const prefix = depth > 0 ? `<span style="color:var(--gold-dim);font-size:0.65rem;">↳ </span>` : ''; return `<div style="margin-left:${indent}px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:14px;padding:12px;"><div style="color:var(--text-secondary);white-space:pre-wrap;font-size:0.85rem;">${prefix}${r.content}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;"><span style="font-size:0.6rem;color:var(--text-muted);">${r.time}</span><div style="display:flex;gap:6px;"><button class="subReplyBtn" data-path='${JSON.stringify(r.path)}' style="background:transparent;border:none;color:var(--gold-dim);font-size:0.65rem;cursor:pointer;">回复</button><button class="deleteReplyBtn" data-path='${JSON.stringify(r.path)}' style="background:transparent;border:none;color:rgba(232,160,176,0.7);font-size:0.6rem;cursor:pointer;">🗑</button></div></div></div>`; }).join(''); document.querySelectorAll('.subReplyBtn').forEach(btn=>{ btn.addEventListener('click', function(e){ e.stopPropagation(); currentReplyPath = JSON.parse(this.getAttribute('data-path')); document.getElementById('subReplyInput').value = ''; document.getElementById('subReplyModal').classList.add('show'); }); }); document.querySelectorAll('.deleteReplyBtn').forEach(btn=>{ btn.addEventListener('click', function(e){ e.stopPropagation(); const path = JSON.parse(this.getAttribute('data-path')); if(confirm('确定删除这条评论吗？')){ const posts = loadPosts(); const replies = posts[currentPostIndex].replies; deleteByPath(replies, path); savePosts(posts); renderReplies(); } }); }); }
+  function deleteByPath(replies, path){ if(path.length === 1){ replies.splice(path[0], 1); return; } const [first, ...rest] = path; if(replies[first] && replies[first].replies){ deleteByPath(replies[first].replies, rest); } }
+  function getReplyByPath(replies, path){ let target = replies; for(let i=0; i<path.length; i++){ if(!target[path[i]]) return null; if(i < path.length-1){ if(!target[path[i]].replies) target[path[i]].replies = []; target = target[path[i]].replies; } } return target[path.length-1]; }
+  document.getElementById('backToListBtn').addEventListener('click', ()=>{ document.getElementById('communityDetailView').style.display = 'none'; document.getElementById('communityMainView').style.display = 'block'; renderPostList(); });
+  document.getElementById('newPostBtn').addEventListener('click', ()=>{ document.getElementById('postTitleInput').value = ''; document.getElementById('postContentInput').value = ''; document.getElementById('postEditModal').classList.add('show'); });
+  document.getElementById('savePostBtn').addEventListener('click', ()=>{ const title = document.getElementById('postTitleInput').value.trim(); const content = document.getElementById('postContentInput').value.trim(); if(!title) return alert('标题不能为空'); const posts = loadPosts(); posts.unshift({title, content, time: new Date().toLocaleString(), replies:[]}); savePosts(posts); document.getElementById('postEditModal').classList.remove('show'); renderPostList(); });
+  document.getElementById('cancelPostBtn').addEventListener('click', ()=> document.getElementById('postEditModal').classList.remove('show')); document.getElementById('postEditModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+  document.getElementById('submitReplyBtn').addEventListener('click', ()=>{ const reply = document.getElementById('newReplyInput').value.trim(); if(!reply) return alert('回复不能为空'); const posts = loadPosts(); if(currentPostIndex !== null && posts[currentPostIndex]){ if(!posts[currentPostIndex].replies) posts[currentPostIndex].replies = []; posts[currentPostIndex].replies.push({content:reply, time: new Date().toLocaleString(), replies:[]}); savePosts(posts); } document.getElementById('newReplyInput').value = ''; renderReplies(); });
+  document.getElementById('saveSubReplyBtn').addEventListener('click', ()=>{ const reply = document.getElementById('subReplyInput').value.trim(); if(!reply) return alert('回复不能为空'); const posts = loadPosts(); if(currentPostIndex !== null && currentReplyPath !== null && posts[currentPostIndex]){ const target = getReplyByPath(posts[currentPostIndex].replies, currentReplyPath); if(target){ if(!target.replies) target.replies = []; target.replies.push({content:reply, time: new Date().toLocaleString(), replies:[]}); savePosts(posts); } } document.getElementById('subReplyModal').classList.remove('show'); renderReplies(); });
+  document.getElementById('cancelSubReplyBtn').addEventListener('click', ()=> document.getElementById('subReplyModal').classList.remove('show')); document.getElementById('subReplyModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
   renderPostList();
 }
 
+// ==================== 成就系统 ====================
+const ACHIEVEMENTS = [
+  { id:'work_first', icon:'🐣', name:'初次出卖灵魂', desc:'完成第一次上班打卡', cat:'打工' },
+  { id:'work_7days', icon:'💪', name:'七天轮回', desc:'累计打卡7天', cat:'打工' },
+  { id:'work_30days', icon:'🏅', name:'人形齿轮', desc:'累计打卡30天', cat:'打工' },
+  { id:'work_earn100', icon:'💵', name:'纸片收集者', desc:'单日赚到100元', cat:'打工' },
+  { id:'work_earn500', icon:'💰', name:'数字的慰藉', desc:'单日赚到500元', cat:'打工' },
+  { id:'work_monthly_5000', icon:'🤑', name:'生存资格认证', desc:'单月累计赚到5000元', cat:'打工' },
+  { id:'period_first', icon:'🌸', name:'潮汐初识', desc:'第一次标记经期', cat:'经期' },
+  { id:'period_7streak', icon:'📅', name:'七日潮汐', desc:'累计记录7天', cat:'经期' },
+  { id:'period_30streak', icon:'🌺', name:'身体的日记', desc:'累计记录30天', cat:'经期' },
+  { id:'period_note', icon:'📝', name:'写给自己的话', desc:'第一次填写备注', cat:'经期' },
+  { id:'recipe_first', icon:'🍳', name:'火的使用', desc:'第一次加菜到购物车', cat:'菜谱' },
+  { id:'recipe_10dishes', icon:'👨‍🍳', name:'炼金术士', desc:'累计选购10次', cat:'菜谱' },
+  { id:'recipe_add_dish', icon:'✨', name:'从虚空创造', desc:'自己添加了一道新菜', cat:'菜谱' },
+  { id:'recipe_all_bought', icon:'🛒', name:'清单的终结', desc:'一次性把清单全部勾完', cat:'菜谱' },
+  { id:'diary_first', icon:'📸', name:'瞬间冻结术', desc:'第一次保存日记', cat:'日记' },
+  { id:'diary_7days', icon:'🗓', name:'七日切片', desc:'累计保存7天日记', cat:'日记' },
+  { id:'diary_cutout', icon:'✂️', name:'分离主体与背景', desc:'使用抠图功能保存', cat:'日记' },
+  { id:'secret_midnight', icon:'🦉', name:'夜的共犯', desc:'凌晨0-5点使用过', cat:'隐藏' },
+  { id:'secret_title_edit', icon:'✏️', name:'命名权', desc:'修改了应用名称', cat:'隐藏' },
+  { id:'secret_all_unlock', icon:'👑', name:'我即世界', desc:'解锁所有其他成就', cat:'隐藏' },
+];
+];
+function getUnlocked(){ const r=localStorage.getItem('my_achievements'); return r?JSON.parse(r):{}; }
+function saveUnlocked(obj){ localStorage.setItem('my_achievements',JSON.stringify(obj)); }
+function unlockAchievement(id){ const unlocked = getUnlocked(); if(unlocked[id]) return; unlocked[id] = new Date().toLocaleString(); saveUnlocked(unlocked); const ach = ACHIEVEMENTS.find(a=>a.id===id); if(ach) triggerAchievement(ach.icon, ach.name, ach.desc); }
+window.triggerAchievement = function(icon, name, desc){ const toast = document.getElementById('achieveToast'); if(!toast) return; document.getElementById('achieveToastIcon').textContent = icon; document.getElementById('achieveToastName').textContent = name; document.getElementById('achieveToastDesc').textContent = desc; toast.classList.add('show'); playAchieveSound(); setTimeout(()=>{ toast.classList.remove('show'); }, 4000); };
+function playAchieveSound(){ try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); [523,659,784,1047].forEach((f,i)=>{ const o=ctx.createOscillator(),g=ctx.createGain(); o.type='sine';o.frequency.value=f; g.gain.setValueAtTime(0.15,ctx.currentTime+i*0.12); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.12+0.2); o.connect(g);g.connect(ctx.destination); o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+i*0.12+0.25); }); }catch(e){} }
+function loadAchievementModule(){ document.getElementById('achievementContent').innerHTML = `<div class="app-card"><h2>🏅 成就库</h2><div id="achieveList"></div></div>`; renderAchievements(); }
+function renderAchievements(){ const unlocked = getUnlocked(); const cats = ['打工','经期','菜谱','日记','隐藏']; let html = ''; cats.forEach(cat => { const items = ACHIEVEMENTS.filter(a=>a.cat===cat); html += `<div style="color:var(--gold-light);font-weight:bold;margin:12px 0 6px;font-size:0.85rem;">${cat}</div><div class="achieve-grid">`; items.forEach(a => { const isUnlocked = !!unlocked[a.id]; html += `<div class="achieve-card${isUnlocked?'':' locked'}"><div class="ach-icon">${a.icon}</div><div class="ach-name">${a.name}</div><div class="ach-cond">${a.desc}</div>${isUnlocked?`<div class="ach-date">${unlocked[a.id]}</div>`:''}</div>`; }); html += '</div>'; }); document.getElementById('achieveList').innerHTML = html; }
 </script>
 </body>
 </html>
